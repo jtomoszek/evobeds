@@ -696,12 +696,12 @@ body.detail-open .detail-drawer { transform: none; }
   position: relative;
   border-radius: var(--radius-card-lg);
   overflow: hidden;
-  aspect-ratio: 16 / 8;
-  background: var(--black);
+  /* Poměr stran shodný s fotografiemi (3:2), postel je vždy vidět celá */
+  aspect-ratio: 3 / 2;
+  background: var(--white);
   user-select: none;
   touch-action: none;
 }
-@media (max-width: 767px) { .xray-wrap { aspect-ratio: 4 / 3; } }
 .xray-wrap img {
   position: absolute;
   inset: 0;
@@ -726,13 +726,17 @@ body.detail-open .detail-drawer { transform: none; }
   transform: translate(-50%, -50%);
   width: 48px; height: 48px;
   border-radius: 50%;
-  background: var(--white);
+  /* Lehce transparentní kolečko s rozostřením pozadí */
+  background: rgba(255, 255, 255, .45);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, .6);
   color: var(--black);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: var(--fs-md);
-  box-shadow: 0 6px 24px rgba(0,0,0,.35);
+  box-shadow: 0 6px 24px rgba(0,0,0,.25);
 }
 .xray-tag {
   position: absolute;
