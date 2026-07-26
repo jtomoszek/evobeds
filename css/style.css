@@ -696,9 +696,9 @@ body.detail-open .detail-drawer { transform: none; }
   position: relative;
   border-radius: var(--radius-card-lg);
   overflow: hidden;
-  /* Poměr stran shodný s fotografiemi (3:2), postel je vždy vidět celá */
-  aspect-ratio: 3 / 2;
-  background: var(--white);
+  /* Poměr stran shodný s fotografiemi, postel je vždy vidět celá */
+  aspect-ratio: 2560 / 1271;
+  background: #f5efe9;
   user-select: none;
   touch-action: none;
 }
