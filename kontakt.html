@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kontakt | evobeds</title>
+  <meta name="description" content="Kontaktujte evobeds, poradíme s výběrem chytré polohovací postele pro domácí i profesionální péči.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/png" href="assets/img/logo.png">
+</head>
+<body>
+
+  <a class="announce" href="kontakt.html">Konzultace výběru postele zdarma, domluvte si hovor →</a>
+
+  <header class="site-header">
+    <div class="header-bar">
+      <div class="header-inner">
+        <button class="mobile-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+        <a class="brand" href="index.html"><img src="assets/img/logo.png" alt="evobeds"></a>
+        <nav class="main-nav">
+          <a class="nav-link" href="domaci-pece.html">Domácí péče</a>
+          <a class="nav-link" href="profesionalni-pece.html">Profesionální péče</a>
+          <a class="nav-link" href="eshop.html#prislusenstvi">Příslušenství</a>
+          <a class="nav-link" href="index.html#reference">Reference</a>
+          <a class="nav-link" href="index.html#o-nas">O nás</a>
+          <a class="nav-link" href="kontakt.html">Kontakt</a>
+        </nav>
+        <div class="nav-right">
+          <div class="lang">
+            <button class="lang-toggle" aria-label="Změnit jazyk">
+              <span class="flag">🇨🇿</span> CZ
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+            <div class="lang-menu">
+              <a href="#"><span>🇨🇿</span> Čeština</a>
+              <a href="#"><span>🇸🇰</span> Slovenčina <span class="soon">Brzy</span></a>
+              <a href="#"><span>🇬🇧</span> English <span class="soon">Brzy</span></a>
+            </div>
+          </div>
+          <a class="btn btn-dark btn-sm" href="eshop.html">e-shop</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-menu">
+    <a href="domaci-pece.html">Domácí péče</a>
+    <a href="profesionalni-pece.html">Profesionální péče</a>
+    <a href="eshop.html#prislusenstvi">Příslušenství</a>
+    <a href="index.html#reference">Reference</a>
+    <a href="index.html#o-nas">O nás</a>
+    <a href="kontakt.html">Kontakt</a>
+    <a class="btn btn-dark" href="eshop.html">e-shop</a>
+  </div>
+
+  <!-- Obsah -->
+  <section class="section" style="padding-top:200px">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Kontakt</p>
+        <h1 class="h-xl">My se o vás postaráme.</h1>
+        <p class="lead">Ať už vybíráte postel pro blízkého, pro sebe, nebo pro celé zařízení, ozvěte se. Poradíme, předvedeme a najdeme řešení pro vaši situaci.</p>
+      </div>
+      <div class="contact-grid reveal">
+        <div class="contact-info">
+          <h3>Telefon</h3>
+          <p><a href="tel:+420773030533">+420 773 030 533</a><br>Pracovní dny 8 až 16 hod</p>
+          <h3>E-mail</h3>
+          <p><a href="mailto:info@evobeds.cz">info@evobeds.cz</a></p>
+          <h3>Ostrava, centrála a vzorková prodejna</h3>
+          <p>Paličkova 75/2, 709 00 Ostrava<br><a href="tel:+420773030533">+420 773 030 533</a></p>
+          <h3>Praha, pobočka a vzorková prodejna</h3>
+          <p>U Nikolajky 957/11, 150 00 Praha 5 Smíchov<br><a href="tel:+420731578376">+420 731 578 376</a></p>
+          <h3>Fakturační údaje</h3>
+          <p>evobeds s.r.o.<br>IČ: 07754523 · DIČ: CZ07754523</p>
+        </div>
+        <form class="form-grid" data-demo>
+          <div class="field">
+            <label for="f-name">Jméno a příjmení</label>
+            <input id="f-name" type="text" required>
+          </div>
+          <div class="field">
+            <label for="f-phone">Telefon</label>
+            <input id="f-phone" type="tel">
+          </div>
+          <div class="field full">
+            <label for="f-email">E-mail</label>
+            <input id="f-email" type="email" required>
+          </div>
+          <div class="field full">
+            <label for="f-type">Co řešíte?</label>
+            <select id="f-type">
+              <option>Postel pro blízkého (domácí péče)</option>
+              <option>Postel pro sebe</option>
+              <option>Lůžka pro zařízení (profesionální péče)</option>
+              <option>Příslušenství ke stávající posteli</option>
+              <option>Něco jiného</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label for="f-msg">Zpráva</label>
+            <textarea id="f-msg" placeholder="Popište nám svou situaci, pomůže nám to poradit vám co nejlépe."></textarea>
+          </div>
+          <div class="full">
+            <button class="btn btn-dark" type="submit">Odeslat zprávu</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-sand">
+    <div class="final-cta">
+      <h2 class="reveal">Raději si postel<br>prohlédnete naživo?</h2>
+      <div class="btns reveal">
+        <a class="btn btn-light" href="mailto:info@evobeds.cz">Domluvit návštěvu vzorkové prodejny</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-news">
+          <h3>Zůstaňte v obraze</h3>
+          <p>Novinky, příslušenství a rady pro domácí péči. Žádný spam.</p>
+          <form class="news-form" data-demo>
+            <input type="email" placeholder="Váš e-mail" required>
+            <button class="btn btn-light btn-sm" type="submit">Přihlásit</button>
+          </form>
+        </div>
+        <div class="footer-cols">
+          <div class="footer-col">
+            <h4>Produkt</h4>
+            <a href="index.html#postel">Chytrá postel</a>
+            <a href="eshop.html#konfigurace">Sestavit postel</a>
+            <a href="eshop.html#konfigurace">Příslušenství</a>
+            <a href="eshop.html">E-shop</a>
+          </div>
+          <div class="footer-col">
+            <h4>Péče</h4>
+            <a href="domaci-pece.html">Domácí péče</a>
+            <a href="profesionalni-pece.html">Profesionální péče</a>
+            <a href="index.html">Časté dotazy</a>
+          </div>
+          <div class="footer-col">
+            <h4>Společnost</h4>
+            <a href="kontakt.html">Kontakt</a>
+            <a href="kontakt.html">Showroom</a>
+            <a href="kontakt.html">Pro média</a>
+          </div>
+          <div class="footer-col">
+            <h4>Podpora</h4>
+            <a href="kontakt.html">Doprava a montáž</a>
+            <a href="kontakt.html">Servis</a>
+            <a href="kontakt.html">Záruka</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <img src="assets/img/logo.png" alt="evobeds">
+        <div class="legal">
+          <span>© 2026 evobeds. Všechna práva vyhrazena.</span>
+          <a href="#">Obchodní podmínky</a>
+          <a href="#">Ochrana osobních údajů</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
