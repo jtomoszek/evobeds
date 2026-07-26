@@ -635,10 +635,10 @@ body.detail-open .detail-drawer { transform: none; }
   border-radius: var(--radius-card-lg);
   overflow: hidden;
   position: relative;
-  aspect-ratio: 16 / 8;
-  background: var(--gray-100);
+  /* Poměr stran shodný s fotografiemi poloh, postel je vždy vidět celá */
+  aspect-ratio: 2560 / 1271;
+  background: #f5efe9;
 }
-@media (max-width: 767px) { .positions-stage { aspect-ratio: 4 / 3; } }
 .positions-stage img {
   position: absolute;
   inset: 0;
