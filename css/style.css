@@ -1463,10 +1463,25 @@ body.detail-open .detail-drawer { transform: none; }
   object-fit: cover;
   transition: opacity .25s var(--ease);
 }
-.konf-controls { margin-top: 20px; }
-.konf-controls .opt-group { margin-top: 20px; }
-.konf-controls .opt-group:first-child { margin-top: 0; }
+/* Náhled zůstává v zorném poli, zatímco se prochází volby vpravo */
+@media (min-width: 1024px) {
+  .pdp-gallery { position: sticky; top: 100px; }
+}
+
+/* Apple styl: velké nadpisy jednotlivých kroků konfigurace */
+.apple-group { margin-top: clamp(40px, 5vw, 64px); }
+.opt-title {
+  font-size: clamp(22px, 2vw, 27px);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -.2px;
+  margin-bottom: 18px;
+}
+.opt-title span { color: var(--gray-400); font-weight: 500; }
+.opt-selected { font-size: var(--fs-sm); color: var(--gray-700); margin-bottom: 12px; }
+
 .swatch-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.swatch-row[hidden] { display: none; }
 .swatch {
   width: 36px; height: 36px;
   border-radius: 50%;
@@ -1575,6 +1590,27 @@ body.detail-open .detail-drawer { transform: none; }
   border-color: var(--black);
   color: var(--white);
 }
+
+/* Cena s tlačítkem ukotvená u spodního okraje, aby byla stále po ruce */
+.buy-sticky {
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
+  margin-top: clamp(40px, 5vw, 64px);
+  padding: 20px 0 18px;
+  background: rgba(255, 255, 255, .88);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+}
+.buy-sticky::before {
+  content: '';
+  position: absolute;
+  left: -24px; right: -24px; top: 0;
+  height: 1px;
+  background: var(--gray-200);
+}
+.buy-sticky .total-row { margin-top: 0; padding-top: 0; border-top: 0; }
+.buy-sticky .alt-link { margin-top: 10px; }
 
 .total-row {
   display: flex;
