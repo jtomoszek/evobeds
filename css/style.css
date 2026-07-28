@@ -575,6 +575,27 @@ body.detail-open .detail-drawer { transform: none; }
 .detail-nav button:hover { transform: translateX(2px); }
 .detail-nav .d-prev:hover { transform: translateX(-2px); }
 
+/* Samostatné otevírání panelů (B2B popupy mimo režim klíčových bodů) */
+.detail-overlay.open { opacity: 1; visibility: visible; }
+.detail-drawer.open { transform: none; }
+
+/* B2B popup: nižší fotka, ať se vejde formulář */
+.b2b-drawer .d-img { aspect-ratio: 16 / 7; }
+.b2b-drawer .detail-content h2 { margin-bottom: 12px; }
+.drawer-phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: var(--fs-md);
+  margin: 10px 0 24px;
+  color: var(--black);
+}
+.drawer-phone svg { color: var(--sand); flex-shrink: 0; }
+.drawer-phone .hrs { font-size: var(--fs-xs); font-weight: 600; color: var(--gray-500); }
+.drawer-form { display: grid; gap: 14px; }
+.drawer-form .btn { margin-top: 6px; justify-self: start; }
+
 /* ---------- Přepínač funkcí (velká slova) ---------- */
 .switch-section {
   display: grid;
@@ -1123,7 +1144,7 @@ body.detail-open .detail-drawer { transform: none; }
   border-radius: var(--radius-card);
   padding: 32px 28px 38px;
 }
-.b2b-card .num-chip { margin-bottom: 18px; background: var(--sand); }
+.b2b-card svg { display: block; margin-bottom: 24px; color: var(--sand); }
 .b2b-card h3 { font-size: var(--fs-md); font-weight: 700; margin-bottom: 8px; }
 .b2b-card p { font-size: var(--fs-sm); line-height: 1.55; color: var(--gray-500); }
 

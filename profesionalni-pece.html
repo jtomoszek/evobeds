@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=6">
+  <link rel="stylesheet" href="css/style.css?v=8">
   <link rel="icon" type="image/png" href="assets/img/logo.png">
 </head>
 <body>
@@ -121,29 +121,29 @@
       </div>
       <div class="b2b-grid reveal">
         <div class="b2b-card">
-          <span class="num-chip"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16M4 12h16"/></svg></span>
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M8 7l4-4 4 4M8 17l4 4 4-4"/></svg>
           <h3>Snížení fyzické námahy</h3>
           <p>Elektrické nastavení výšky do pracovní pozice bez ohýbání a zvedání. Záda personálu si oddechnou.</p>
         </div>
         <div class="b2b-card">
-          <span class="num-chip"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12l2.5 2.5L16 9"/></svg></span>
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg>
           <h3>Snadná dezinfekce</h3>
           <p>Materiály odolné dezinfekčním prostředkům a pratelné potahy. Hygienický standard bez kompromisů.</p>
         </div>
         <div class="b2b-card">
-          <span class="num-chip"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-3.5 7-9V6l-7-2.7L5 6v6c0 5.5 7 9 7 9z"/></svg></span>
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
           <h3>Certifikace MDR</h3>
           <p>Zdravotnický prostředek třídy I s plnou dokumentací. Bezpečnostní standardy nemocnic.</p>
         </div>
         <div class="b2b-card">
-          <span class="num-chip"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></span>
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
           <h3>Úspora času při péči</h3>
           <p>Polohování na jedno tlačítko a výměna potahu místo výměny lůžka. Rutina rychleji, klienti spokojenější.</p>
         </div>
       </div>
       <div class="btns reveal" style="display:flex;gap:14px;flex-wrap:wrap;margin-top:40px">
-        <a class="btn btn-dark" href="kontakt.html">Domluvit prezentaci na vaší klinice</a>
-        <a class="btn btn-light" style="box-shadow:inset 0 0 0 1.5px var(--gray-200)" href="mailto:info@evobeds.cz?subject=Žádost o B2B ceník">Získat B2B ceník</a>
+        <button class="btn btn-dark" data-open-drawer="drawer-prezentace">Domluvit prezentaci na vaší klinice</button>
+        <button class="btn btn-light" style="box-shadow:inset 0 0 0 1.5px var(--gray-200)" data-open-drawer="drawer-cenik">Získat B2B ceník</button>
       </div>
     </div>
   </section>
@@ -183,6 +183,81 @@
       </div>
     </div>
   </section>
+
+  <!-- B2B popupy: overlay + vysouvací panely zprava -->
+  <div class="detail-overlay" id="b2b-overlay"></div>
+
+  <aside class="detail-drawer b2b-drawer" id="drawer-prezentace" role="dialog" aria-modal="true">
+    <div class="d-img">
+      <button class="detail-close" data-close-drawer aria-label="Zavřít">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <img src="assets/img/header-8.jpg" alt="Postel evobeds v zařízení">
+    </div>
+    <div class="detail-body">
+      <div class="detail-content">
+        <h2>Domluvit prezentaci na vaší klinice</h2>
+        <p>Přijedeme přímo k vám. Postel předvedeme personálu i vedení, vyzkoušíte si polohování, výměnu potahů a vše, co usnadní každodenní provoz. Prezentace je nezávazná a zabere zhruba hodinu.</p>
+        <p class="drawer-phone">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <span><a href="tel:+420773030533">+420 773 030 533</a><br><span class="hrs">Pracovní dny 8 až 16 hod</span></span>
+        </p>
+        <form class="drawer-form" data-demo>
+          <div class="field">
+            <label for="p-name">Jméno a příjmení</label>
+            <input id="p-name" type="text" required>
+          </div>
+          <div class="field">
+            <label for="p-org">Název zařízení</label>
+            <input id="p-org" type="text" required>
+          </div>
+          <div class="field">
+            <label for="p-phone">Telefon</label>
+            <input id="p-phone" type="tel" required>
+          </div>
+          <div class="field">
+            <label for="p-msg">Poznámka</label>
+            <textarea id="p-msg" style="min-height:90px" placeholder="Kdy se vám prezentace hodí a kolik lůžek řešíte?"></textarea>
+          </div>
+          <button class="btn btn-dark" type="submit">Odeslat poptávku</button>
+        </form>
+      </div>
+    </div>
+  </aside>
+
+  <aside class="detail-drawer b2b-drawer" id="drawer-cenik" role="dialog" aria-modal="true">
+    <div class="d-img">
+      <button class="detail-close" data-close-drawer aria-label="Zavřít">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <img src="assets/img/tech-design-v2.webp" alt="Postel evobeds">
+    </div>
+    <div class="detail-body">
+      <div class="detail-content">
+        <h2>Získat B2B ceník</h2>
+        <p>Zanechte nám kontakt a pošleme vám kompletní B2B ceník postelí evobeds včetně příslušenství a množstevních podmínek pro zařízení.</p>
+        <p class="drawer-phone">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <span><a href="tel:+420773030533">+420 773 030 533</a><br><span class="hrs">Pracovní dny 8 až 16 hod</span></span>
+        </p>
+        <form class="drawer-form" data-demo>
+          <div class="field">
+            <label for="c-name">Jméno a příjmení</label>
+            <input id="c-name" type="text" required>
+          </div>
+          <div class="field">
+            <label for="c-org">Název zařízení</label>
+            <input id="c-org" type="text" required>
+          </div>
+          <div class="field">
+            <label for="c-email">E-mail pro zaslání ceníku</label>
+            <input id="c-email" type="email" required>
+          </div>
+          <button class="btn btn-dark" type="submit">Poslat ceník</button>
+        </form>
+      </div>
+    </div>
+  </aside>
 
   <footer class="footer">
     <div class="container">
@@ -235,5 +310,32 @@
   </footer>
 
   <script src="js/main.js"></script>
+  <script>
+  /* B2B popupy: otevírání panelů s formulářem a telefonem */
+  (function () {
+    'use strict';
+    var overlay = document.getElementById('b2b-overlay');
+    var drawers = Array.prototype.slice.call(document.querySelectorAll('.b2b-drawer'));
+
+    function closeAll() {
+      overlay.classList.remove('open');
+      drawers.forEach(function (d) { d.classList.remove('open'); });
+    }
+    document.querySelectorAll('[data-open-drawer]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        closeAll();
+        overlay.classList.add('open');
+        var d = document.getElementById(btn.dataset.openDrawer);
+        d.classList.add('open');
+        d.scrollTop = 0;
+      });
+    });
+    overlay.addEventListener('click', closeAll);
+    document.querySelectorAll('[data-close-drawer]').forEach(function (btn) {
+      btn.addEventListener('click', closeAll);
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAll(); });
+  })();
+  </script>
 </body>
 </html>
