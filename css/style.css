@@ -1724,6 +1724,68 @@ body.detail-open .detail-drawer { transform: none; }
 @media (max-width: 900px) { .dims-grid { grid-template-columns: 1fr; } }
 .dims-grid .media { border-radius: var(--radius-card-lg); overflow: hidden; }
 
+/* ---------- Právní a dokumentové stránky ---------- */
+.legal-wrap { padding: 150px 0 clamp(64px, 8vw, 110px); }
+@media (max-width: 1023px) { .legal-wrap { padding-top: 130px; } }
+.legal-head { max-width: 760px; margin-bottom: clamp(36px, 5vw, 56px); }
+.legal-head .eyebrow { margin-bottom: 12px; }
+.legal-head .lead { margin-top: 16px; }
+
+.legal-body { max-width: 780px; }
+.legal-body h2 {
+  font-size: clamp(21px, 2vw, 26px);
+  font-weight: 700;
+  margin: clamp(36px, 4vw, 52px) 0 14px;
+}
+.legal-body h3 {
+  font-size: var(--fs-md);
+  font-weight: 700;
+  margin: 26px 0 10px;
+}
+.legal-body p { margin-bottom: 14px; color: var(--gray-700); }
+.legal-body ul, .legal-body ol { margin: 0 0 16px 22px; display: grid; gap: 8px; color: var(--gray-700); }
+.legal-body a { font-weight: 600; border-bottom: 1.5px solid currentColor; }
+.legal-body .lead-in { font-size: var(--fs-md); color: var(--gray-700); }
+
+/* Tabulka ceníku dopravy */
+.price-table { width: 100%; border-collapse: collapse; margin: 8px 0 20px; }
+.price-table td { padding: 11px 0; border-bottom: 1px solid var(--gray-100); vertical-align: top; }
+.price-table td:last-child { text-align: right; font-weight: 700; white-space: nowrap; }
+
+/* Informační box */
+.legal-note {
+  background: var(--offwhite);
+  border-radius: var(--radius-card);
+  padding: 22px 26px;
+  margin: 24px 0;
+}
+.legal-note p:last-child { margin-bottom: 0; }
+
+/* Stránka s návodem ke stažení */
+.doc-card {
+  display: flex;
+  gap: 22px;
+  align-items: flex-start;
+  background: var(--offwhite);
+  border-radius: var(--radius-card-lg);
+  padding: clamp(24px, 3vw, 34px);
+  margin-bottom: 18px;
+}
+@media (max-width: 640px) { .doc-card { flex-direction: column; gap: 16px; } }
+.doc-icon {
+  flex-shrink: 0;
+  width: 56px; height: 56px;
+  border-radius: 14px;
+  background: var(--sand);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.doc-card h2 { font-size: var(--fs-lg); font-weight: 700; margin: 0 0 6px; }
+.doc-card p { font-size: var(--fs-sm); color: var(--gray-500); margin-bottom: 16px; }
+.doc-meta { font-size: var(--fs-xs); color: var(--gray-400); margin-top: 12px; }
+
 /* ---------- Objednávka (dokončení nákupu) ---------- */
 .order-wrap { padding: 150px 0 clamp(64px, 8vw, 110px); }
 @media (max-width: 1023px) { .order-wrap { padding-top: 130px; } }
