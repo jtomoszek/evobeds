@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dokončení objednávky | evobeds</title>
+  <meta name="description" content="Dokončete objednávku postele evobeds One. Vyplňte kontaktní a fakturační údaje, my vám obratem pošleme souhrn objednávky a podklady k platbě.">
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=12">
+  <link rel="icon" type="image/png" href="assets/img/logo.png">
+</head>
+<body>
+
+  <a class="announce" href="kontakt.html">Konzultace výběru postele zdarma, domluvte si hovor →</a>
+
+  <header class="site-header">
+    <div class="header-bar">
+      <div class="header-inner">
+        <button class="mobile-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+        <a class="brand" href="index.html"><img src="assets/img/logo.png" alt="evobeds"></a>
+        <nav class="main-nav">
+          <a class="nav-link" href="domaci-pece.html">Domácí péče</a>
+          <a class="nav-link" href="profesionalni-pece.html">Profesionální péče</a>
+          <a class="nav-link" href="eshop.html#prislusenstvi">Příslušenství</a>
+          <a class="nav-link" href="index.html#reference">Reference</a>
+          <a class="nav-link" href="o-nas.html">O nás</a>
+          <a class="nav-link" href="kontakt.html">Kontakt</a>
+        </nav>
+        <div class="nav-right">
+          <div class="lang">
+            <button class="lang-toggle" aria-label="Změnit jazyk">
+              <span class="flag">🇨🇿</span> CZ
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+            <div class="lang-menu">
+              <a href="#"><span>🇨🇿</span> Čeština</a>
+              <a href="#"><span>🇸🇰</span> Slovenčina <span class="soon">Brzy</span></a>
+              <a href="#"><span>🇬🇧</span> English <span class="soon">Brzy</span></a>
+            </div>
+          </div>
+          <a class="btn btn-dark btn-sm" href="eshop.html">e-shop</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-menu">
+    <a href="domaci-pece.html">Domácí péče</a>
+    <a href="profesionalni-pece.html">Profesionální péče</a>
+    <a href="eshop.html#prislusenstvi">Příslušenství</a>
+    <a href="index.html#reference">Reference</a>
+    <a href="o-nas.html">O nás</a>
+    <a href="kontakt.html">Kontakt</a>
+    <a class="btn btn-dark" href="eshop.html">e-shop</a>
+  </div>
+
+  <!-- Objednávka -->
+  <section class="container order-wrap" id="objednavka">
+    <div class="order-head">
+      <p class="eyebrow">Krok 2 ze 2</p>
+      <h1 class="h-xl">Dokončení objednávky</h1>
+      <p class="lead">Zbývá vyplnit údaje, na které postel doručíme a vystavíme fakturu. Objednávka je nezávazná do chvíle, než uhradíte zálohovou fakturu.</p>
+    </div>
+
+    <div class="order-grid">
+      <!-- Formulář -->
+      <form class="order-form" id="order-form" novalidate>
+        <div class="form-block">
+          <h2 class="opt-title">Kontaktní údaje. <span>Abychom se domluvili na termínu.</span></h2>
+          <div class="form-grid">
+            <div class="field">
+              <label for="o-jmeno">Jméno a příjmení objednávajícího <span class="req">*</span></label>
+              <input id="o-jmeno" name="jmeno" type="text" required autocomplete="name">
+            </div>
+            <div class="field">
+              <label for="o-telefon">Telefon <span class="req">*</span></label>
+              <input id="o-telefon" name="telefon" type="tel" required autocomplete="tel" placeholder="+420">
+            </div>
+            <div class="field full">
+              <label for="o-email">E-mail <span class="req">*</span></label>
+              <input id="o-email" name="email" type="email" required autocomplete="email">
+              <p class="field-hint">Na tuto adresu vám pošleme souhrn objednávky a podklady k platbě.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-block">
+          <h2 class="opt-title">Doručení. <span>Kam postel přivezeme a sestavíme.</span></h2>
+          <div class="form-grid">
+            <div class="field full">
+              <label for="o-ulice">Ulice a číslo popisné <span class="req">*</span></label>
+              <input id="o-ulice" name="ulice" type="text" required autocomplete="street-address">
+            </div>
+            <div class="field">
+              <label for="o-mesto">Město <span class="req">*</span></label>
+              <input id="o-mesto" name="mesto" type="text" required autocomplete="address-level2">
+            </div>
+            <div class="field">
+              <label for="o-psc">PSČ <span class="req">*</span></label>
+              <input id="o-psc" name="psc" type="text" required autocomplete="postal-code" inputmode="numeric">
+            </div>
+            <div class="field full">
+              <label for="o-patro">Patro a dostupnost výtahu</label>
+              <input id="o-patro" name="patro" type="text" placeholder="Například 3. patro, výtah k dispozici">
+              <p class="field-hint">Pomůže nám to připravit montáž. Postel projde i úzkou chodbou nebo schodištěm.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-block">
+          <h2 class="opt-title">Fakturační údaje. <span>Na koho vystavíme fakturu.</span></h2>
+          <label class="check-inline">
+            <input type="checkbox" id="o-firma-toggle" name="nafirmu">
+            <span>Objednávám na firmu nebo zařízení</span>
+          </label>
+          <div class="form-grid" id="firma-pole" hidden>
+            <div class="field full">
+              <label for="o-firma">Název firmy nebo zařízení</label>
+              <input id="o-firma" name="firma" type="text" autocomplete="organization">
+            </div>
+            <div class="field">
+              <label for="o-ic">IČ</label>
+              <input id="o-ic" name="ic" type="text" inputmode="numeric">
+            </div>
+            <div class="field">
+              <label for="o-dic">DIČ</label>
+              <input id="o-dic" name="dic" type="text">
+            </div>
+          </div>
+          <label class="check-inline" style="margin-top:16px">
+            <input type="checkbox" id="o-adresa-toggle" name="jinaadresa">
+            <span>Fakturační adresa je jiná než doručovací</span>
+          </label>
+          <div class="form-grid" id="fakt-pole" hidden>
+            <div class="field full">
+              <label for="o-fakt">Fakturační adresa</label>
+              <input id="o-fakt" name="fakturacniadresa" type="text" placeholder="Ulice, město, PSČ">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-block">
+          <h2 class="opt-title">Poznámka. <span>Cokoli, co bychom měli vědět.</span></h2>
+          <div class="field">
+            <label for="o-pozn">Poznámka k objednávce</label>
+            <textarea id="o-pozn" name="poznamka" placeholder="Například preferovaný termín dodání, zdravotní stav uživatele nebo dotaz k příslušenství."></textarea>
+          </div>
+        </div>
+
+        <!-- Jak to bude dál -->
+        <div class="form-block">
+          <h2 class="opt-title">Jak to bude dál. <span>Čtyři kroky k posteli u vás doma.</span></h2>
+          <ol class="process-steps">
+            <li>
+              <span class="step-num">1</span>
+              <div>
+                <h3>Potvrdíme objednávku</h3>
+                <p>Ihned po odeslání dostanete e-mailem souhrn objednávky s vaší konfigurací. Kopii dostává i naše obchodní oddělení, které vás do dvou pracovních dnů kontaktuje a vše s vámi projde.</p>
+              </div>
+            </li>
+            <li>
+              <span class="step-num">2</span>
+              <div>
+                <h3>Pošleme fakturační údaje</h3>
+                <p>Po potvrzení objednávky vám zašleme zálohovou fakturu se všemi platebními údaji, tedy číslem účtu, variabilním symbolem a částkou.</p>
+              </div>
+            </li>
+            <li>
+              <span class="step-num">3</span>
+              <div>
+                <h3>Postel jde do výroby</h3>
+                <p>Jakmile je platba připsaná, předáváme objednávku do výroby v České republice. Každou postel ručně kontrolujeme a testujeme před expedicí.</p>
+              </div>
+            </li>
+            <li>
+              <span class="step-num">4</span>
+              <div>
+                <h3>Přivezeme a sestavíme</h3>
+                <p>Termín doručení domluvíme telefonicky. Postel sestavíme přímo v ložnici, nastavíme polohy, předvedeme ovládání a odvezeme obaly.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+
+        <div class="form-block">
+          <label class="check-inline">
+            <input type="checkbox" id="o-souhlas" name="souhlas" required>
+            <span>Souhlasím s <a href="#">obchodními podmínkami</a> a se <a href="#">zpracováním osobních údajů</a>. <span class="req">*</span></span>
+          </label>
+          <p class="form-error" id="form-error" hidden></p>
+        </div>
+      </form>
+
+      <!-- Souhrn objednávky -->
+      <aside class="order-summary">
+        <div class="summary-card">
+          <div class="summary-img"><img id="sum-img" src="assets/img/konfigurator/00cover0-10sidewalls0-20wheels0-30mattress0-40trapeze0-50bedding0.jpg" alt="Vaše konfigurace postele evobeds One"></div>
+          <h2 class="summary-title">evobeds One</h2>
+          <p class="summary-sub">Chytrá elektrická polohovací postel</p>
+          <div class="summary-rows" id="sum-rows"></div>
+          <div class="summary-total">
+            <span>Celkem</span>
+            <strong id="sum-total">39 900 Kč</strong>
+          </div>
+          <p class="summary-note">Cena včetně DPH. Doprava a odborná montáž jsou v ceně.</p>
+          <button class="btn btn-dark btn-cta" type="submit" form="order-form" id="order-submit">Závazně objednat</button>
+          <a class="summary-back" href="eshop.html#konfigurace">← Upravit konfiguraci</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Poděkování po odeslání -->
+  <section class="container order-done" id="order-done" hidden>
+    <div class="done-card">
+      <span class="done-icon">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      </span>
+      <h1 class="h-xl">Děkujeme za objednávku</h1>
+      <p class="lead">Souhrn objednávky jsme odeslali na váš e-mail i našemu obchodnímu oddělení. Ozveme se vám do dvou pracovních dnů a domluvíme podrobnosti.</p>
+      <div class="done-next">
+        <p><strong>Co bude následovat:</strong></p>
+        <ol>
+          <li>Zavoláme vám a potvrdíme konfiguraci i termín.</li>
+          <li>Pošleme vám zálohovou fakturu s platebními údaji.</li>
+          <li>Po připsání platby postel předáme do výroby.</li>
+          <li>Přivezeme ji k vám domů a sestavíme.</li>
+        </ol>
+      </div>
+      <p class="done-contact">Potřebujete něco upřesnit dřív? Zavolejte nám na <a href="tel:+420773030533">+420 773 030 533</a>, pracovní dny 8 až 16 hod.</p>
+      <div class="btns">
+        <a class="btn btn-dark" href="index.html">Zpět na úvodní stránku</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-news">
+          <h3>Zůstaňte v obraze</h3>
+          <p>Novinky, příslušenství a rady pro domácí péči. Žádný spam.</p>
+          <form class="news-form" data-demo>
+            <input type="email" placeholder="Váš e-mail" required>
+            <button class="btn btn-light btn-sm" type="submit">Přihlásit</button>
+          </form>
+        </div>
+        <div class="footer-cols">
+          <div class="footer-col">
+            <h4>Produkt</h4>
+            <a href="index.html#postel">Chytrá postel</a>
+            <a href="eshop.html#konfigurace">Sestavit postel</a>
+            <a href="eshop.html#prislusenstvi">Příslušenství</a>
+            <a href="eshop.html">E-shop</a>
+          </div>
+          <div class="footer-col">
+            <h4>Péče</h4>
+            <a href="domaci-pece.html">Domácí péče</a>
+            <a href="profesionalni-pece.html">Profesionální péče</a>
+            <a href="eshop.html">Časté dotazy</a>
+          </div>
+          <div class="footer-col">
+            <h4>Společnost</h4>
+            <a href="o-nas.html">O nás</a>
+            <a href="kontakt.html">Kontakt</a>
+            <a href="kontakt.html">Showroom</a>
+          </div>
+          <div class="footer-col">
+            <h4>Podpora</h4>
+            <a href="kontakt.html">Doprava a montáž</a>
+            <a href="kontakt.html">Servis</a>
+            <a href="kontakt.html">Záruka</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <img src="assets/img/logo.png" alt="evobeds">
+        <div class="legal">
+          <span>© 2026 evobeds. Všechna práva vyhrazena.</span>
+          <a href="#">Obchodní podmínky</a>
+          <a href="#">Ochrana osobních údajů</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+  /* Objednávka: souhrn konfigurace, validace a odeslání */
+  (function () {
+    'use strict';
+
+    /* ====== NASTAVENÍ ODESÍLÁNÍ E-MAILŮ ======
+       Statický web neumí sám odesílat e-maily, potřebuje k tomu službu.
+       Doporučená je Web3Forms (zdarma): na web3forms.com zadáte adresu
+       info@invira.cz, přijde vám přístupový klíč a ten vložíte sem.
+       Dokud je klíč prázdný, formulář otevře předvyplněný e-mail
+       v poštovním programu, takže objednávka nikdy nezmizí. */
+    var ACCESS_KEY = '';
+    var OBCHOD_EMAIL = 'info@invira.cz';
+
+    /* ---------- Souhrn objednávky z předané konfigurace ---------- */
+    var p = new URLSearchParams(location.search);
+    var zaklad = +(p.get('zaklad') || 39900);
+    var celkem = +(p.get('celkem') || zaklad);
+    var material = p.get('material') || 'Polstrovaná ekokůže';
+    var barva = p.get('barva') || 'světle šedá';
+    var matrace = p.get('matrace') || 'Bez matrace';
+    var matraceCena = +(p.get('matracecena') || 0);
+    var doplnky = (p.get('doplnky') || '').split(';').filter(Boolean).map(function (d) {
+      var c = d.split('|');
+      return { nazev: c[0], cena: +c[1] };
+    });
+    var nahled = p.get('nahled');
+
+    function fmt(n) { return n.toLocaleString('cs-CZ') + ' Kč'; }
+    function radek(popis, hodnota, cena) {
+      return '<div class="summary-row"><span class="sr-l"><span class="sr-t">' + popis +
+             '</span><span class="sr-d">' + hodnota + '</span></span>' +
+             '<span class="sr-p">' + cena + '</span></div>';
+    }
+
+    if (nahled) document.getElementById('sum-img').src = nahled;
+    var rows = radek('Postel evobeds One', material + ', ' + barva, fmt(zaklad));
+    rows += radek('Matrace', matrace, matraceCena ? '+ ' + fmt(matraceCena) : 'v ceně');
+    doplnky.forEach(function (d) {
+      rows += radek('Příslušenství', d.nazev, '+ ' + fmt(d.cena));
+    });
+    document.getElementById('sum-rows').innerHTML = rows;
+    document.getElementById('sum-total').textContent = fmt(celkem);
+
+    /* ---------- Volitelná pole fakturace ---------- */
+    function prepni(idPrepinace, idPole) {
+      var t = document.getElementById(idPrepinace);
+      var pole = document.getElementById(idPole);
+      t.addEventListener('change', function () { pole.hidden = !t.checked; });
+    }
+    prepni('o-firma-toggle', 'firma-pole');
+    prepni('o-adresa-toggle', 'fakt-pole');
+
+    /* ---------- Odeslání objednávky ---------- */
+    var form = document.getElementById('order-form');
+    var chyba = document.getElementById('form-error');
+    var tlacitko = document.getElementById('order-submit');
+
+    function textSouhrnu(data) {
+      var r = ['NOVÁ OBJEDNÁVKA evobeds One', ''];
+      r.push('KONFIGURACE');
+      r.push('Postel evobeds One, ' + material + ', ' + barva + ': ' + fmt(zaklad));
+      r.push('Matrace: ' + matrace + (matraceCena ? ' (+ ' + fmt(matraceCena) + ')' : ''));
+      doplnky.forEach(function (d) { r.push('Příslušenství: ' + d.nazev + ' (+ ' + fmt(d.cena) + ')'); });
+      r.push('CELKEM: ' + fmt(celkem) + ' včetně DPH, doprava a montáž v ceně');
+      r.push('');
+      r.push('ZÁKAZNÍK');
+      r.push('Jméno: ' + data.jmeno);
+      r.push('Telefon: ' + data.telefon);
+      r.push('E-mail: ' + data.email);
+      r.push('');
+      r.push('DORUČENÍ');
+      r.push(data.ulice + ', ' + data.mesto + ', ' + data.psc);
+      if (data.patro) r.push('Patro a výtah: ' + data.patro);
+      if (data.firma) r.push('');
+      if (data.firma) r.push('FAKTURACE: ' + data.firma + ', IČ ' + (data.ic || 'neuvedeno') + ', DIČ ' + (data.dic || 'neuvedeno'));
+      if (data.fakturacniadresa) r.push('Fakturační adresa: ' + data.fakturacniadresa);
+      if (data.poznamka) { r.push(''); r.push('POZNÁMKA: ' + data.poznamka); }
+      return r.join('\n');
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      chyba.hidden = true;
+
+      if (!form.checkValidity()) {
+        var prvni = form.querySelector(':invalid');
+        chyba.textContent = prvni && prvni.id === 'o-souhlas'
+          ? 'Pro odeslání objednávky je potřeba souhlasit s obchodními podmínkami.'
+          : 'Zkontrolujte prosím povinná pole označená hvězdičkou.';
+        chyba.hidden = false;
+        if (prvni) { prvni.focus(); prvni.scrollIntoView({ block: 'center' }); }
+        return;
+      }
+
+      var data = {};
+      new FormData(form).forEach(function (v, k) { data[k] = v; });
+      var souhrn = textSouhrnu(data);
+      tlacitko.disabled = true;
+      tlacitko.textContent = 'Odesíláme objednávku…';
+
+      function hotovo() {
+        document.getElementById('objednavka').hidden = true;
+        document.getElementById('order-done').hidden = false;
+        window.scrollTo(0, 0);
+      }
+
+      if (ACCESS_KEY) {
+        /* Odeslání přes Web3Forms: kopie na obchod i zákazníkovi */
+        fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            access_key: ACCESS_KEY,
+            subject: 'Nová objednávka evobeds One, ' + data.jmeno,
+            from_name: 'evobeds objednávky',
+            email: OBCHOD_EMAIL,
+            replyto: data.email,
+            cc: data.email,
+            message: souhrn
+          })
+        }).then(hotovo).catch(function () {
+          chyba.textContent = 'Objednávku se nepodařilo odeslat. Zavolejte nám prosím na +420 773 030 533.';
+          chyba.hidden = false;
+          tlacitko.disabled = false;
+          tlacitko.textContent = 'Závazně objednat';
+        });
+      } else {
+        /* Záloha bez služby: otevře předvyplněný e-mail na obchod s kopií zákazníkovi */
+        var mail = 'mailto:' + OBCHOD_EMAIL +
+                   '?cc=' + encodeURIComponent(data.email) +
+                   '&subject=' + encodeURIComponent('Nová objednávka evobeds One, ' + data.jmeno) +
+                   '&body=' + encodeURIComponent(souhrn);
+        window.location.href = mail;
+        setTimeout(hotovo, 600);
+      }
+    });
+  })();
+  </script>
+</body>
+</html>

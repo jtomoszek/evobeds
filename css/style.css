@@ -1724,6 +1724,140 @@ body.detail-open .detail-drawer { transform: none; }
 @media (max-width: 900px) { .dims-grid { grid-template-columns: 1fr; } }
 .dims-grid .media { border-radius: var(--radius-card-lg); overflow: hidden; }
 
+/* ---------- Objednávka (dokončení nákupu) ---------- */
+.order-wrap { padding: 150px 0 clamp(64px, 8vw, 110px); }
+@media (max-width: 1023px) { .order-wrap { padding-top: 130px; } }
+.order-head { max-width: 720px; margin-bottom: clamp(36px, 5vw, 56px); }
+.order-head .eyebrow { margin-bottom: 12px; }
+.order-head .lead { margin-top: 16px; }
+
+.order-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, .65fr);
+  gap: clamp(32px, 4vw, 64px);
+  align-items: start;
+}
+@media (max-width: 1023px) { .order-grid { grid-template-columns: 1fr; } }
+
+.form-block { margin-bottom: clamp(36px, 4vw, 56px); }
+.form-block .opt-title { margin-bottom: 20px; }
+.field-hint { font-size: var(--fs-xs); color: var(--gray-500); margin-top: 6px; }
+.req { color: var(--sand); }
+
+.check-inline {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  line-height: 1.5;
+}
+.check-inline input {
+  width: 20px; height: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  accent-color: var(--black);
+}
+.check-inline a { font-weight: 600; border-bottom: 1.5px solid currentColor; }
+
+.form-error {
+  margin-top: 14px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: #fdecec;
+  color: #9a2020;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+/* Kroky procesu objednávky */
+.process-steps { list-style: none; display: grid; gap: 20px; }
+.process-steps li { display: flex; gap: 16px; align-items: flex-start; }
+.step-num {
+  flex-shrink: 0;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--sand);
+  color: var(--white);
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.process-steps h3 { font-size: var(--fs-md); font-weight: 700; margin-bottom: 4px; }
+.process-steps p { font-size: var(--fs-sm); color: var(--gray-500); line-height: 1.55; }
+
+/* Souhrn objednávky */
+.order-summary { position: sticky; top: 100px; }
+@media (max-width: 1023px) { .order-summary { position: static; } }
+.summary-card {
+  background: var(--offwhite);
+  border-radius: var(--radius-card-lg);
+  padding: 24px;
+}
+.summary-img {
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: var(--white);
+  margin-bottom: 18px;
+}
+.summary-img img { width: 100%; display: block; }
+.summary-title { font-size: var(--fs-lg); font-weight: 700; }
+.summary-sub { font-size: var(--fs-sm); color: var(--gray-500); margin-bottom: 18px; }
+.summary-rows { display: grid; gap: 12px; padding: 18px 0; border-top: 1px solid var(--gray-200); }
+.summary-row { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; }
+.summary-row .sr-t { display: block; font-size: var(--fs-xs); color: var(--gray-500); }
+.summary-row .sr-d { display: block; font-size: var(--fs-sm); font-weight: 600; }
+.summary-row .sr-p { font-size: var(--fs-sm); font-weight: 700; white-space: nowrap; }
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 16px;
+  border-top: 1px solid var(--gray-200);
+  font-size: var(--fs-md);
+  font-weight: 700;
+}
+.summary-total strong { font-size: clamp(22px, 2vw, 26px); }
+.summary-note { font-size: var(--fs-xs); color: var(--gray-500); margin: 10px 0 18px; }
+.summary-card .btn-cta { width: 100%; padding: 16px 24px; }
+.summary-back {
+  display: block;
+  text-align: center;
+  margin-top: 14px;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--gray-700);
+}
+.summary-back:hover { color: var(--black); }
+
+/* Poděkování po odeslání objednávky */
+.order-done { padding: 170px 0 clamp(64px, 8vw, 110px); }
+.done-card { max-width: 640px; margin: 0 auto; text-align: center; }
+.done-icon {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: var(--sand);
+  color: var(--white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 26px;
+}
+.done-card .lead { margin: 18px auto 0; }
+.done-next {
+  text-align: left;
+  background: var(--offwhite);
+  border-radius: var(--radius-card);
+  padding: 24px 28px;
+  margin: 32px 0 22px;
+}
+.done-next ol { margin: 10px 0 0 20px; display: grid; gap: 8px; font-size: var(--fs-sm); color: var(--gray-700); }
+.done-contact { font-size: var(--fs-sm); color: var(--gray-500); margin-bottom: 26px; }
+.done-contact a { font-weight: 700; border-bottom: 1.5px solid currentColor; }
+.done-card .btns { display: flex; justify-content: center; }
+
 /* ---------- Kontakt ---------- */
 .contact-grid {
   display: grid;

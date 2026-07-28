@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=11">
+  <link rel="stylesheet" href="css/style.css?v=12">
   <link rel="icon" type="image/png" href="assets/img/logo.png">
 </head>
 <body>
@@ -167,7 +167,7 @@
           <span class="cap" id="total-cap">Celkem</span>
           <span class="sum" id="pdp-total">39 900 Kč</span>
         </div>
-        <button class="btn btn-dark btn-cta" id="add-to-cart">Přidat do košíku</button>
+        <button class="btn btn-dark btn-cta" id="add-to-cart">Koupit evobeds</button>
         <p class="alt-link">Raději s poradcem? <a href="kontakt.html">Sestavíme ji s vámi zdarma →</a></p>
       </div>
 
@@ -583,7 +583,7 @@
     var rentMode = false;
 
     function fmt(n) { return n.toLocaleString('cs-CZ') + ' Kč'; }
-    function recalc() {
+    function soucetCeny() {
       var soucet = BASE_PRICE;
       mattressCards.forEach(function (c) {
         if (c.classList.contains('active') && c.dataset.price) soucet += +c.dataset.price;
@@ -591,6 +591,10 @@
       addonCards.forEach(function (c) {
         if (c.classList.contains('active')) soucet += +c.dataset.price;
       });
+      return soucet;
+    }
+    function recalc() {
+      var soucet = soucetCeny();
       if (rentMode) {
         totalCap.textContent = 'Pronájem';
         totalEl.textContent = 'Nabídka na míru';
@@ -598,7 +602,7 @@
       } else {
         totalCap.textContent = 'Celkem';
         totalEl.textContent = fmt(soucet);
-        cta.textContent = 'Přidat do košíku';
+        cta.textContent = 'Koupit evobeds';
       }
       cta.disabled = false;
     }
@@ -622,10 +626,25 @@
         recalc();
       });
     });
+    /* Odeslání konfigurace do objednávkového formuláře */
     cta.addEventListener('click', function () {
       if (rentMode) { window.location.href = 'kontakt.html'; return; }
-      cta.textContent = 'V košíku ✓ (dokončení objednávky připravujeme)';
-      cta.disabled = true;
+      var doplnky = addonCards
+        .filter(function (c) { return c.classList.contains('active'); })
+        .map(function (c) { return c.querySelector('.t').textContent + '|' + c.dataset.price; });
+      var matraceKarta = mattressCards.filter(function (c) { return c.classList.contains('active'); })[0];
+      var material = materialCards.filter(function (c) { return c.classList.contains('active'); })[0];
+      var p = new URLSearchParams({
+        material: material.querySelector('.t').textContent,
+        barva: colorName.textContent,
+        matrace: matraceKarta.querySelector('.t').textContent,
+        matracecena: matraceKarta.dataset.price || '0',
+        doplnky: doplnky.join(';'),
+        zaklad: String(BASE_PRICE),
+        celkem: String(soucetCeny()),
+        nahled: konfSrc()
+      });
+      window.location.href = 'objednavka.html?' + p.toString();
     });
     recalc();
   })();
