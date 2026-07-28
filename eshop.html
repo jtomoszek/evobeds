@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=8">
+  <link rel="stylesheet" href="css/style.css?v=9">
   <link rel="icon" type="image/png" href="assets/img/logo.png">
 </head>
 <body>
@@ -59,23 +59,48 @@
   <!-- PDP: galerie + buy box -->
   <section class="container pdp" id="konfigurace">
     <div class="pdp-gallery">
-      <div class="pdp-stage">
-        <img src="assets/img/header-7.jpg" alt="evobeds One, pohled z boku" class="active">
-        <img src="assets/img/header-2.jpg" alt="evobeds One v obývacím pokoji">
-        <img src="assets/img/header-6.jpg" alt="evobeds One, polohování zad">
-        <img src="assets/img/header-4.jpg" alt="evobeds One, zvednutá poloha s hrazdou">
-        <img src="assets/img/header-9.jpg" alt="evobeds One, detail čalounění">
-        <img src="assets/img/slide-4.jpg" alt="Materiály potahů evobeds">
-        <button class="rail-arrow pdp-prev" aria-label="Předchozí"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-        <button class="rail-arrow pdp-next" aria-label="Další"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+      <!-- Konfigurátor: náhled sestavené postele -->
+      <div class="konf-stage">
+        <img id="konf-img" src="assets/img/konfigurator/00cover0-10sidewalls0-20wheels0-30mattress0-40trapeze0-50bedding0.jpg" alt="Náhled konfigurace postele evobeds One">
       </div>
-      <div class="pdp-thumbs">
-        <button class="pdp-thumb active"><img src="assets/img/header-7.jpg" alt=""></button>
-        <button class="pdp-thumb"><img src="assets/img/header-2.jpg" alt=""></button>
-        <button class="pdp-thumb"><img src="assets/img/header-6.jpg" alt=""></button>
-        <button class="pdp-thumb"><img src="assets/img/header-4.jpg" alt=""></button>
-        <button class="pdp-thumb"><img src="assets/img/header-9.jpg" alt=""></button>
-        <button class="pdp-thumb"><img src="assets/img/slide-4.jpg" alt=""></button>
+      <div class="konf-controls">
+        <div class="opt-group">
+          <p class="label"><span>Barva potahu, ekokůže</span></p>
+          <div class="swatch-row">
+            <button class="swatch active" data-cover="0" title="Světle šedá ekokůže"><img src="assets/img/konfigurator/swatch-leather-grey.png" alt="Světle šedá ekokůže"></button>
+            <button class="swatch" data-cover="1" title="Tmavě šedá ekokůže"><img src="assets/img/konfigurator/swatch-leather-dark-grey.png" alt="Tmavě šedá ekokůže"></button>
+            <button class="swatch" data-cover="2" title="Béžová ekokůže"><img src="assets/img/konfigurator/swatch-leather-yellow.png" alt="Béžová ekokůže"></button>
+            <button class="swatch" data-cover="3" title="Vínová ekokůže"><img src="assets/img/konfigurator/swatch-leather-red.png" alt="Vínová ekokůže"></button>
+            <button class="swatch" data-cover="4" title="Černá ekokůže"><img src="assets/img/konfigurator/swatch-leather-black.png" alt="Černá ekokůže"></button>
+          </div>
+        </div>
+        <div class="opt-group">
+          <p class="label"><span>Barva potahu, textil</span></p>
+          <div class="swatch-row">
+            <button class="swatch" data-cover="5" title="Světle šedý textil"><img src="assets/img/konfigurator/swatch-textil-grey.png" alt="Světle šedý textil"></button>
+            <button class="swatch" data-cover="6" title="Tmavě šedý textil"><img src="assets/img/konfigurator/swatch-textil-dark-grey.png" alt="Tmavě šedý textil"></button>
+            <button class="swatch" data-cover="7" title="Béžový textil"><img src="assets/img/konfigurator/swatch-textil-yellow.png" alt="Béžový textil"></button>
+            <button class="swatch" data-cover="8" title="Vínový textil"><img src="assets/img/konfigurator/swatch-textil-red.png" alt="Vínový textil"></button>
+            <button class="swatch" data-cover="9" title="Černý textil"><img src="assets/img/konfigurator/swatch-textil-black.png" alt="Černý textil"></button>
+          </div>
+        </div>
+        <div class="opt-group">
+          <p class="label"><span>Výbava na náhledu</span><span class="hint">Propsáno do ceny vpravo</span></p>
+          <div class="opt-pills">
+            <button class="opt-pill konf-toggle" data-addon="2">Hrazda</button>
+            <button class="opt-pill konf-toggle" data-addon="3">Zábrany</button>
+            <button class="opt-pill konf-toggle" data-addon="4">Kolečka</button>
+            <button class="opt-pill konf-toggle" data-addon="5">Lůžkoviny</button>
+          </div>
+        </div>
+        <div class="opt-group">
+          <p class="label"><span>Matrace</span></p>
+          <div class="opt-pills" id="konf-mattress">
+            <button class="opt-pill active" data-mattress="0">Bez matrace</button>
+            <button class="opt-pill" data-mattress="1">Clinic</button>
+            <button class="opt-pill" data-mattress="2">Silver ProAir</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -107,15 +132,6 @@
             <span><span class="t">Evo Clinic</span><span class="d" style="display:block">Postel pro zdravotnická zařízení</span></span>
             <span class="p">56 800 Kč</span>
           </button>
-        </div>
-      </div>
-
-      <!-- Potah -->
-      <div class="opt-group">
-        <p class="label"><span>Potah</span><span class="hint">Barvu vyberete při potvrzení objednávky</span></p>
-        <div class="opt-pills" id="opt-cover">
-          <button class="opt-pill active">Polstrovaný textil</button>
-          <button class="opt-pill">Polstrovaná ekokůže</button>
         </div>
       </div>
 
@@ -415,27 +431,74 @@
 
   <script src="js/main.js"></script>
   <script>
-  /* PDP: galerie + kalkulace ceny */
+  /* PDP: konfigurátor + kalkulace ceny */
   (function () {
     'use strict';
 
-    /* Galerie */
-    var imgs = Array.prototype.slice.call(document.querySelectorAll('.pdp-stage img'));
-    var thumbs = Array.prototype.slice.call(document.querySelectorAll('.pdp-thumb'));
-    var idx = 0;
-    function show(i) {
-      idx = (i + imgs.length) % imgs.length;
-      imgs.forEach(function (im, k) { im.classList.toggle('active', k === idx); });
-      thumbs.forEach(function (t, k) { t.classList.toggle('active', k === idx); });
+    /* ---------- Konfigurátor náhledu postele ----------
+       Název souboru kóduje konfiguraci:
+       cover 0 až 9 (barva potahu), sidewalls, wheels, mattress 0 až 2, trapeze, bedding */
+    var konf = { cover: 0, sidewalls: 0, wheels: 0, mattress: 0, trapeze: 0, bedding: 0 };
+    var konfImg = document.getElementById('konf-img');
+    /* Přiřazení tlačítek výbavy ke klíčům v názvu souboru */
+    var addonKeys = { 2: 'trapeze', 3: 'sidewalls', 4: 'wheels', 5: 'bedding' };
+
+    function konfSrc() {
+      return 'assets/img/konfigurator/00cover' + konf.cover +
+             '-10sidewalls' + konf.sidewalls +
+             '-20wheels' + konf.wheels +
+             '-30mattress' + konf.mattress +
+             '-40trapeze' + konf.trapeze +
+             '-50bedding' + konf.bedding + '.jpg';
     }
-    document.querySelector('.pdp-prev').addEventListener('click', function () { show(idx - 1); });
-    document.querySelector('.pdp-next').addEventListener('click', function () { show(idx + 1); });
-    thumbs.forEach(function (t, i) { t.addEventListener('click', function () { show(i); }); });
+    /* Počítadlo hlídá, aby při rychlém klikání nepřepsal náhled starší, později doručený obrázek */
+    var konfToken = 0;
+    function konfRender() {
+      var token = ++konfToken;
+      var next = new Image();
+      next.onload = function () {
+        if (token !== konfToken) return;
+        konfImg.src = next.src;
+        konfImg.style.opacity = '';
+      };
+      konfImg.style.opacity = '.55';
+      next.src = konfSrc();
+    }
+
+    var swatches = Array.prototype.slice.call(document.querySelectorAll('.swatch'));
+    swatches.forEach(function (s) {
+      s.addEventListener('click', function () {
+        swatches.forEach(function (x) { x.classList.remove('active'); });
+        s.classList.add('active');
+        konf.cover = +s.dataset.cover;
+        konfRender();
+      });
+    });
+
+    var mattressPills = Array.prototype.slice.call(document.querySelectorAll('#konf-mattress .opt-pill'));
+    mattressPills.forEach(function (p) {
+      p.addEventListener('click', function () {
+        mattressPills.forEach(function (x) { x.classList.remove('active'); });
+        p.classList.add('active');
+        konf.mattress = +p.dataset.mattress;
+        konfRender();
+        syncAddonsFromKonf();
+      });
+    });
+
+    var konfToggles = Array.prototype.slice.call(document.querySelectorAll('.konf-toggle'));
+    konfToggles.forEach(function (t) {
+      t.addEventListener('click', function () {
+        var on = t.classList.toggle('active');
+        konf[addonKeys[t.dataset.addon]] = on ? 1 : 0;
+        konfRender();
+        syncAddonsFromKonf();
+      });
+    });
 
     /* Cena */
     var packageCards = Array.prototype.slice.call(document.querySelectorAll('#opt-package .opt-card'));
     var addonCards = Array.prototype.slice.call(document.querySelectorAll('#opt-addons .opt-card'));
-    var coverPills = Array.prototype.slice.call(document.querySelectorAll('#opt-cover .opt-pill'));
     var modePills = Array.prototype.slice.call(document.querySelectorAll('#opt-mode .opt-pill'));
     var priceEl = document.getElementById('pdp-price');
     var totalEl = document.getElementById('pdp-total');
@@ -468,15 +531,44 @@
         recalc();
       });
     });
-    addonCards.forEach(function (c) {
-      c.addEventListener('click', function () { c.classList.toggle('active'); recalc(); });
-    });
-    coverPills.forEach(function (p) {
-      p.addEventListener('click', function () {
-        coverPills.forEach(function (x) { x.classList.remove('active'); });
-        p.classList.add('active');
+    addonCards.forEach(function (c, i) {
+      c.addEventListener('click', function () {
+        c.classList.toggle('active');
+        /* Matrace se v seznamu vylučují, aktivní může být jen jedna */
+        if (i < 2 && c.classList.contains('active')) {
+          addonCards[i === 0 ? 1 : 0].classList.remove('active');
+        }
+        syncKonfFromAddons();
+        recalc();
       });
     });
+
+    /* ---------- Propojení konfigurátoru a ceníku ----------
+       Pořadí karet příslušenství: 0 matrace Clinic, 1 Silver ProAir,
+       2 hrazda, 3 zábrany, 4 kolečka, 5 lůžkoviny */
+    function syncAddonsFromKonf() {
+      addonCards[0].classList.toggle('active', konf.mattress === 1);
+      addonCards[1].classList.toggle('active', konf.mattress === 2);
+      Object.keys(addonKeys).forEach(function (idx) {
+        addonCards[idx].classList.toggle('active', konf[addonKeys[idx]] === 1);
+      });
+      recalc();
+    }
+    function syncKonfFromAddons() {
+      konf.mattress = addonCards[0].classList.contains('active') ? 1
+                    : addonCards[1].classList.contains('active') ? 2 : 0;
+      mattressPills.forEach(function (p) {
+        p.classList.toggle('active', +p.dataset.mattress === konf.mattress);
+      });
+      Object.keys(addonKeys).forEach(function (idx) {
+        var on = addonCards[idx].classList.contains('active');
+        konf[addonKeys[idx]] = on ? 1 : 0;
+        konfToggles.forEach(function (t) {
+          if (t.dataset.addon === idx) t.classList.toggle('active', on);
+        });
+      });
+      konfRender();
+    }
     modePills.forEach(function (p, i) {
       p.addEventListener('click', function () {
         modePills.forEach(function (x) { x.classList.remove('active'); });
