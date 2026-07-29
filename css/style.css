@@ -1283,6 +1283,42 @@ body.detail-open .detail-drawer { transform: none; }
 }
 .footer-col a:hover { color: #fff; }
 
+/* Zákonné údaje o společnosti */
+.footer-company {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  padding: 44px 0;
+  margin-top: 44px;
+  border-top: 1px solid rgba(255,255,255,.12);
+}
+@media (max-width: 768px) { .footer-company { grid-template-columns: 1fr; gap: 36px; } }
+.footer-company h4 {
+  font-size: var(--fs-md);
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 14px;
+}
+.footer-company p {
+  font-size: var(--fs-sm);
+  color: rgba(255,255,255,.8);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+.footer-company p:last-child { margin-bottom: 0; }
+.footer-company a { color: rgba(255,255,255,.8); transition: color .25s; }
+.footer-company a:hover { color: #fff; }
+.footer-company .map-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: #fff;
+}
+.footer-company .map-link svg { transition: transform .25s; }
+.footer-company .map-link:hover svg { transform: translate(2px, -2px); }
+
 .footer-bottom {
   display: flex;
   justify-content: space-between;
@@ -1290,6 +1326,7 @@ body.detail-open .detail-drawer { transform: none; }
   gap: 24px;
   flex-wrap: wrap;
   padding-top: 36px;
+  border-top: 1px solid rgba(255,255,255,.12);
 }
 .footer-bottom img { height: 20px; filter: brightness(0) invert(1); opacity: .9; }
 .footer-bottom .legal {
