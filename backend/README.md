@@ -92,8 +92,8 @@ curl -X POST -H "X-Admin-Token: VAS_TOKEN" \
 ## E-maily
 
 Do `.env` patří SMTP údaje schránky, ze které se posílají potvrzení
-(např. info@evobeds.cz u vašeho poskytovatele pošty). Obchodní kopie
-chodí na `EMAIL_OBCHOD` (výchozí info@invira.cz).
+(např. info@evobeds.com u vašeho poskytovatele pošty). Obchodní kopie
+chodí na `EMAIL_OBCHOD` (výchozí info@evobeds.com).
 
 ## Kontrolní seznam před spuštěním
 

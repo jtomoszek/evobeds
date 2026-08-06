@@ -62,7 +62,7 @@ evobeds s.r.o.`
 
   await t.sendMail({
     from: odesilatel,
-    to: process.env.EMAIL_OBCHOD || 'info@invira.cz',
+    to: process.env.EMAIL_OBCHOD || 'info@evobeds.com',
     replyTo: o.zakaznik.email,
     subject: `Nová zaplacená objednávka č. ${o.cislo}, ${o.zakaznik.jmeno}`,
     text: souhrn
