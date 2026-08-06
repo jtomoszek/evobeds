@@ -2,3 +2,9 @@
 .claude/
 Obrázky/
 /hpvideo.mp4
+
+# Backend: závislosti, tajné klíče a data objednávek do gitu nepatří
+backend/node_modules/
+backend/.env
+backend/keys/
+backend/data/

@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=16">
+  <link rel="stylesheet" href="css/style.css?v=17">
   <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
@@ -240,6 +240,21 @@
     </div>
   </section>
 
+  <!-- Neúspěšná platba -->
+  <section class="container order-done" id="order-fail" hidden>
+    <div class="done-card">
+      <span class="done-icon fail">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </span>
+      <h1 class="h-xl">Platba se nezdařila</h1>
+      <p class="lead">Vaše objednávka je u nás uložená, jen se nepodařilo dokončit platbu. Nic se neztratilo, platbu můžete zkusit znovu.</p>
+      <div class="btns">
+        <a class="btn btn-dark" id="fail-retry" href="#">Zopakovat platbu</a>
+      </div>
+      <p class="done-contact">Pokud potíže přetrvají, zavolejte nám na <a href="tel:+420773030533">+420 773 030 533</a>, pracovní dny 8 až 16 hod. Objednávku spolu dokončíme telefonicky.</p>
+    </div>
+  </section>
+
   <footer class="footer">
     <div class="container">
       <div class="footer-top">
@@ -317,12 +332,14 @@
   (function () {
     'use strict';
 
-    /* ====== NASTAVENÍ ODESÍLÁNÍ E-MAILŮ ======
-       Statický web neumí sám odesílat e-maily, potřebuje k tomu službu.
-       Doporučená je Web3Forms (zdarma): na web3forms.com zadáte adresu
-       info@invira.cz, přijde vám přístupový klíč a ten vložíte sem.
-       Dokud je klíč prázdný, formulář otevře předvyplněný e-mail
-       v poštovním programu, takže objednávka nikdy nezmizí. */
+    /* ====== NASTAVENÍ ODESLÁNÍ OBJEDNÁVKY ======
+       BACKEND_URL: adresa serverové části s platbami GP webpay a napojením
+       na Pohodu (viz backend/README.md). Jakmile ji vyplníte, formulář
+       posílá objednávku na server a zákazník jde rovnou platit,
+       např. 'https://objednavky.evobeds.cz'.
+       Dokud je BACKEND_URL prázdný, platí záložní režim: Web3Forms
+       (ACCESS_KEY z web3forms.com), a bez klíče předvyplněný e-mail. */
+    var BACKEND_URL = '';
     var ACCESS_KEY = '';
     var OBCHOD_EMAIL = 'info@invira.cz';
 
@@ -419,6 +436,33 @@
         window.scrollTo(0, 0);
       }
 
+      function selhani(zprava) {
+        chyba.textContent = zprava || 'Objednávku se nepodařilo odeslat. Zavolejte nám prosím na +420 773 030 533.';
+        chyba.hidden = false;
+        tlacitko.disabled = false;
+        tlacitko.textContent = BACKEND_URL ? 'Objednat a zaplatit' : 'Závazně objednat';
+      }
+
+      if (BACKEND_URL) {
+        /* Odeslání na server a přesměrování na platební bránu GP webpay */
+        tlacitko.textContent = 'Přesměrováváme na platbu…';
+        fetch(BACKEND_URL + '/api/objednavka', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            konfigurace: {
+              material: material, barva: barva,
+              matrace: matrace, matraceKc: matraceCena,
+              doplnky: doplnky.map(function (d) { return { nazev: d.nazev, cena: d.cena }; })
+            },
+            zakaznik: data
+          })
+        }).then(function (r) { return r.json().then(function (t) { return r.ok ? t : Promise.reject(t); }); })
+          .then(function (t) { window.location.href = t.platbaUrl; })
+          .catch(function (t) { selhani(t && t.chyba); });
+        return;
+      }
+
       if (ACCESS_KEY) {
         /* Odeslání přes Web3Forms: kopie na obchod i zákazníkovi */
         fetch('https://api.web3forms.com/submit', {
@@ -433,12 +477,7 @@
             cc: data.email,
             message: souhrn
           })
-        }).then(hotovo).catch(function () {
-          chyba.textContent = 'Objednávku se nepodařilo odeslat. Zavolejte nám prosím na +420 773 030 533.';
-          chyba.hidden = false;
-          tlacitko.disabled = false;
-          tlacitko.textContent = 'Závazně objednat';
-        });
+        }).then(hotovo).catch(function () { selhani(); });
       } else {
         /* Záloha bez služby: otevře předvyplněný e-mail na obchod s kopií zákazníkovi */
         var mail = 'mailto:' + OBCHOD_EMAIL +
@@ -449,6 +488,50 @@
         setTimeout(hotovo, 600);
       }
     });
+
+    /* ---------- Režim online platby: texty a návrat z brány ---------- */
+    if (BACKEND_URL) {
+      tlacitko.textContent = 'Objednat a zaplatit';
+
+      /* Popis procesu odpovídá platbě předem přes bránu */
+      var kroky = document.querySelectorAll('.process-steps > li');
+      if (kroky.length === 4) {
+        kroky[0].querySelector('h3').textContent = 'Zaplatíte zabezpečeně online';
+        kroky[0].querySelector('p').textContent = 'Po odeslání objednávky vás přesměrujeme na zabezpečenou platební bránu GP webpay, kde zaplatíte kartou. O výsledku platby dostanete okamžité potvrzení.';
+        kroky[1].querySelector('h3').textContent = 'Potvrdíme objednávku';
+        kroky[1].querySelector('p').textContent = 'Ihned po zaplacení dostanete e-mailem souhrn objednávky i doklad o platbě. Naše obchodní oddělení se vám ozve do dvou pracovních dnů a vše s vámi projde.';
+        kroky[2].querySelector('p').textContent = 'Po potvrzení konfigurace předáváme objednávku do výroby v České republice. Každou postel ručně kontrolujeme a testujeme před expedicí.';
+      }
+
+      var doneList = document.querySelector('#order-done .done-next ol');
+      if (doneList) {
+        doneList.innerHTML = '<li>Zavoláme vám a potvrdíme konfiguraci i termín.</li>' +
+          '<li>Postel předáme do výroby.</li>' +
+          '<li>Přivezeme ji k vám domů a sestavíme.</li>';
+      }
+
+      /* Návrat z platební brány: ?platba=ok|chyba&cislo=… */
+      var vysledek = p.get('platba');
+      if (vysledek === 'ok') {
+        document.querySelector('#order-done .lead').textContent =
+          'Platba proběhla v pořádku. Souhrn objednávky jsme odeslali na váš e-mail i našemu obchodnímu oddělení. Ozveme se vám do dvou pracovních dnů a domluvíme podrobnosti.';
+        document.getElementById('objednavka').hidden = true;
+        document.getElementById('order-done').hidden = false;
+        window.scrollTo(0, 0);
+      } else if (vysledek === 'chyba') {
+        var cislo = p.get('cislo');
+        var retry = document.getElementById('fail-retry');
+        if (cislo) {
+          retry.href = BACKEND_URL + '/api/platba/znovu/' + encodeURIComponent(cislo);
+        } else {
+          retry.textContent = 'Zpět na objednávku';
+          retry.href = 'objednavka.html';
+        }
+        document.getElementById('objednavka').hidden = true;
+        document.getElementById('order-fail').hidden = false;
+        window.scrollTo(0, 0);
+      }
+    }
   })();
   </script>
 </body>

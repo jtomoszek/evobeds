@@ -1942,6 +1942,7 @@ body.detail-open .detail-drawer { transform: none; }
   justify-content: center;
   margin-bottom: 26px;
 }
+.done-icon.fail { background: #a4443f; }
 .done-card .lead { margin: 18px auto 0; }
 .done-next {
   text-align: left;
