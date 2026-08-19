@@ -877,9 +877,9 @@ body.detail-open .detail-drawer { transform: none; }
   border-radius: var(--radius-card-lg);
   overflow: hidden;
   /* Poměr stran shodný s fotografiemi, postel je vždy vidět celá */
-  aspect-ratio: 2560 / 1271;
-  /* Fotografie mají průhledné pozadí, rentgen leží přímo na šedé stránce */
-  background: transparent;
+  /* Poměr stran shodný s fotografiemi na bílém pozadí, bílá karta jako ostatní boxy */
+  aspect-ratio: 3 / 2;
+  background: var(--white);
   user-select: none;
   touch-action: none;
 }
@@ -896,8 +896,7 @@ body.detail-open .detail-drawer { transform: none; }
   top: 0; bottom: 0;
   left: 50%;
   width: 2px;
-  background: rgba(255,255,255,.95);
-  box-shadow: 0 0 0 1px rgba(56,56,68,.08);
+  background: rgba(56,56,68,.35);
   z-index: 4;
   cursor: ew-resize;
 }
