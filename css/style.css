@@ -797,14 +797,13 @@ body.detail-open .detail-drawer { transform: none; }
 
 /* ---------- Chytré polohy: velké slovo na pozadí, postel přes něj ---------- */
 .positions-hero { display: flex; flex-direction: column; align-items: center; }
-.positions-head { margin-bottom: 0; }
 .positions-stage {
   position: relative;
   width: 100%;
   /* Výška odpovídá poměru stran fotografií, postel je vždy vidět celá */
   aspect-ratio: 2560 / 1273;
   /* Nahoře místo pro postel, která přesahuje nad rámec slova */
-  margin-top: clamp(56px, 10vw, 170px);
+  margin-top: clamp(40px, 8vw, 130px);
 }
 /* Obří slovo v pozadí (jako „Costs" v předloze) */
 .positions-ghost {
@@ -858,7 +857,7 @@ body.detail-open .detail-drawer { transform: none; }
   position: absolute;
   inset: 0;
   width: 0;
-  background: var(--dark);
+  background: rgba(255, 255, 255, .22);
   z-index: 0;
 }
 .pos-btn.active { color: var(--white); background: var(--dark); }
