@@ -2,18 +2,11 @@
 (function () {
   'use strict';
 
-  /* ---------- Header: schovávání při scrollu dolů, blur po opuštění hero ---------- */
+  /* ---------- Header: stále viditelný, po odscrollování vystoupí jako skleněná vrstva ---------- */
   const header = document.querySelector('.site-header');
-  let lastY = window.scrollY;
 
   function onScroll() {
-    const y = window.scrollY;
-    if (header) {
-      header.classList.toggle('scrolled', y > 40);
-      if (y > 400 && y > lastY + 4) header.classList.add('hidden');
-      else if (y < lastY - 4 || y < 400) header.classList.remove('hidden');
-    }
-    lastY = y;
+    if (header) header.classList.toggle('scrolled', window.scrollY > 24);
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();

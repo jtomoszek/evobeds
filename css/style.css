@@ -199,23 +199,30 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; letter-spacing:
 .site-header {
   position: fixed;
   left: 16px; right: 16px;
-  top: 16px;
+  top: 24px;
   z-index: 100;
-  transition: transform .4s var(--ease), top .4s var(--ease);
+  transition: top .5s var(--ease);
 }
-.site-header.hidden { transform: translateY(-160%); }
+.site-header.scrolled { top: 14px; }
 
+/* Úplně nahoře lišta splývá s pozadím stránky, po odscrollování vystoupí
+   dopředu jako skleněná vrstva se stínem (plynulá animace) */
 .header-bar {
-  background: rgba(255, 255, 255, .55);
+  background: rgba(255, 255, 255, 0);
   -webkit-backdrop-filter: blur(22px) saturate(180%);
   backdrop-filter: blur(22px) saturate(180%);
   border-radius: 999px;
-  box-shadow: var(--nav-shadow);
-  transition: background .3s, box-shadow .3s;
+  box-shadow: 0 0 0 rgba(56,56,69,0), 0 0 0 rgba(63,63,94,0), inset 0 1px 0 0 rgba(255,255,255,0);
+  transform: translateY(0) scale(1);
+  transition: background .55s var(--ease), box-shadow .55s var(--ease), transform .55s var(--ease);
 }
 .site-header.scrolled .header-bar {
-  background: rgba(255, 255, 255, .66);
+  background: rgba(255, 255, 255, .62);
+  box-shadow: var(--nav-shadow);
+  transform: translateY(0) scale(1);
 }
+/* Lehké „vystoupení": nahoře je lišta o vlásek menší, po odscrollování doskočí do plné velikosti */
+.site-header:not(.scrolled) .header-bar { transform: translateY(-2px) scale(.992); }
 
 .header-inner {
   margin: 0 auto;
@@ -294,7 +301,8 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; letter-spacing:
 .mobile-toggle { display: none; }
 
 @media (max-width: 1023px) {
-  .site-header { left: 12px; right: 12px; top: 12px; }
+  .site-header { left: 12px; right: 12px; top: 14px; }
+  .site-header.scrolled { top: 10px; }
   .main-nav, .nav-right .lang { display: none; }
   .header-inner { height: 60px; padding: 0 8px 0 18px; gap: 12px; }
   .brand { flex: 1; justify-content: flex-start; }
@@ -335,47 +343,79 @@ body.menu-open .mobile-menu { opacity: 1; visibility: visible; }
 }
 .mobile-menu .btn { margin-top: 24px; font-size: var(--fs-md); }
 
-/* ---------- Hero: video či fotka přes celou šířku na pozadí, text nad ním ---------- */
+/* ---------- Hero: text na šedém podkladu ---------- */
 .hero {
   position: relative;
-  min-height: 100svh;
-  background: var(--dark);
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-}
-.hero video, .hero .hero-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: .9;
-}
-/* Jemné ztmavení pro čitelnost textu */
-.hero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,.32) 0%, rgba(0,0,0,.06) 45%, rgba(0,0,0,.3) 100%);
+  padding: clamp(140px, 15vw, 190px) 0 clamp(36px, 5vw, 64px);
 }
 .hero-content {
   position: relative;
   z-index: 2;
-  color: var(--white);
   max-width: 1120px;
   opacity: 0;
   transform: translateY(24px);
   animation: heroIn 1s var(--ease) .3s forwards;
 }
 @keyframes heroIn { to { opacity: 1; transform: none; } }
-.hero-content .eyebrow { color: rgba(255,255,255,.78); margin-bottom: 22px; }
-.hero-content .btn { margin-top: 36px; }
-/* Skleněná pilulka nad videem: světlejší sklo, ať text zůstane čitelný */
-.hero-content .btn-light { background: rgba(255,255,255,.82); }
-.hero-content .btn-light:hover { background: rgba(255,255,255,.95); }
+.hero-content .eyebrow { margin-bottom: 22px; }
+/* Řádek pod nadpisem: vlevo perex, vpravo tlačítka */
+.hero-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px 40px;
+  margin-top: clamp(22px, 3vw, 34px);
+}
+.hero-row .lead { max-width: 560px; }
+.hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+@media (max-width: 900px) {
+  .hero-row { flex-direction: column; align-items: flex-start; }
+}
+@media (max-width: 640px) {
+  .hero-btns { width: 100%; flex-direction: column; }
+  .hero-btns .btn { width: 100%; }
+}
 
-.hero.hero-sub { min-height: 72svh; }
+/* Hero video: na celou šířku. Po najetí na celou obrazovku se ukotví
+   a následující obsah ho plynule překryje zespodu nahoru. */
+.hero-media {
+  position: relative;
+  height: 200svh;
+  z-index: 0;
+}
+.hero-media-sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--dark);
+}
+.hero-media-sticky video {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+/* Vrstva s obsahem, která video překryje (začíná v okamžiku, kdy je video ukotvené) */
+.over-video {
+  position: relative;
+  z-index: 2;
+  margin-top: -100svh;
+  background: var(--page);
+  border-radius: 32px 32px 0 0;
+}
+@media (max-width: 640px) { .over-video { border-radius: 24px 24px 0 0; } }
+
+/* Podstránky: pod textem zaoblená fotografie */
+.hero.hero-sub { display: flex; flex-direction: column; }
+.hero.hero-sub .container { order: 1; }
+.hero.hero-sub .hero-img {
+  order: 2;
+  width: min(100% - 48px, 1344px);
+  height: clamp(260px, 36vw, 520px);
+  margin: clamp(28px, 4vw, 48px) auto 0;
+  object-fit: cover;
+  border-radius: var(--radius-card-lg);
+}
+@media (min-width: 1024px) { .hero.hero-sub .hero-img { width: min(100% - 96px, 1344px); } }
 
 /* ---------- Sekce obecně ---------- */
 .section { padding: clamp(64px, 9vw, 128px) 0; }
@@ -990,6 +1030,18 @@ body.detail-open .detail-drawer { transform: none; }
   color: rgba(255,255,255,.55);
   font-size: var(--fs-sm);
 }
+/* Čísla se vynořují z rozostření */
+.counter .num {
+  filter: blur(16px);
+  opacity: 0;
+  transition: filter 1.2s var(--ease), opacity 1s var(--ease);
+}
+.counter.visible .num { filter: blur(0); opacity: 1; }
+/* Světlá varianta na šedém podkladu (homepage pod videem) */
+.counters-light { margin-top: 0; gap: 24px; }
+.counters-light .counter { padding-top: 28px; border-top: 1px solid var(--gray-200); }
+.counters-light .counter .num { color: var(--black); }
+.counters-light .counter .cap { color: var(--gray-500); font-size: var(--fs-base); }
 
 /* ---------- Příběhy (member stories) ---------- */
 .story-card {

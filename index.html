@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>evobeds | Chytrá elektrická polohovací postel</title>
   <meta name="description" content="Když běžná postel nestačí, domov může zůstat domovem. evobeds je chytrá elektrická polohovací postel s designem domácího nábytku a funkcemi zdravotnického lůžka. Česká výroba.">
-  <link rel="stylesheet" href="css/style.css?v=18">
+  <link rel="stylesheet" href="css/style.css?v=19">
   <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
@@ -57,46 +57,93 @@
     <a class="btn btn-dark" href="eshop.html">e-shop</a>
   </div>
 
-  <!-- Hero -->
+  <!-- Hero: text na šedém podkladu -->
   <section class="hero">
-    <video autoplay muted loop playsinline poster="assets/img/header-1.jpg">
-      <source src="assets/video/hpvideo.mp4" type="video/mp4">
-    </video>
     <div class="container">
       <div class="hero-content">
         <p class="eyebrow">Chytrá elektrická polohovací postel</p>
         <h1 class="h-hero">Když běžná postel nestačí,<br>domov může zůstat domovem.</h1>
-        <a class="btn btn-light" href="#postel">Objevit postel evobeds</a>
+        <div class="hero-row">
+          <p class="lead">Funkce zdravotnického lůžka, vzhled moderní domácí postele. Navrženo a vyrobeno v České republice.</p>
+          <div class="hero-btns">
+            <a class="btn btn-light" href="#postel">Objevit postel evobeds</a>
+            <a class="btn btn-muted" href="eshop.html#konfigurace">Sestavit postel</a>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- USP boxy -->
-  <section class="section tight">
+  <!-- Hero video: na celou šířku, po najetí na celou obrazovku se ukotví a obsah ho zespodu překryje -->
+  <div class="hero-media">
+    <div class="hero-media-sticky">
+      <video autoplay muted loop playsinline poster="assets/img/header-1.jpg">
+        <source src="assets/video/hpvideo.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+
+  <!-- Obsah, který překrývá video -->
+  <div class="over-video">
+
+  <!-- Čísla: animovaná, vynořují se z rozostření -->
+  <section class="section tight" id="cisla">
     <div class="container">
-      <div class="usp-grid">
-        <div class="usp reveal">
-          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-          <div>
-            <h3>Doprava a odborná montáž</h3>
-            <p>Postel přivezeme, sestavíme a vše nastavíme. Vy se nemusíte o nic starat.</p>
-          </div>
+      <div class="counters counters-light">
+        <div class="counter reveal">
+          <p class="num"><span data-count="100">0</span> %</p>
+          <p class="cap">navrženo a vyrobeno v České republice</p>
         </div>
-        <div class="usp reveal reveal-delay-1">
-          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6.5 7 .8-5.2 4.7 1.5 6.9L12 17.5 5.7 20.9l1.5-6.9L2 9.3l7-.8L12 2z"/></svg>
-          <div>
-            <h3>Česká výroba</h3>
-            <p>Navrženo i vyrobeno v České republice. Rychlý servis a náhradní díly bez čekání.</p>
-          </div>
+        <div class="counter reveal reveal-delay-1">
+          <p class="num"><span data-count="10">0</span></p>
+          <p class="cap">barev čalounění pro každý interiér</p>
         </div>
-        <div class="usp reveal reveal-delay-2">
-          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-          <div>
-            <h3>Jistota na roky</h3>
-            <p>Prodloužená záruka a servis po celé ČR. Jsme tu i dlouho po nákupu.</p>
-          </div>
+        <div class="counter reveal reveal-delay-2">
+          <p class="num"><span data-count="24">0</span> h</p>
+          <p class="cap">servisní zásah kdekoli v ČR</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- Chytré polohy: velké slovo na pozadí, postel s průhledným podkladem, tlačítka poloh -->
+  <section class="section bg-off" id="polohy">
+    <div class="container">
+      <div data-positions class="positions-hero reveal">
+        <p class="positions-kicker">Chytré polohy</p>
+        <div class="positions-stage">
+          <span class="positions-ghost" aria-hidden="true">Polohy</span>
+          <img src="assets/img/poloha-spanek-v2.webp" alt="Poloha spánek" class="active">
+          <img src="assets/img/poloha-jidlo-v2.webp" alt="Poloha jídlo a čtení">
+          <img src="assets/img/poloha-nohy-v2.webp" alt="Poloha úleva nohou">
+          <img src="assets/img/poloha-vstavani-v2.webp" alt="Poloha vstávání">
+          <img src="assets/img/poloha-prace-v2.webp" alt="Poloha práce a péče">
+        </div>
+        <div class="positions-nav">
+          <button class="pos-btn" data-label="Spánek"><span class="fill"></span><span class="txt">Spánek</span></button>
+          <button class="pos-btn" data-label="Jídlo a čtení"><span class="fill"></span><span class="txt">Jídlo a čtení</span></button>
+          <button class="pos-btn" data-label="Úleva nohou"><span class="fill"></span><span class="txt">Úleva nohou</span></button>
+          <button class="pos-btn" data-label="Vstávání"><span class="fill"></span><span class="txt">Vstávání</span></button>
+          <button class="pos-btn" data-label="Práce a péče"><span class="fill"></span><span class="txt">Práce a péče</span></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Přepínač funkcí -->
+  <section class="switch-section" data-switcher>
+    <div class="switch-left reveal">
+      <div class="switch-words">
+        <button class="switch-word active" data-text="Elektricky ovládaná ložná plocha se přizpůsobí spánku, čtení, jídlu i vstávání. Větší samostatnost a méně bolesti. Vše zvládnete jedním tlačítkem.">Polohování</button>
+        <button class="switch-word" data-text="Čalounění, které patří do ložnice, ne do nemocnice. Potah svléknete a vyperete. Hygiena bez kompromisů v deseti barvách.">Chytrost</button>
+        <button class="switch-word" data-text="Plynulé nastavení výšky znamená, že se pečující nemusí ohýbat a z postele se bezpečně vstává. Záda si oddechnou na obou stranách.">Péče</button>
+      </div>
+      <p class="switch-text">Elektricky ovládaná ložná plocha se přizpůsobí spánku, čtení, jídlu i vstávání. Větší samostatnost a méně bolesti. Vše zvládnete jedním tlačítkem.</p>
+    </div>
+    <div class="switch-media reveal">
+      <img src="assets/img/header-6.jpg" alt="Polohování postele evobeds" class="active">
+      <img src="assets/img/slide-4.jpg" alt="Vyměnitelné potahy evobeds">
+      <img src="assets/img/header-4.jpg" alt="Nastavení výšky pro snadnou péči">
     </div>
   </section>
 
@@ -144,47 +191,6 @@
           data-text2="I takový detail je navržený tak, aby ladil s nábytkem. Postel působí jako domácí, ne nemocniční.">
           <span class="dot"></span>
         </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- Přepínač funkcí -->
-  <section class="switch-section" data-switcher>
-    <div class="switch-left reveal">
-      <div class="switch-words">
-        <button class="switch-word active" data-text="Elektricky ovládaná ložná plocha se přizpůsobí spánku, čtení, jídlu i vstávání. Větší samostatnost a méně bolesti. Vše zvládnete jedním tlačítkem.">Polohování</button>
-        <button class="switch-word" data-text="Čalounění, které patří do ložnice, ne do nemocnice. Potah svléknete a vyperete. Hygiena bez kompromisů v deseti barvách.">Chytrost</button>
-        <button class="switch-word" data-text="Plynulé nastavení výšky znamená, že se pečující nemusí ohýbat a z postele se bezpečně vstává. Záda si oddechnou na obou stranách.">Péče</button>
-      </div>
-      <p class="switch-text">Elektricky ovládaná ložná plocha se přizpůsobí spánku, čtení, jídlu i vstávání. Větší samostatnost a méně bolesti. Vše zvládnete jedním tlačítkem.</p>
-    </div>
-    <div class="switch-media reveal">
-      <img src="assets/img/header-6.jpg" alt="Polohování postele evobeds" class="active">
-      <img src="assets/img/slide-4.jpg" alt="Vyměnitelné potahy evobeds">
-      <img src="assets/img/header-4.jpg" alt="Nastavení výšky pro snadnou péči">
-    </div>
-  </section>
-
-  <!-- Chytré polohy: velké slovo na pozadí, postel s průhledným podkladem, tlačítka poloh -->
-  <section class="section bg-off" id="polohy">
-    <div class="container">
-      <div data-positions class="positions-hero reveal">
-        <p class="positions-kicker">Chytré polohy</p>
-        <div class="positions-stage">
-          <span class="positions-ghost" aria-hidden="true">Polohy</span>
-          <img src="assets/img/poloha-spanek-v2.webp" alt="Poloha spánek" class="active">
-          <img src="assets/img/poloha-jidlo-v2.webp" alt="Poloha jídlo a čtení">
-          <img src="assets/img/poloha-nohy-v2.webp" alt="Poloha úleva nohou">
-          <img src="assets/img/poloha-vstavani-v2.webp" alt="Poloha vstávání">
-          <img src="assets/img/poloha-prace-v2.webp" alt="Poloha práce a péče">
-        </div>
-        <div class="positions-nav">
-          <button class="pos-btn" data-label="Spánek"><span class="fill"></span><span class="txt">Spánek</span></button>
-          <button class="pos-btn" data-label="Jídlo a čtení"><span class="fill"></span><span class="txt">Jídlo a čtení</span></button>
-          <button class="pos-btn" data-label="Úleva nohou"><span class="fill"></span><span class="txt">Úleva nohou</span></button>
-          <button class="pos-btn" data-label="Vstávání"><span class="fill"></span><span class="txt">Vstávání</span></button>
-          <button class="pos-btn" data-label="Práce a péče"><span class="fill"></span><span class="txt">Práce a péče</span></button>
-        </div>
       </div>
     </div>
   </section>
@@ -311,20 +317,6 @@
         <h2 class="h-xl">Postaveno na příbězích.<br>Ověřeno každodenní péčí.</h2>
         <p class="lead on-dark">Nasloucháme těm, kteří polohovací postel skutečně potřebují a používají, rodinám, seniorům i profesionálům. Z jejich zkušeností vzniká každý detail postele evobeds.</p>
         <p style="margin-top:28px"><a class="link-arrow" href="domaci-pece.html" style="color:#fff">Jak evobeds pomáhá →</a></p>
-      </div>
-      <div class="counters">
-        <div class="counter reveal">
-          <p class="num"><span data-count="100">0</span> %</p>
-          <p class="cap">navrženo a vyrobeno v České republice</p>
-        </div>
-        <div class="counter reveal reveal-delay-1">
-          <p class="num"><span data-count="10">0</span></p>
-          <p class="cap">barev čalounění pro každý interiér</p>
-        </div>
-        <div class="counter reveal reveal-delay-2">
-          <p class="num"><span data-count="24">0</span> h</p>
-          <p class="cap">servisní zásah kdekoli v ČR</p>
-        </div>
       </div>
     </div>
   </section>
@@ -637,6 +629,8 @@
     </div>
   </section>
 
+  </div>
+
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
@@ -710,6 +704,6 @@
     </div>
   </footer>
 
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=3"></script>
 </body>
 </html>
