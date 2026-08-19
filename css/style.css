@@ -1,30 +1,48 @@
 /* ============================================================
-   EvoBeds — hlavní stylesheet
-   Design system: tmavý hero, světlé sekce (#F9F8F7), Manrope
+   evobeds — hlavní stylesheet
+   Design: světle šedá stránka, bílé karty s velkým zaoblením,
+   pilulková tlačítka se skleněným efektem, Helvetica Now
    ============================================================ */
 
+/* Helvetica Now je licencované písmo (Monotype). Po zakoupení webové licence
+   uložte soubory do assets/fonts/ a odkomentujte blok níže. Do té doby se
+   použije Helvetica Neue (macOS, iOS) a dále Helvetica nebo Arial.
+@font-face { font-family: 'Helvetica Now Display'; font-weight: 400; src: url('../assets/fonts/HelveticaNowDisplay-Regular.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'Helvetica Now Display'; font-weight: 500; src: url('../assets/fonts/HelveticaNowDisplay-Medium.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'Helvetica Now Display'; font-weight: 700; src: url('../assets/fonts/HelveticaNowDisplay-Bold.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'Helvetica Now Text'; font-weight: 400; src: url('../assets/fonts/HelveticaNowText-Regular.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'Helvetica Now Text'; font-weight: 500; src: url('../assets/fonts/HelveticaNowText-Medium.woff2') format('woff2'); font-display: swap; }
+*/
+
 :root {
-  /* Paleta: Navy #2F4156 · Teal #567C8D · Sky Blue #C8D9E6 · Beige #F9F5F3 · White #FFFFFF */
-  --black: #2f4156;            /* Navy: patička, CTA tlačítka, hlavní texty */
+  /* Paleta: pozadí #EAEBEE · karty #FFFFFF · text #383844 · tmavá #323842 */
+  --page: #eaebee;             /* světle šedé pozadí celé stránky */
+  --black: #383844;            /* hlavní barva textu */
+  --dark: #323842;             /* tmavé karty, CTA tlačítka, patička announce baru */
+  --dark-hover: #262b33;
   --white: #fff;
-  --offwhite: #f9f5f3;         /* Beige: velké sekční pásy */
-  --fog: #c8d9e6;              /* Sky Blue: boxy a karty na světlém podkladu */
-  --gray-100: #edf2f6;         /* jemný modrošedý podklad drobných prvků */
-  --gray-200: #d5dee6;
-  --gray-400: #8fa1ae;
-  --gray-500: #647686;
-  --gray-700: #3e5265;
-  --ink: #2f4156;
-  --slate: #2f4156;            /* Navy pro velké karty recenzí */
-  --sand: #567c8d;             /* Teal: hlavní akcentní sekce */
-  --sand-dark: #46687a;        /* tmavší Teal pro hover a přechody */
-  --sand-100: #dee8f0;         /* světlý podklad odvozený ze Sky Blue */
-  --accent: #567c8d;           /* announcement bar v Teal */
-  --radius-btn: 8px;
-  --radius-card: 16px;
-  --radius-card-lg: 24px;
-  --header-h: 64px;
-  --font: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --offwhite: #ffffff;         /* karty na šedém podkladu */
+  --fog: #ffffff;              /* boxy a karty (dříve Sky Blue) */
+  --gray-100: rgba(56, 56, 68, .07);   /* tlumený podklad drobných prvků */
+  --gray-200: rgba(56, 56, 68, .16);   /* dělicí linky a rámečky */
+  --gray-400: #9a9aa6;
+  --gray-500: #6b6b78;         /* vedlejší text */
+  --gray-700: #56525c;         /* delší texty */
+  --ink: #383844;
+  --slate: #323842;            /* tmavá karta recenzí */
+  --sand: #323842;             /* tmavé akcentní sekce */
+  --sand-dark: #262b33;
+  --sand-100: #ffffff;
+  --accent: #323842;           /* announcement bar */
+  --radius-btn: 999px;         /* pilulková tlačítka */
+  --radius-card: 20px;
+  --radius-card-lg: 28px;
+  --header-h: 72px;
+  --font: 'Helvetica Now Text', 'Helvetica Now Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-display: 'Helvetica Now Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  /* Skleněné tlačítko a navigace podle předlohy */
+  --glass-shadow: 0 9px 7px -7px rgba(56,56,69,.08), 0 22px 21px -7px rgba(63,63,94,.12), inset 0 1px 0 0 #fff, inset 0 -9px 11px 1px #fff;
+  --nav-shadow: 0 9px 7px -7px rgba(56,56,69,.08), 0 22px 21px -7px rgba(63,63,94,.12), inset 0 1px 0 0 #fff;
   --ease: cubic-bezier(.25, .1, .25, 1);
 
   /* Typografická škála: responzivní velikosti, na větších displejích větší písmo */
@@ -41,10 +59,11 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font);
-  background: var(--white);
+  background: var(--page);
   color: var(--black);
   font-size: var(--fs-base);
-  line-height: 1.55;
+  line-height: 1.5;
+  letter-spacing: -.015em;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
@@ -64,30 +83,35 @@ button { font-family: inherit; color: inherit; cursor: pointer; border: 0; backg
 @media (min-width: 1024px) { .container { padding: 0 48px; } }
 
 /* ---------- Typografie ---------- */
-h1, h2, h3 { font-weight: 500; letter-spacing: .2px; }
+/* Nadpisy v Helvetica Now Display: velké sekční nadpisy tenké (Regular),
+   nadpisy karet a výzev tučné (Bold), vše s těsným prostrkáním */
+h1, h2, h3 { font-family: var(--font-display); font-weight: 500; letter-spacing: -.03em; }
 
 .h-hero {
-  font-size: clamp(38px, 5vw, 64px);
-  line-height: 1.1;
-  font-weight: 500;
-  letter-spacing: .4px;
+  font-size: clamp(40px, 6.2vw, 92px);
+  line-height: .98;
+  font-weight: 400;
+  letter-spacing: -.04em;
 }
 .h-xl {
-  font-size: clamp(32px, 4vw, 56px);
-  line-height: 1.12;
-  font-weight: 500;
+  font-size: clamp(34px, 4.8vw, 72px);
+  line-height: 1;
+  font-weight: 400;
+  letter-spacing: -.04em;
 }
 .h-lg {
-  font-size: clamp(26px, 3vw, 40px);
-  line-height: 1.18;
-  font-weight: 500;
+  font-size: clamp(28px, 3.4vw, 50px);
+  line-height: 1.04;
+  font-weight: 700;
+  letter-spacing: -.035em;
 }
-.h-md { font-size: clamp(20px, 2vw, 26px); line-height: 1.3; }
+.h-md { font-size: clamp(20px, 2vw, 26px); line-height: 1.25; font-weight: 500; }
 
 .eyebrow {
+  font-family: var(--font);
   font-size: var(--fs-xs);
-  font-weight: 700;
-  letter-spacing: 1.6px;
+  font-weight: 500;
+  letter-spacing: .07em;
   text-transform: uppercase;
   color: var(--gray-500);
 }
@@ -95,38 +119,53 @@ h1, h2, h3 { font-weight: 500; letter-spacing: .2px; }
 
 .lead {
   font-size: clamp(18px, 1.4vw, 22px);
+  line-height: 1.45;
   color: var(--gray-700);
   max-width: 640px;
 }
 .on-dark .lead, .lead.on-dark { color: rgba(255,255,255,.72); }
 
-/* ---------- Tlačítka ---------- */
+/* ---------- Tlačítka (pilulky) ---------- */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 14px 28px;
+  min-height: 54px;
+  padding: 0 28px;
   border-radius: var(--radius-btn);
-  font-size: var(--fs-base);
-  font-weight: 600;
+  font-size: clamp(15px, 0.3vw + 14px, 16px);
+  font-weight: 500;
+  letter-spacing: -.01em;
   line-height: 1.2;
-  transition: transform .25s var(--ease), background .25s, color .25s, opacity .25s;
+  transition: transform .25s var(--ease), background .25s, color .25s, opacity .25s, box-shadow .25s;
   white-space: nowrap;
 }
 .btn:hover { transform: translateY(-1px); }
 .btn:active { transform: translateY(0); }
-.btn-dark { background: var(--black); color: var(--white); }
-.btn-dark:hover { background: #3a516b; }
-.btn-light { background: var(--white); color: var(--black); }
-.btn-light:hover { background: var(--gray-100); }
-.btn-outline {
-  background: transparent;
-  color: var(--white);
-  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.6);
+/* Tmavá pilulka: e-shop, hlavní akce */
+.btn-dark { background: var(--dark); color: var(--white); }
+.btn-dark:hover { background: var(--dark-hover); }
+/* Skleněná pilulka s měkkým stínem (podle předlohy) */
+.btn-light {
+  background: rgba(255, 255, 255, .44);
+  color: var(--black);
+  box-shadow: var(--glass-shadow);
 }
-.btn-outline:hover { box-shadow: inset 0 0 0 1.5px #fff; }
-.btn-sm { padding: 10px 20px; font-size: var(--fs-sm); }
+.btn-light:hover { background: rgba(255, 255, 255, .7); }
+/* Na tmavých kartách je světlé tlačítko plně bílé */
+.bg-sand .btn-light, .bg-dark .btn-light, .final-cta .btn-light { background: var(--white); box-shadow: none; }
+.bg-sand .btn-light:hover, .bg-dark .btn-light:hover, .final-cta .btn-light:hover { background: #f1f1f3; }
+/* Tlumená pilulka: vedlejší akce na světlém podkladu */
+.btn-muted { background: var(--gray-100); color: var(--black); }
+.btn-muted:hover { background: rgba(56, 56, 68, .12); }
+/* Průsvitná pilulka na tmavém podkladu */
+.btn-outline {
+  background: rgba(255,255,255,.14);
+  color: var(--white);
+}
+.btn-outline:hover { background: rgba(255,255,255,.22); }
+.btn-sm { min-height: 44px; padding: 0 22px; font-size: var(--fs-sm); }
 
 .link-arrow {
   display: inline-flex;
@@ -146,44 +185,43 @@ h1, h2, h3 { font-weight: 500; letter-spacing: .2px; }
   text-align: center;
   padding: 12px 16px;
   font-size: var(--fs-xs);
-  font-weight: 700;
-  letter-spacing: 1.4px;
+  font-weight: 500;
+  letter-spacing: .07em;
   text-transform: uppercase;
   display: block;
 }
 .announce:hover { background: var(--sand-dark); }
 @media (max-width: 640px) {
-  .announce { font-size: 11px; letter-spacing: .8px; padding: 10px 12px; }
+  .announce { font-size: 11px; letter-spacing: .05em; padding: 10px 12px; }
 }
 
-/* ---------- Header (klasická lišta, iOS glass) ---------- */
+/* ---------- Header: plovoucí skleněná pilulka ---------- */
 .site-header {
   position: fixed;
-  left: 0; right: 0;
-  top: 44px;               /* pod announcement barem */
+  left: 16px; right: 16px;
+  top: 60px;               /* pod announcement barem (44 px) + odsazení */
   z-index: 100;
   transition: transform .4s var(--ease), top .4s var(--ease);
 }
-.site-header.scrolled { top: 0; }
-.site-header.hidden { transform: translateY(-140%); }
+.site-header.scrolled { top: 16px; }
+.site-header.hidden { transform: translateY(-160%); }
 
 .header-bar {
   background: rgba(255, 255, 255, .55);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  backdrop-filter: blur(24px) saturate(180%);
-  border-bottom: 1px solid rgba(0, 0, 0, .06);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  backdrop-filter: blur(22px) saturate(180%);
+  border-radius: 999px;
+  box-shadow: var(--nav-shadow);
   transition: background .3s, box-shadow .3s;
 }
 .site-header.scrolled .header-bar {
-  background: rgba(255, 255, 255, .65);
-  box-shadow: 0 1px 24px rgba(0, 0, 0, .06);
+  background: rgba(255, 255, 255, .66);
 }
 
 .header-inner {
-  max-width: 1480px;
   margin: 0 auto;
-  padding: 0 32px;
-  height: 72px;
+  padding: 0 14px 0 26px;
+  height: var(--header-h);
   display: flex;
   align-items: center;
   gap: clamp(24px, 3vw, 48px);
@@ -195,27 +233,20 @@ h1, h2, h3 { font-weight: 500; letter-spacing: .2px; }
 .main-nav {
   display: flex;
   align-items: center;
-  gap: clamp(20px, 2.4vw, 38px);
+  gap: clamp(20px, 2.4vw, 34px);
   flex: 1;
   justify-content: center;
 }
 .nav-link {
   font-size: var(--fs-sm);
   font-weight: 500;
-  letter-spacing: .1px;
+  color: var(--gray-500);
   position: relative;
   padding: 6px 0;
   white-space: nowrap;
+  transition: color .25s;
 }
-.nav-link::after {
-  content: '';
-  position: absolute;
-  left: 0; bottom: 0;
-  width: 0; height: 1.5px;
-  background: currentColor;
-  transition: width .25s var(--ease);
-}
-.nav-link:hover::after { width: 100%; }
+.nav-link:hover { color: var(--black); }
 
 .nav-right { display: flex; gap: 18px; align-items: center; justify-content: flex-end; flex-shrink: 0; }
 
@@ -264,8 +295,10 @@ h1, h2, h3 { font-weight: 500; letter-spacing: .2px; }
 .mobile-toggle { display: none; }
 
 @media (max-width: 1023px) {
+  .site-header { left: 12px; right: 12px; top: 54px; }
+  .site-header.scrolled { top: 12px; }
   .main-nav, .nav-right .lang { display: none; }
-  .header-inner { height: 64px; padding: 0 20px; gap: 16px; }
+  .header-inner { height: 60px; padding: 0 8px 0 18px; gap: 12px; }
   .brand { flex: 1; justify-content: flex-start; }
   .mobile-toggle {
     display: flex;
@@ -286,7 +319,7 @@ h1, h2, h3 { font-weight: 500; letter-spacing: .2px; }
   position: fixed;
   inset: 0;
   z-index: 90;
-  background: var(--white);
+  background: var(--page);
   padding: 140px 32px 40px;
   display: flex;
   flex-direction: column;
@@ -304,60 +337,62 @@ body.menu-open .mobile-menu { opacity: 1; visibility: visible; }
 }
 .mobile-menu .btn { margin-top: 24px; font-size: var(--fs-md); }
 
-/* ---------- Hero ---------- */
+/* ---------- Hero: text na šedém podkladu, pod ním zaoblené video či fotka ---------- */
 .hero {
   position: relative;
-  min-height: 100svh;
-  background: var(--black);
   display: flex;
-  align-items: center;
-  overflow: hidden;
+  flex-direction: column;
+  padding-top: clamp(150px, 16vw, 200px);
 }
+.hero .container { order: 1; }
 .hero video, .hero .hero-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  order: 2;
+  width: min(100% - 48px, 1344px);
+  height: clamp(300px, 44vw, 640px);
+  margin: clamp(28px, 4vw, 48px) auto 0;
   object-fit: cover;
-  opacity: .85;
+  border-radius: var(--radius-card-lg);
 }
-.hero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,.35) 0%, rgba(0,0,0,.05) 40%, rgba(0,0,0,.35) 100%);
-}
+@media (min-width: 1024px) { .hero video, .hero .hero-img { width: min(100% - 96px, 1344px); } }
 .hero-content {
   position: relative;
   z-index: 2;
-  color: var(--white);
-  max-width: 720px;
+  max-width: 1120px;
   opacity: 0;
   transform: translateY(24px);
   animation: heroIn 1s var(--ease) .3s forwards;
 }
 @keyframes heroIn { to { opacity: 1; transform: none; } }
-.hero-content .eyebrow { color: rgba(255,255,255,.75); margin-bottom: 18px; }
+.hero-content .eyebrow { margin-bottom: 22px; }
 .hero-content .btn { margin-top: 36px; }
 
-.hero.hero-sub { min-height: 72svh; }
+.hero.hero-sub video, .hero.hero-sub .hero-img { height: clamp(260px, 36vw, 520px); }
 
 /* ---------- Sekce obecně ---------- */
 .section { padding: clamp(64px, 9vw, 128px) 0; }
 .section.tight { padding: clamp(40px, 6vw, 80px) 0; }
-.bg-off { background: var(--offwhite); }
-.bg-dark { background: var(--black); color: var(--white); }
+/* Světlé pásy splývají s šedým pozadím stránky, oddělení zajišťují bílé karty */
+.bg-off { background: transparent; }
+.bg-stone { background: transparent; }
+.bg-sand-100 { background: transparent; }
 
-/* Světle šedý pás — střídání pozadí mezi sekcemi (dle vzoru) */
-.bg-stone { background: #e9e7e3; }
-
-/* Hřejivá akcentní sekce — nahrazuje dřívější celoplošnou černou */
-.bg-sand { background: var(--sand); color: var(--white); }
+/* Tmavé sekce jako velké zaoblené karty s odsazením od okrajů */
+.bg-dark, .bg-sand {
+  background: var(--dark);
+  color: var(--white);
+  border-radius: 32px;
+  margin-left: 16px;
+  margin-right: 16px;
+  overflow: hidden;
+}
+/* Mezera mezi dvěma kartovými sekcemi za sebou (tmavá, bílá plnoformátová) */
+.bg-dark + .bg-dark, .bg-sand + .bg-sand, .bg-dark + .bg-sand, .bg-sand + .bg-dark,
+.edge-split + .bg-sand, .edge-split + .bg-dark, .bg-sand + .edge-split, .bg-dark + .edge-split,
+.switch-section + .bg-sand, .switch-section + .bg-dark, .bg-sand + .switch-section, .bg-dark + .switch-section,
+.edge-split + .switch-section, .switch-section + .edge-split { margin-top: 16px; }
 .bg-sand .lead, .bg-sand .counter .cap { color: rgba(255,255,255,.82); }
 .bg-sand .eyebrow.on-dark { color: rgba(255,255,255,.7); }
 .bg-sand .check-list li::before { background-color: var(--white); }
-/* Jemná hřejivá varianta pro světlé karty */
-.bg-sand-100 { background: var(--sand-100); }
 
 .section-head { max-width: 820px; margin-bottom: clamp(36px, 5vw, 72px); }
 .section-head .eyebrow { margin-bottom: 16px; }
@@ -384,16 +419,17 @@ body.menu-open .mobile-menu { opacity: 1; visibility: visible; }
 }
 @media (max-width: 767px) { .usp-grid { grid-template-columns: 1fr; } }
 .usp {
-  background: var(--offwhite);
-  border-radius: var(--radius-card);
-  padding: 40px 36px 52px;
+  background: var(--white);
+  border-radius: 24px;
+  padding: 32px 32px 36px;
 }
-.usp svg { display: block; margin-bottom: 30px; }
+.usp svg { display: block; margin-bottom: 22px; }
 .usp h3 {
-  font-size: clamp(20px, 1.8vw, 25px);
-  font-weight: 600;
-  letter-spacing: .1px;
-  margin-bottom: 10px;
+  font-family: var(--font);
+  font-size: clamp(19px, 1.5vw, 21px);
+  font-weight: 500;
+  letter-spacing: -.02em;
+  margin-bottom: 8px;
 }
 .usp p { font-size: var(--fs-sm); line-height: 1.55; color: var(--gray-500); max-width: 400px; }
 
@@ -548,8 +584,8 @@ body.detail-open .detail-drawer { transform: none; }
 .detail-content.fading { opacity: 0; }
 .detail-content h2 {
   font-size: clamp(30px, 3.2vw, 44px);
-  font-weight: 600;
-  letter-spacing: -.3px;
+  font-weight: 700;
+  letter-spacing: -.035em;
   margin-bottom: 20px;
 }
 .detail-content p {
@@ -591,7 +627,7 @@ body.detail-open .detail-drawer { transform: none; }
   margin: 10px 0 24px;
   color: var(--black);
 }
-.drawer-phone svg { color: var(--sand); flex-shrink: 0; }
+.drawer-phone svg { color: var(--black); flex-shrink: 0; }
 .drawer-phone .hrs { font-size: var(--fs-xs); font-weight: 600; color: var(--gray-500); }
 .drawer-form { display: grid; gap: 14px; }
 .drawer-form .btn { margin-top: 6px; justify-self: start; }
@@ -601,6 +637,9 @@ body.detail-open .detail-drawer { transform: none; }
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   background: var(--white);
+  border-radius: 32px;
+  margin: 0 16px;
+  overflow: hidden;
 }
 @media (max-width: 900px) { .switch-section { grid-template-columns: 1fr; } }
 .switch-left {
@@ -656,7 +695,11 @@ body.detail-open .detail-drawer { transform: none; }
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   background: var(--white);
+  border-radius: 32px;
+  margin: 0 16px;
+  overflow: hidden;
 }
+.edge-split + .edge-split { margin-top: 16px; }
 @media (max-width: 900px) { .edge-split { grid-template-columns: 1fr; } }
 .edge-split .content {
   display: flex;
@@ -745,10 +788,10 @@ body.detail-open .detail-drawer { transform: none; }
   position: absolute;
   inset: 0;
   width: 0;
-  background: var(--black);
+  background: var(--dark);
   z-index: 0;
 }
-.pos-btn.active { color: var(--white); background: var(--gray-700); }
+.pos-btn.active { color: var(--white); background: var(--dark); }
 .pos-btn.active .fill { width: 100%; transition: width 3.5s linear; }
 .pos-btn span.txt { position: relative; z-index: 1; }
 
@@ -797,7 +840,7 @@ body.detail-open .detail-drawer { transform: none; }
   align-items: center;
   justify-content: center;
   font-size: var(--fs-md);
-  box-shadow: 0 6px 24px rgba(0,0,0,.25);
+  box-shadow: 0 6px 24px rgba(0,0,0,.2);
 }
 .xray-tag {
   position: absolute;
@@ -851,7 +894,7 @@ body.detail-open .detail-drawer { transform: none; }
 .scenario-card:hover .img img { transform: scale(1.04); }
 .scenario-card .body { padding: 26px 26px 30px; }
 .scenario-card .eyebrow { margin-bottom: 10px; font-size: var(--fs-xs); }
-.scenario-card h3 { font-size: var(--fs-lg); font-weight: 700; margin-bottom: 10px; }
+.scenario-card h3 { font-family: var(--font); font-size: var(--fs-lg); font-weight: 500; letter-spacing: -.02em; margin-bottom: 10px; }
 .scenario-card p { font-size: var(--fs-sm); color: var(--gray-500); }
 
 .rail-arrows { display: flex; gap: 10px; }
@@ -891,10 +934,11 @@ body.detail-open .detail-drawer { transform: none; }
 .bg-dark .stat-card { background: #3a4e63; }
 .stat-card .label { font-size: var(--fs-sm); color: var(--gray-500); margin-bottom: 14px; }
 .stat-card .value {
+  font-family: var(--font-display);
   font-size: clamp(38px, 4vw, 56px);
-  font-weight: 600;
+  font-weight: 400;
   line-height: 1;
-  letter-spacing: -.5px;
+  letter-spacing: -.04em;
 }
 .stat-card .unit { font-size: .55em; font-weight: 600; margin-left: 2px; }
 
@@ -907,10 +951,11 @@ body.detail-open .detail-drawer { transform: none; }
 }
 @media (max-width: 767px) { .counters { grid-template-columns: 1fr; gap: 36px; } }
 .counter .num {
+  font-family: var(--font-display);
   font-size: clamp(56px, 7vw, 96px);
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1;
-  letter-spacing: -1px;
+  letter-spacing: -.05em;
 }
 .counter .num sup { font-size: .45em; }
 .counter .cap {
@@ -991,9 +1036,9 @@ body.detail-open .detail-drawer { transform: none; }
 @media (max-width: 640px) { .reviews-grid { columns: 1; } }
 .review-card {
   break-inside: avoid;
-  background: var(--offwhite);
-  border-radius: var(--radius-card);
-  padding: 28px;
+  background: var(--white);
+  border-radius: 24px;
+  padding: 32px;
   margin-bottom: 20px;
 }
 .review-card .head {
@@ -1016,7 +1061,7 @@ body.detail-open .detail-drawer { transform: none; }
 }
 .review-card .name { font-weight: 700; font-size: var(--fs-sm); }
 .review-card .role { font-size: var(--fs-xs); color: var(--gray-500); }
-.review-card .text { font-size: var(--fs-sm); line-height: 1.55; }
+.review-card .text { font-size: var(--fs-base); line-height: 1.45; }
 .review-card.big { background: var(--slate); color: var(--white); }
 .review-card.big .text { font-size: var(--fs-md); line-height: 1.5; }
 .review-card.big .role { color: rgba(255,255,255,.7); }
@@ -1031,7 +1076,7 @@ body.detail-open .detail-drawer { transform: none; }
   font-size: var(--fs-sm);
   letter-spacing: 2px;
 }
-.review-card.big .stars { color: #cfe0ec; }
+.review-card.big .stars { color: rgba(255,255,255,.8); }
 
 /* ---------- Marquee recenze ---------- */
 .review-tabs {
@@ -1050,7 +1095,7 @@ body.detail-open .detail-drawer { transform: none; }
   color: var(--gray-500);
   transition: all .3s;
 }
-.review-tab.active { background: var(--black); color: var(--white); }
+.review-tab.active { background: var(--dark); color: var(--white); }
 
 .marquee {
   overflow: hidden;
@@ -1090,12 +1135,12 @@ body.detail-open .detail-drawer { transform: none; }
 @media (max-width: 1023px) { .features-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 640px) { .features-grid { grid-template-columns: 1fr; } }
 .feature-card {
-  background: var(--fog);
-  border-radius: var(--radius-card);
-  padding: 34px 30px 40px;
+  background: var(--white);
+  border-radius: 24px;
+  padding: 32px 30px 36px;
 }
-.feature-card svg { display: block; margin-bottom: 24px; color: var(--sand); }
-.feature-card h3 { font-size: var(--fs-md); font-weight: 700; margin-bottom: 8px; }
+.feature-card svg { display: block; margin-bottom: 22px; color: var(--black); }
+.feature-card h3 { font-family: var(--font); font-size: var(--fs-md); font-weight: 500; letter-spacing: -.02em; margin-bottom: 8px; }
 .feature-card p { font-size: var(--fs-sm); line-height: 1.55; color: var(--gray-500); }
 
 /* ---------- Loga partnerských domovů ---------- */
@@ -1117,8 +1162,8 @@ body.detail-open .detail-drawer { transform: none; }
 .partner-logo {
   width: 170px;
   height: 64px;
-  border-radius: 12px;
-  background: var(--sand-100);
+  border-radius: 16px;
+  background: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1141,11 +1186,11 @@ body.detail-open .detail-drawer { transform: none; }
 @media (max-width: 640px) { .b2b-grid { grid-template-columns: 1fr; } }
 .b2b-card {
   background: var(--white);
-  border-radius: var(--radius-card);
-  padding: 32px 28px 38px;
+  border-radius: 24px;
+  padding: 32px 28px 36px;
 }
-.b2b-card svg { display: block; margin-bottom: 24px; color: var(--sand); }
-.b2b-card h3 { font-size: var(--fs-md); font-weight: 700; margin-bottom: 8px; }
+.b2b-card svg { display: block; margin-bottom: 22px; color: var(--black); }
+.b2b-card h3 { font-family: var(--font); font-size: var(--fs-md); font-weight: 500; letter-spacing: -.02em; margin-bottom: 8px; }
 .b2b-card p { font-size: var(--fs-sm); line-height: 1.55; color: var(--gray-500); }
 
 /* ---------- Ocenění ---------- */
@@ -1217,10 +1262,10 @@ body.detail-open .detail-drawer { transform: none; }
   padding: clamp(96px, 14vw, 200px) 24px;
 }
 .final-cta h2 {
-  font-size: clamp(40px, 6.5vw, 88px);
-  font-weight: 500;
-  line-height: 1.05;
-  letter-spacing: -.5px;
+  font-size: clamp(40px, 6.2vw, 84px);
+  font-weight: 700;
+  line-height: .98;
+  letter-spacing: -.04em;
 }
 .final-cta .btns {
   margin-top: 44px;
@@ -1230,10 +1275,10 @@ body.detail-open .detail-drawer { transform: none; }
   flex-wrap: wrap;
 }
 
-/* ---------- Footer ---------- */
+/* ---------- Footer: světlý, na šedém pozadí stránky ---------- */
 .footer {
-  background: var(--black);
-  color: var(--white);
+  background: transparent;
+  color: var(--black);
   padding: clamp(56px, 8vw, 96px) 0 40px;
 }
 .footer-top {
@@ -1241,24 +1286,27 @@ body.detail-open .detail-drawer { transform: none; }
   grid-template-columns: 1.2fr 2fr;
   gap: 64px;
   padding-bottom: 56px;
-  border-bottom: 1px solid rgba(255,255,255,.12);
+  border-bottom: 1px solid var(--gray-200);
 }
 @media (max-width: 900px) { .footer-top { grid-template-columns: 1fr; gap: 40px; } }
-.footer-news h3 { font-size: var(--fs-lg); font-weight: 600; margin-bottom: 8px; }
-.footer-news p { color: rgba(255,255,255,.55); font-size: var(--fs-sm); margin-bottom: 20px; }
+.footer-news h3 { font-family: var(--font); font-size: var(--fs-lg); font-weight: 500; letter-spacing: -.02em; margin-bottom: 8px; }
+.footer-news p { color: var(--gray-500); font-size: var(--fs-sm); margin-bottom: 20px; }
 .news-form { display: flex; gap: 10px; max-width: 420px; }
 .news-form input {
   flex: 1;
-  background: #3a4e63;
-  border: 1px solid rgba(255,255,255,.16);
-  border-radius: var(--radius-btn);
-  color: var(--white);
-  padding: 13px 16px;
+  min-width: 0;
+  background: var(--white);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: var(--black);
+  padding: 12px 18px;
   font-family: inherit;
   font-size: var(--fs-sm);
 }
-.news-form input::placeholder { color: rgba(255,255,255,.4); }
-.news-form input:focus { outline: none; border-color: rgba(255,255,255,.5); }
+.news-form input::placeholder { color: var(--gray-400); }
+.news-form input:focus { outline: none; border-color: var(--gray-400); }
+.news-form .btn-light { background: var(--dark); color: var(--white); box-shadow: none; }
+.news-form .btn-light:hover { background: var(--dark-hover); }
 
 .footer-cols {
   display: grid;
@@ -1267,21 +1315,22 @@ body.detail-open .detail-drawer { transform: none; }
 }
 @media (max-width: 640px) { .footer-cols { grid-template-columns: repeat(2, 1fr); } }
 .footer-col h4 {
+  font-family: var(--font);
   font-size: var(--fs-xs);
-  font-weight: 700;
-  letter-spacing: 1.4px;
+  font-weight: 500;
+  letter-spacing: .07em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.45);
+  color: var(--gray-500);
   margin-bottom: 18px;
 }
 .footer-col a {
   display: block;
   padding: 6px 0;
   font-size: var(--fs-sm);
-  color: rgba(255,255,255,.8);
+  color: var(--gray-700);
   transition: color .25s;
 }
-.footer-col a:hover { color: #fff; }
+.footer-col a:hover { color: var(--black); }
 
 /* Zákonné údaje o společnosti */
 .footer-company {
@@ -1292,27 +1341,29 @@ body.detail-open .detail-drawer { transform: none; }
 }
 @media (max-width: 768px) { .footer-company { grid-template-columns: 1fr; gap: 36px; } }
 .footer-company h4 {
+  font-family: var(--font);
   font-size: var(--fs-md);
-  font-weight: 600;
-  color: #fff;
+  font-weight: 500;
+  letter-spacing: -.02em;
+  color: var(--black);
   margin-bottom: 14px;
 }
 .footer-company p {
   font-size: var(--fs-sm);
-  color: rgba(255,255,255,.8);
+  color: var(--gray-700);
   line-height: 1.6;
   margin-bottom: 14px;
 }
 .footer-company p:last-child { margin-bottom: 0; }
-.footer-company a { color: rgba(255,255,255,.8); transition: color .25s; }
-.footer-company a:hover { color: #fff; }
+.footer-company a { color: var(--gray-700); transition: color .25s; }
+.footer-company a:hover { color: var(--black); }
 .footer-company .map-link {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   font-size: var(--fs-sm);
-  font-weight: 600;
-  color: #fff;
+  font-weight: 500;
+  color: var(--black);
 }
 .footer-company .map-link svg { transition: transform .25s; }
 .footer-company .map-link:hover svg { transform: translate(2px, -2px); }
@@ -1324,17 +1375,17 @@ body.detail-open .detail-drawer { transform: none; }
   gap: 24px;
   flex-wrap: wrap;
   padding-top: 36px;
-  border-top: 1px solid rgba(255,255,255,.12);
+  border-top: 1px solid var(--gray-200);
 }
-.footer-bottom img { height: 20px; filter: brightness(0) invert(1); opacity: .9; }
+.footer-bottom img { height: 20px; opacity: .9; }
 .footer-bottom .legal {
   display: flex;
   gap: 24px;
   flex-wrap: wrap;
   font-size: var(--fs-xs);
-  color: rgba(255,255,255,.45);
+  color: var(--gray-500);
 }
-.footer-bottom .legal a:hover { color: #fff; }
+.footer-bottom .legal a:hover { color: var(--black); }
 
 /* ---------- Podstránky: obecné ---------- */
 .split {
@@ -1368,7 +1419,7 @@ body.detail-open .detail-drawer { transform: none; }
   left: 0; top: 12px;
   width: 20px; height: 20px;
   border-radius: 50%;
-  background: var(--black) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / 11px no-repeat;
+  background: var(--dark) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / 11px no-repeat;
 }
 .bg-dark .check-list li::before { background-color: #fff; }
 
@@ -1382,9 +1433,10 @@ body.detail-open .detail-drawer { transform: none; }
   align-items: center;
   gap: 16px;
   text-align: left;
-  padding: 24px 0;
+  padding: 26px 0;
   font-size: var(--fs-md);
-  font-weight: 600;
+  font-weight: 500;
+  letter-spacing: -.02em;
 }
 .faq-q svg { flex-shrink: 0; transition: transform .35s var(--ease); }
 .faq-item.open .faq-q svg { transform: rotate(45deg); }
@@ -1422,7 +1474,7 @@ body.detail-open .detail-drawer { transform: none; }
   text-transform: uppercase;
   color: var(--gray-400);
 }
-.product-card h3 { font-size: var(--fs-md); font-weight: 700; }
+.product-card h3 { font-family: var(--font); font-size: var(--fs-md); font-weight: 500; letter-spacing: -.02em; }
 .product-card p { font-size: var(--fs-sm); color: var(--gray-500); flex: 1; }
 .product-card .meta { font-size: var(--fs-sm); font-weight: 600; color: var(--gray-700); }
 .product-card .btn { margin-top: 12px; align-self: flex-start; }
@@ -1491,7 +1543,7 @@ body.detail-open .detail-drawer { transform: none; }
   border-radius: var(--radius-card-lg);
   overflow: hidden;
   background: var(--white);
-  border: 1.5px solid var(--gray-100);
+  border: 0;
 }
 .konf-stage img {
   width: 100%; height: 100%;
@@ -1506,10 +1558,11 @@ body.detail-open .detail-drawer { transform: none; }
 /* Apple styl: velké nadpisy jednotlivých kroků konfigurace */
 .apple-group { margin-top: clamp(40px, 5vw, 64px); }
 .opt-title {
+  font-family: var(--font-display);
   font-size: clamp(22px, 2vw, 27px);
-  font-weight: 600;
-  line-height: 1.25;
-  letter-spacing: -.2px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -.03em;
   margin-bottom: 18px;
 }
 .opt-title span { color: var(--gray-400); font-weight: 500; }
@@ -1551,7 +1604,7 @@ body.detail-open .detail-drawer { transform: none; }
   border-radius: 100px;
   padding: 6px 14px;
 }
-.buybox h1 { font-size: clamp(30px, 3vw, 40px); font-weight: 600; }
+.buybox h1 { font-size: clamp(30px, 3vw, 44px); font-weight: 700; letter-spacing: -.035em; }
 .buybox .sub { color: var(--gray-500); margin-top: 6px; }
 .buybox .price-line {
   display: flex;
@@ -1583,17 +1636,17 @@ body.detail-open .detail-drawer { transform: none; }
   gap: 14px;
   text-align: left;
   width: 100%;
-  border: 1.5px solid var(--gray-200);
-  border-radius: 12px;
+  border: 1.5px solid transparent;
+  border-radius: 16px;
   padding: 14px 16px;
   background: var(--white);
   transition: border-color .25s, box-shadow .25s;
 }
 .opt-card:hover { border-color: var(--gray-400); }
-.opt-card.active { border-color: var(--black); box-shadow: 0 0 0 1px var(--black); }
-.opt-card .t { font-size: var(--fs-sm); font-weight: 700; }
+.opt-card.active { border-color: var(--dark); box-shadow: 0 0 0 1px var(--dark); }
+.opt-card .t { font-size: var(--fs-sm); font-weight: 500; }
 .opt-card .d { font-size: var(--fs-xs); color: var(--gray-500); margin-top: 2px; }
-.opt-card .p { font-size: var(--fs-sm); font-weight: 700; white-space: nowrap; }
+.opt-card .p { font-size: var(--fs-sm); font-weight: 500; white-space: nowrap; }
 .opt-card .p.plus { color: var(--gray-500); font-weight: 600; }
 
 .opt-pills { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -1607,7 +1660,7 @@ body.detail-open .detail-drawer { transform: none; }
   transition: all .25s;
 }
 .opt-pill:hover { border-color: var(--gray-400); }
-.opt-pill.active { border-color: var(--black); background: var(--black); color: var(--white); }
+.opt-pill.active { border-color: var(--dark); background: var(--dark); color: var(--white); }
 
 .addon-check {
   width: 26px; height: 26px;
@@ -1621,8 +1674,8 @@ body.detail-open .detail-drawer { transform: none; }
   transition: all .25s;
 }
 .opt-card.active .addon-check {
-  background: var(--black);
-  border-color: var(--black);
+  background: var(--dark);
+  border-color: var(--dark);
   color: var(--white);
 }
 
@@ -1637,7 +1690,7 @@ body.detail-open .detail-drawer { transform: none; }
   /* Roztažení na plnou šířku sloupce i s odsazením */
   margin-left: -24px;
   margin-right: -24px;
-  background: rgba(255, 255, 255, .6);
+  background: rgba(234, 235, 238, .72);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   backdrop-filter: blur(24px) saturate(180%);
   border-top: 1px solid rgba(0, 0, 0, .06);
@@ -1649,7 +1702,7 @@ body.detail-open .detail-drawer { transform: none; }
   left: 0; right: 0;
   bottom: 100%;
   height: 44px;
-  background: linear-gradient(to top, rgba(255, 255, 255, .75), rgba(255, 255, 255, 0));
+  background: linear-gradient(to top, rgba(234, 235, 238, .85), rgba(234, 235, 238, 0));
   pointer-events: none;
 }
 .buy-sticky .total-row { margin-top: 0; padding-top: 0; border-top: 0; }
@@ -1768,13 +1821,16 @@ body.detail-open .detail-drawer { transform: none; }
 
 .legal-body { max-width: 780px; }
 .legal-body h2 {
+  font-family: var(--font);
   font-size: clamp(21px, 2vw, 26px);
-  font-weight: 700;
+  font-weight: 500;
+  letter-spacing: -.02em;
   margin: clamp(36px, 4vw, 52px) 0 14px;
 }
 .legal-body h3 {
+  font-family: var(--font);
   font-size: var(--fs-md);
-  font-weight: 700;
+  font-weight: 500;
   margin: 26px 0 10px;
 }
 .legal-body p { margin-bottom: 14px; color: var(--gray-700); }
@@ -1810,14 +1866,14 @@ body.detail-open .detail-drawer { transform: none; }
 .doc-icon {
   flex-shrink: 0;
   width: 56px; height: 56px;
-  border-radius: 14px;
-  background: var(--sand);
+  border-radius: 16px;
+  background: var(--dark);
   color: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.doc-card h2 { font-size: var(--fs-lg); font-weight: 700; margin: 0 0 6px; }
+.doc-card h2 { font-family: var(--font); font-size: var(--fs-lg); font-weight: 500; letter-spacing: -.02em; margin: 0 0 6px; }
 .doc-card p { font-size: var(--fs-sm); color: var(--gray-500); margin-bottom: 16px; }
 .doc-meta { font-size: var(--fs-xs); color: var(--gray-400); margin-top: 12px; }
 
@@ -1839,7 +1895,7 @@ body.detail-open .detail-drawer { transform: none; }
 .form-block { margin-bottom: clamp(36px, 4vw, 56px); }
 .form-block .opt-title { margin-bottom: 20px; }
 .field-hint { font-size: var(--fs-xs); color: var(--gray-500); margin-top: 6px; }
-.req { color: var(--sand); }
+.req { color: #a4443f; }
 
 .check-inline {
   display: flex;
@@ -1874,7 +1930,7 @@ body.detail-open .detail-drawer { transform: none; }
   flex-shrink: 0;
   width: 34px; height: 34px;
   border-radius: 50%;
-  background: var(--sand);
+  background: var(--dark);
   color: var(--white);
   font-weight: 700;
   font-size: var(--fs-sm);
@@ -1882,7 +1938,7 @@ body.detail-open .detail-drawer { transform: none; }
   align-items: center;
   justify-content: center;
 }
-.process-steps h3 { font-size: var(--fs-md); font-weight: 700; margin-bottom: 4px; }
+.process-steps h3 { font-family: var(--font); font-size: var(--fs-md); font-weight: 500; letter-spacing: -.02em; margin-bottom: 4px; }
 .process-steps p { font-size: var(--fs-sm); color: var(--gray-500); line-height: 1.55; }
 
 /* Souhrn objednávky */
@@ -1900,7 +1956,7 @@ body.detail-open .detail-drawer { transform: none; }
   margin-bottom: 18px;
 }
 .summary-img img { width: 100%; display: block; }
-.summary-title { font-size: var(--fs-lg); font-weight: 700; }
+.summary-title { font-family: var(--font); font-size: var(--fs-lg); font-weight: 500; letter-spacing: -.02em; }
 .summary-sub { font-size: var(--fs-sm); color: var(--gray-500); margin-bottom: 18px; }
 .summary-rows { display: grid; gap: 12px; padding: 18px 0; border-top: 1px solid var(--gray-200); }
 .summary-row { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; }
@@ -1935,7 +1991,7 @@ body.detail-open .detail-drawer { transform: none; }
 .done-icon {
   width: 72px; height: 72px;
   border-radius: 50%;
-  background: var(--sand);
+  background: var(--dark);
   color: var(--white);
   display: inline-flex;
   align-items: center;
@@ -1963,22 +2019,22 @@ body.detail-open .detail-drawer { transform: none; }
   gap: clamp(40px, 6vw, 96px);
 }
 @media (max-width: 900px) { .contact-grid { grid-template-columns: 1fr; } }
-.contact-info h3 { font-size: var(--fs-base); font-weight: 700; margin: 28px 0 6px; }
+.contact-info h3 { font-family: var(--font); font-size: var(--fs-base); font-weight: 500; margin: 28px 0 6px; }
 .contact-info p { color: var(--gray-700); }
-.contact-info a { font-weight: 600; border-bottom: 1px solid var(--gray-300, #ccc); }
+.contact-info a { font-weight: 500; border-bottom: 1px solid var(--gray-200); }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
 .form-grid .full { grid-column: 1 / -1; }
 .field label {
   display: block;
   font-size: var(--fs-xs);
-  font-weight: 700;
+  font-weight: 500;
   margin-bottom: 6px;
 }
 .field input, .field textarea, .field select {
   width: 100%;
   border: 1.5px solid var(--gray-200);
-  border-radius: var(--radius-btn);
+  border-radius: 14px;
   padding: 13px 14px;
   font-family: inherit;
   font-size: var(--fs-sm);
@@ -2006,7 +2062,7 @@ body.detail-open .detail-drawer { transform: none; }
 }
 
 /* ---------- Drobnosti ---------- */
-::selection { background: var(--black); color: var(--white); }
+::selection { background: var(--dark); color: var(--white); }
 .mt-0 { margin-top: 0; }
 .tc { text-align: center; }
 
@@ -2022,4 +2078,8 @@ a, button { -webkit-tap-highlight-color: transparent; }
   .hotspot-card { max-width: calc(100vw - 48px); }
   /* Vzdušnější odsazení final CTA */
   .final-cta .btns { flex-direction: column; align-items: stretch; }
+  /* Na úzkém displeji nechť nadpisy zalamuje prohlížeč, ne pevné zlomy řádků */
+  .h-hero br, .h-xl br { display: none; }
+  /* Kartové sekce mají na mobilu menší odsazení od okrajů */
+  .bg-dark, .bg-sand, .edge-split, .switch-section { margin-left: 10px; margin-right: 10px; border-radius: 24px; }
 }
