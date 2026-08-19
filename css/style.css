@@ -199,11 +199,10 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; letter-spacing:
 .site-header {
   position: fixed;
   left: 16px; right: 16px;
-  top: 60px;               /* pod announcement barem (44 px) + odsazení */
+  top: 16px;
   z-index: 100;
   transition: transform .4s var(--ease), top .4s var(--ease);
 }
-.site-header.scrolled { top: 16px; }
 .site-header.hidden { transform: translateY(-160%); }
 
 .header-bar {
@@ -295,8 +294,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; letter-spacing:
 .mobile-toggle { display: none; }
 
 @media (max-width: 1023px) {
-  .site-header { left: 12px; right: 12px; top: 54px; }
-  .site-header.scrolled { top: 12px; }
+  .site-header { left: 12px; right: 12px; top: 12px; }
   .main-nav, .nav-right .lang { display: none; }
   .header-inner { height: 60px; padding: 0 8px 0 18px; gap: 12px; }
   .brand { flex: 1; justify-content: flex-start; }
@@ -337,36 +335,47 @@ body.menu-open .mobile-menu { opacity: 1; visibility: visible; }
 }
 .mobile-menu .btn { margin-top: 24px; font-size: var(--fs-md); }
 
-/* ---------- Hero: text na šedém podkladu, pod ním zaoblené video či fotka ---------- */
+/* ---------- Hero: video či fotka přes celou šířku na pozadí, text nad ním ---------- */
 .hero {
   position: relative;
+  min-height: 100svh;
+  background: var(--dark);
   display: flex;
-  flex-direction: column;
-  padding-top: clamp(150px, 16vw, 200px);
+  align-items: center;
+  overflow: hidden;
 }
-.hero .container { order: 1; }
 .hero video, .hero .hero-img {
-  order: 2;
-  width: min(100% - 48px, 1344px);
-  height: clamp(300px, 44vw, 640px);
-  margin: clamp(28px, 4vw, 48px) auto 0;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: var(--radius-card-lg);
+  opacity: .9;
 }
-@media (min-width: 1024px) { .hero video, .hero .hero-img { width: min(100% - 96px, 1344px); } }
+/* Jemné ztmavení pro čitelnost textu */
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,.32) 0%, rgba(0,0,0,.06) 45%, rgba(0,0,0,.3) 100%);
+}
 .hero-content {
   position: relative;
   z-index: 2;
+  color: var(--white);
   max-width: 1120px;
   opacity: 0;
   transform: translateY(24px);
   animation: heroIn 1s var(--ease) .3s forwards;
 }
 @keyframes heroIn { to { opacity: 1; transform: none; } }
-.hero-content .eyebrow { margin-bottom: 22px; }
+.hero-content .eyebrow { color: rgba(255,255,255,.78); margin-bottom: 22px; }
 .hero-content .btn { margin-top: 36px; }
+/* Skleněná pilulka nad videem: světlejší sklo, ať text zůstane čitelný */
+.hero-content .btn-light { background: rgba(255,255,255,.82); }
+.hero-content .btn-light:hover { background: rgba(255,255,255,.95); }
 
-.hero.hero-sub video, .hero.hero-sub .hero-img { height: clamp(260px, 36vw, 520px); }
+.hero.hero-sub { min-height: 72svh; }
 
 /* ---------- Sekce obecně ---------- */
 .section { padding: clamp(64px, 9vw, 128px) 0; }
@@ -734,44 +743,62 @@ body.detail-open .detail-drawer { transform: none; }
   object-fit: cover;
 }
 
-/* ---------- Chytrý obrázek (polohy) ---------- */
+/* ---------- Chytré polohy: velké slovo na pozadí, postel přes něj ---------- */
+.positions-hero { display: flex; flex-direction: column; align-items: center; }
+.positions-kicker {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  color: var(--gray-700);
+  text-align: center;
+}
 .positions-stage {
-  border-radius: var(--radius-card-lg);
-  overflow: hidden;
   position: relative;
-  /* Poměr stran shodný s fotografiemi poloh, postel je vždy vidět celá */
+  width: 100%;
+  /* Výška odpovídá poměru stran fotografií, postel je vždy vidět celá */
   aspect-ratio: 2560 / 1273;
-  background: var(--white);
+  /* Nahoře místo pro postel, která přesahuje nad rámec slova */
+  margin-top: clamp(48px, 9vw, 150px);
+}
+/* Obří slovo v pozadí (jako „Costs" v předloze) */
+.positions-ghost {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: clamp(120px, 31vw, 460px);
+  font-weight: 400;
+  line-height: .9;
+  letter-spacing: -.05em;
+  color: rgba(56, 56, 68, .16);
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
+  z-index: 0;
 }
 .positions-stage img {
   position: absolute;
-  inset: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
+  left: -10%; bottom: 0;
+  width: 120%; max-width: none; height: 120%;
+  object-fit: contain;
+  object-position: center bottom;
   opacity: 0;
+  z-index: 1;
+  /* Bílý podklad fotografie splyne se stránkou a slovo v pozadí prosvítá */
+  mix-blend-mode: multiply;
   /* Čisté plynulé prolnutí mezi polohami, bez přibližování */
   transition: opacity .9s ease-in-out;
 }
 .positions-stage img.active { opacity: 1; }
-.positions-stage .pos-label {
-  position: absolute;
-  left: 24px; bottom: 20px;
-  z-index: 3;
-  background: rgba(0,0,0,.55);
-  color: #fff;
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  border-radius: 100px;
-  padding: 8px 18px;
-  font-size: var(--fs-sm);
-  font-weight: 600;
-}
 
 .positions-nav {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  margin-top: 28px;
+  justify-content: center;
+  margin-top: clamp(20px, 3vw, 36px);
 }
 .pos-btn {
   position: relative;
