@@ -1311,7 +1311,7 @@ body.detail-open .detail-drawer { transform: none; }
   display: flex;
   align-items: flex-end;
 }
-.craft-tile.media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .75; }
+.craft-tile.media img, .craft-tile.media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .craft-tile .cap {
   position: relative;
   z-index: 2;
