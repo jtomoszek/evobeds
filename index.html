@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>evobeds | Chytrá elektrická polohovací postel</title>
   <meta name="description" content="Když běžná postel nestačí, domov může zůstat domovem. evobeds je chytrá elektrická polohovací postel s designem domácího nábytku a funkcemi zdravotnického lůžka. Česká výroba.">
-  <link rel="stylesheet" href="css/style.css?v=26">
+  <link rel="stylesheet" href="css/style.css?v=28">
   <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
@@ -290,34 +290,39 @@
   </section>
 
   <!-- Výroba -->
-  <section class="section">
+  <section class="section" style="padding-bottom:0">
     <div class="container">
       <div class="section-head reveal">
         <p class="eyebrow">Vyrobeno s péčí</p>
         <h2 class="h-xl">Než postel pomůže vám,<br>věnujeme jí stovky hodin.</h2>
         <p class="lead">Šití potahů, svařování rámů, lakování i kompletace, všechno pod jednou střechou v Česku. Podívejte se, jak postel evobeds vzniká.</p>
       </div>
-      <div class="craft-grid reveal">
-        <div class="craft-tile media">
-          <video autoplay muted loop playsinline preload="metadata" poster="assets/img/vyroba-3-poster.jpg">
-            <source src="assets/video/vyroba-3.mp4" type="video/mp4">
-          </video>
-          <p class="cap">Šití a čalounění</p>
-        </div>
-        <div class="craft-tile media">
-          <video autoplay muted loop playsinline preload="metadata" poster="assets/img/vyroba-4-poster.jpg">
-            <source src="assets/video/vyroba-4.mp4" type="video/mp4">
-          </video>
-          <p class="cap">Řezání a lakování rámů</p>
-        </div>
-        <div class="craft-tile media">
-          <video autoplay muted loop playsinline preload="metadata" poster="assets/img/vyroba-2-poster.jpg">
-            <source src="assets/video/vyroba-2.mp4" type="video/mp4">
-          </video>
-          <p class="cap">Kompletace a kontrola</p>
-        </div>
-      </div>
     </div>
+  </section>
+
+  <!-- Výroba: vrstvící se karty s videi -->
+  <section class="stack-section" data-stack style="margin-bottom:clamp(64px,9vw,128px)">
+    <article class="stack-card">
+      <div class="media"><video autoplay muted loop playsinline preload="metadata" poster="assets/img/vyroba-4-poster.jpg"><source src="assets/video/vyroba-4.mp4" type="video/mp4"></video></div>
+      <div class="content content-bottom">
+        <h2>Řezání a lakování rámů</h2>
+        <p>Každý rám vzniká z české oceli. Díly řežeme laserem s vysokou přesností a lakujeme barvou, která vydrží roky každodenního provozu.</p>
+      </div>
+    </article>
+    <article class="stack-card">
+      <div class="media"><video autoplay muted loop playsinline preload="metadata" poster="assets/img/vyroba-2-poster.jpg"><source src="assets/video/vyroba-2.mp4" type="video/mp4"></video></div>
+      <div class="content content-bottom">
+        <h2>Kompletace</h2>
+        <p>Postel sestavují zkušení technici ručně. Každý spoj, motor i rošt projde jejich rukama, než postel opustí dílnu.</p>
+      </div>
+    </article>
+    <article class="stack-card">
+      <div class="media"><video autoplay muted loop playsinline preload="metadata" poster="assets/img/vyroba-3-poster.jpg"><source src="assets/video/vyroba-3.mp4" type="video/mp4"></video></div>
+      <div class="content content-bottom">
+        <h2>Výstupní kontrola</h2>
+        <p>Před expedicí každou postel rozpohybujeme a vyzkoušíme všechny funkce. K vám domů odjíždí jen postel, za kterou si stojíme.</p>
+      </div>
+    </article>
   </section>
 
   <!-- Příběhy: proč právě tato postel + skuteční lidé -->
