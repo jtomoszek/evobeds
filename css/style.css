@@ -107,14 +107,16 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; letter-spacing:
 }
 .h-md { font-size: clamp(20px, 2vw, 26px); line-height: 1.25; font-weight: 500; }
 
+/* Nadpisek sekce: jednotně pro celý web (podle sekce Chytré polohy) */
 .eyebrow {
   font-family: var(--font);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   font-weight: 500;
-  letter-spacing: .07em;
+  letter-spacing: .3em;
   text-transform: uppercase;
-  color: var(--gray-500);
+  color: var(--gray-700);
 }
+@media (max-width: 640px) { .eyebrow { font-size: var(--fs-xs); letter-spacing: .2em; } }
 .eyebrow.on-dark { color: rgba(255,255,255,.6); }
 
 .lead {
@@ -796,21 +798,14 @@ body.detail-open .detail-drawer { transform: none; }
 
 /* ---------- Chytré polohy: velké slovo na pozadí, postel přes něj ---------- */
 .positions-hero { display: flex; flex-direction: column; align-items: center; }
-.positions-kicker {
-  font-size: var(--fs-sm);
-  font-weight: 500;
-  letter-spacing: .32em;
-  text-transform: uppercase;
-  color: var(--gray-700);
-  text-align: center;
-}
+.positions-head { margin-bottom: 0; }
 .positions-stage {
   position: relative;
   width: 100%;
   /* Výška odpovídá poměru stran fotografií, postel je vždy vidět celá */
   aspect-ratio: 2560 / 1273;
   /* Nahoře místo pro postel, která přesahuje nad rámec slova */
-  margin-top: clamp(48px, 9vw, 150px);
+  margin-top: clamp(56px, 10vw, 170px);
 }
 /* Obří slovo v pozadí (jako „Costs" v předloze) */
 .positions-ghost {
@@ -970,7 +965,7 @@ body.detail-open .detail-drawer { transform: none; }
 }
 .scenario-card:hover .img img { transform: scale(1.04); }
 .scenario-card .body { padding: 26px 26px 30px; }
-.scenario-card .eyebrow { margin-bottom: 10px; font-size: var(--fs-xs); }
+.scenario-card .eyebrow { margin-bottom: 10px; font-size: var(--fs-xs); letter-spacing: .14em; color: var(--gray-500); }
 .scenario-card h3 { font-family: var(--font); font-size: var(--fs-lg); font-weight: 500; letter-spacing: -.02em; margin-bottom: 10px; }
 .scenario-card p { font-size: var(--fs-sm); color: var(--gray-500); }
 
@@ -1044,7 +1039,7 @@ body.detail-open .detail-drawer { transform: none; }
 .counter .num {
   filter: blur(16px);
   opacity: 0;
-  transition: filter 1.2s var(--ease), opacity 1s var(--ease);
+  transition: filter 2s var(--ease), opacity 1.6s var(--ease);
 }
 .counter.visible .num { filter: blur(0); opacity: 1; }
 /* Světlá varianta na šedém podkladu (homepage pod videem) */

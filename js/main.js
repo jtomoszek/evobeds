@@ -263,7 +263,7 @@
       counterObserver.unobserve(en.target);
       const el = en.target;
       const target = parseFloat(el.dataset.count);
-      const dur = 1600;
+      const dur = 2000;
       const t0 = performance.now();
       function tick(now) {
         const p = Math.min((now - t0) / dur, 1);
