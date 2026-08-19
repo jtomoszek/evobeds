@@ -146,16 +146,35 @@
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
   }
 
-  /* ---------- Přepínač funkcí (velká slova) ---------- */
-  document.querySelectorAll('[data-switcher]').forEach((root) => {
-    const words = [...root.querySelectorAll('.switch-word')];
-    const imgs = [...root.querySelectorAll('.switch-media img')];
-    const text = root.querySelector('.switch-text');
-    words.forEach((w, i) => w.addEventListener('click', () => {
-      words.forEach((x, k) => x.classList.toggle('active', k === i));
-      imgs.forEach((im, k) => im.classList.toggle('active', k === i));
-      if (text) text.textContent = w.dataset.text || '';
-    }));
+  /* ---------- Vrstvící se karty: překryté karty se plynule zmenšují ---------- */
+  document.querySelectorAll('[data-stack]').forEach((root) => {
+    const cards = [...root.querySelectorAll('.stack-card')];
+    if (cards.length < 2) return;
+    let ticking = false;
+
+    function progress(card) {
+      /* Jak daleko karta dojela od spodní hrany okna ke své kotvě (0 až 1) */
+      const rect = card.getBoundingClientRect();
+      const anchor = parseFloat(getComputedStyle(card).top) || 0;
+      const start = window.innerHeight;
+      return Math.min(1, Math.max(0, (start - rect.top) / (start - anchor)));
+    }
+
+    function update() {
+      ticking = false;
+      cards.forEach((card, i) => {
+        let cover = 0;
+        for (let j = i + 1; j < cards.length; j++) cover += progress(cards[j]);
+        const scale = Math.max(.86, 1 - cover * .05);
+        card.style.transform = 'scale(' + scale + ')';
+      });
+    }
+    function onScrollStack() {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }
+    window.addEventListener('scroll', onScrollStack, { passive: true });
+    window.addEventListener('resize', onScrollStack);
+    update();
   });
 
   /* ---------- Chytrý obrázek: polohy postele ---------- */

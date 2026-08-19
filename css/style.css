@@ -442,20 +442,18 @@ body.menu-open .mobile-menu { opacity: 1; visibility: visible; }
   overflow: hidden;
 }
 /* Všechny kartové sekce mají šířku obsahu kontejneru, aby byly boxy stejně široké */
-.bg-dark, .bg-sand, .edge-split, .switch-section {
+.bg-dark, .bg-sand, .edge-split {
   width: calc(100% - 48px);
   max-width: 1344px;
   margin-left: auto;
   margin-right: auto;
 }
 @media (min-width: 1024px) {
-  .bg-dark, .bg-sand, .edge-split, .switch-section { width: calc(100% - 96px); }
+  .bg-dark, .bg-sand, .edge-split { width: calc(100% - 96px); }
 }
 /* Mezera mezi dvěma kartovými sekcemi za sebou (tmavá, bílá plnoformátová) */
 .bg-dark + .bg-dark, .bg-sand + .bg-sand, .bg-dark + .bg-sand, .bg-sand + .bg-dark,
-.edge-split + .bg-sand, .edge-split + .bg-dark, .bg-sand + .edge-split, .bg-dark + .edge-split,
-.switch-section + .bg-sand, .switch-section + .bg-dark, .bg-sand + .switch-section, .bg-dark + .switch-section,
-.edge-split + .switch-section, .switch-section + .edge-split { margin-top: 16px; }
+.edge-split + .bg-sand, .edge-split + .bg-dark, .bg-sand + .edge-split, .bg-dark + .edge-split { margin-top: 16px; }
 .bg-sand .lead, .bg-sand .counter .cap { color: rgba(255,255,255,.82); }
 .bg-sand .eyebrow.on-dark { color: rgba(255,255,255,.7); }
 .bg-sand .check-list li::before { background-color: var(--white); }
@@ -698,62 +696,60 @@ body.detail-open .detail-drawer { transform: none; }
 .drawer-form { display: grid; gap: 14px; }
 .drawer-form .btn { margin-top: 6px; justify-self: start; }
 
-/* ---------- Přepínač funkcí (velká slova) ---------- */
-.switch-section {
+/* ---------- Vrstvící se karty (Polohování, Chytrost, Péče) ---------- */
+.stack-section {
+  width: calc(100% - 48px);
+  max-width: 1344px;
+  margin: 0 auto;
+}
+@media (min-width: 1024px) { .stack-section { width: calc(100% - 96px); } }
+.stack-card {
+  position: sticky;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   background: var(--white);
   border-radius: 32px;
   overflow: hidden;
+  min-height: clamp(420px, 64svh, 620px);
+  /* Zmenšování při překrytí drží horní hranu, takže zůstane vidět proužek karty */
+  transform-origin: center top;
+  will-change: transform;
+  box-shadow: 0 -12px 40px -22px rgba(56, 56, 68, .28);
 }
-@media (max-width: 900px) { .switch-section { grid-template-columns: 1fr; } }
-.switch-left {
+/* Odsazené kotvy: každá další karta se zastaví o kousek níž,
+   z předchozích tak zůstane vidět proužek */
+.stack-card:nth-child(1) { top: 104px; }
+.stack-card:nth-child(2) { top: 118px; }
+.stack-card:nth-child(3) { top: 132px; }
+.stack-card + .stack-card { margin-top: 24px; }
+.stack-card .content {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: clamp(48px, 7vw, 104px) clamp(28px, 4.5vw, 72px);
+  gap: 20px;
+  padding: clamp(40px, 6vw, 88px) clamp(28px, 4.5vw, 72px);
 }
-@media (max-width: 900px) {
-  .switch-left { padding: 48px 24px; }
+.stack-card h2 {
+  font-size: clamp(34px, 4vw, 58px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.035em;
 }
-.switch-words { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
-.switch-word {
-  font-family: inherit;
-  font-size: clamp(42px, 5.2vw, 74px);
-  font-weight: 500;
-  line-height: 1.18;
-  letter-spacing: -.5px;
-  color: var(--gray-200);
-  text-align: left;
-  padding: 0;
-  transition: color .35s var(--ease);
-}
-.switch-word:hover { color: var(--gray-400); }
-.switch-word.active { color: var(--black); }
-.switch-text {
-  margin-top: clamp(32px, 4vw, 56px);
-  max-width: 440px;
-  font-size: var(--fs-base);
-  line-height: 1.6;
-  color: var(--gray-700);
-  min-height: 5.4em;
-}
-.switch-media {
-  position: relative;
-  min-height: 420px;
-  overflow: hidden;
-}
-@media (max-width: 900px) { .switch-media { min-height: 340px; } }
-.switch-media img {
+.stack-card p { color: var(--gray-700); max-width: 46ch; }
+.stack-card .media { position: relative; min-height: 300px; }
+.stack-card .media img {
   position: absolute;
   inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
-  opacity: 0;
-  transform: scale(1.02);
-  transition: opacity .6s var(--ease), transform 1s var(--ease);
 }
-.switch-media img.active { opacity: 1; transform: scale(1); }
+@media (max-width: 900px) {
+  .stack-card { grid-template-columns: 1fr; border-radius: 24px; min-height: 0; }
+  .stack-card .media { order: -1; min-height: 240px; }
+  .stack-card:nth-child(1) { top: 88px; }
+  .stack-card:nth-child(2) { top: 100px; }
+  .stack-card:nth-child(3) { top: 112px; }
+}
 
 /* ---------- Střídavé plnoformátové sekce (text + fotka k okraji) ---------- */
 .edge-split {
@@ -2174,5 +2170,5 @@ a, button { -webkit-tap-highlight-color: transparent; }
   /* Na úzkém displeji nechť nadpisy zalamuje prohlížeč, ne pevné zlomy řádků */
   .h-hero br, .h-xl br { display: none; }
   /* Kartové sekce mají na mobilu menší odsazení od okrajů */
-  .bg-dark, .bg-sand, .edge-split, .switch-section { border-radius: 24px; }
+  .bg-dark, .bg-sand, .edge-split { border-radius: 24px; }
 }
