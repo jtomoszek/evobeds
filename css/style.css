@@ -154,17 +154,25 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; letter-spacing:
 }
 .btn-light:hover { background: rgba(255, 255, 255, .7); }
 /* Na tmavých kartách je světlé tlačítko plně bílé */
-.bg-sand .btn-light, .bg-dark .btn-light, .final-cta .btn-light { background: var(--white); box-shadow: none; }
-.bg-sand .btn-light:hover, .bg-dark .btn-light:hover, .final-cta .btn-light:hover { background: #f1f1f3; }
+.bg-sand .btn-light, .bg-dark .btn-light, .final-cta .btn-light {
+  background: rgba(255, 255, 255, .82);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 14px 30px -12px rgba(0,0,0,.4), inset 0 1px 0 0 #fff;
+}
+.bg-sand .btn-light:hover, .bg-dark .btn-light:hover, .final-cta .btn-light:hover { background: rgba(255, 255, 255, .95); }
 /* Tlumená pilulka: vedlejší akce na světlém podkladu */
 .btn-muted { background: var(--gray-100); color: var(--black); }
 .btn-muted:hover { background: rgba(56, 56, 68, .12); }
 /* Průsvitná pilulka na tmavém podkladu */
 .btn-outline {
-  background: rgba(255,255,255,.14);
+  background: rgba(255,255,255,.1);
   color: var(--white);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: inset 0 1px 0 0 rgba(255,255,255,.28), inset 0 0 0 1px rgba(255,255,255,.08);
 }
-.btn-outline:hover { background: rgba(255,255,255,.22); }
+.btn-outline:hover { background: rgba(255,255,255,.18); }
 .btn-sm { min-height: 44px; padding: 0 22px; font-size: var(--fs-sm); }
 
 .link-arrow {
@@ -209,15 +217,15 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; letter-spacing:
    dopředu jako skleněná vrstva se stínem (plynulá animace) */
 .header-bar {
   background: rgba(255, 255, 255, 0);
-  -webkit-backdrop-filter: blur(22px) saturate(180%);
-  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(26px) saturate(200%);
+  backdrop-filter: blur(26px) saturate(200%);
   border-radius: 999px;
   box-shadow: 0 0 0 rgba(56,56,69,0), 0 0 0 rgba(63,63,94,0), inset 0 1px 0 0 rgba(255,255,255,0);
   transform: translateY(0) scale(1);
   transition: background .55s var(--ease), box-shadow .55s var(--ease), transform .55s var(--ease);
 }
 .site-header.scrolled .header-bar {
-  background: rgba(255, 255, 255, .62);
+  background: rgba(255, 255, 255, .42);
   box-shadow: var(--nav-shadow);
   transform: translateY(0) scale(1);
 }
@@ -430,9 +438,17 @@ body.menu-open .mobile-menu { opacity: 1; visibility: visible; }
   background: var(--dark);
   color: var(--white);
   border-radius: 32px;
-  margin-left: 16px;
-  margin-right: 16px;
   overflow: hidden;
+}
+/* Všechny kartové sekce mají šířku obsahu kontejneru, aby byly boxy stejně široké */
+.bg-dark, .bg-sand, .edge-split, .switch-section {
+  width: calc(100% - 48px);
+  max-width: 1344px;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (min-width: 1024px) {
+  .bg-dark, .bg-sand, .edge-split, .switch-section { width: calc(100% - 96px); }
 }
 /* Mezera mezi dvěma kartovými sekcemi za sebou (tmavá, bílá plnoformátová) */
 .bg-dark + .bg-dark, .bg-sand + .bg-sand, .bg-dark + .bg-sand, .bg-sand + .bg-dark,
@@ -687,7 +703,6 @@ body.detail-open .detail-drawer { transform: none; }
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   background: var(--white);
   border-radius: 32px;
-  margin: 0 16px;
   overflow: hidden;
 }
 @media (max-width: 900px) { .switch-section { grid-template-columns: 1fr; } }
@@ -695,10 +710,10 @@ body.detail-open .detail-drawer { transform: none; }
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: clamp(56px, 8vw, 120px) 48px clamp(56px, 8vw, 120px) max(24px, calc((100vw - 1440px) / 2 + 48px));
+  padding: clamp(48px, 7vw, 104px) clamp(28px, 4.5vw, 72px);
 }
 @media (max-width: 900px) {
-  .switch-left { padding: 56px 24px; }
+  .switch-left { padding: 48px 24px; }
 }
 .switch-words { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
 .switch-word {
@@ -745,7 +760,6 @@ body.detail-open .detail-drawer { transform: none; }
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   background: var(--white);
   border-radius: 32px;
-  margin: 0 16px;
   overflow: hidden;
 }
 .edge-split + .edge-split { margin-top: 16px; }
@@ -755,13 +769,10 @@ body.detail-open .detail-drawer { transform: none; }
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  padding: clamp(56px, 8vw, 120px) 48px clamp(56px, 8vw, 120px) max(24px, calc((100vw - 1440px) / 2 + 48px));
+  padding: clamp(48px, 7vw, 104px) clamp(28px, 4.5vw, 72px);
 }
 /* Varianta s fotkou vlevo a textem vpravo */
 .edge-split.flip .media { order: -1; }
-.edge-split.flip .content {
-  padding: clamp(56px, 8vw, 120px) max(24px, calc((100vw - 1440px) / 2 + 48px)) clamp(56px, 8vw, 120px) 48px;
-}
 @media (max-width: 900px) {
   .edge-split .content, .edge-split.flip .content { padding: 48px 24px 56px; }
   .edge-split.flip .media { order: 0; }
@@ -826,8 +837,6 @@ body.detail-open .detail-drawer { transform: none; }
   object-position: center bottom;
   opacity: 0;
   z-index: 1;
-  /* Bílý podklad fotografie splyne se stránkou a slovo v pozadí prosvítá */
-  mix-blend-mode: multiply;
   /* Čisté plynulé prolnutí mezi polohami, bez přibližování */
   transition: opacity .9s ease-in-out;
 }
@@ -869,7 +878,8 @@ body.detail-open .detail-drawer { transform: none; }
   overflow: hidden;
   /* Poměr stran shodný s fotografiemi, postel je vždy vidět celá */
   aspect-ratio: 2560 / 1271;
-  background: #f5efe9;
+  /* Fotografie mají průhledné pozadí, rentgen leží přímo na šedé stránce */
+  background: transparent;
   user-select: none;
   touch-action: none;
 }
@@ -886,7 +896,8 @@ body.detail-open .detail-drawer { transform: none; }
   top: 0; bottom: 0;
   left: 50%;
   width: 2px;
-  background: rgba(255,255,255,.9);
+  background: rgba(255,255,255,.95);
+  box-shadow: 0 0 0 1px rgba(56,56,68,.08);
   z-index: 4;
   cursor: ew-resize;
 }
@@ -1039,6 +1050,7 @@ body.detail-open .detail-drawer { transform: none; }
 .counter.visible .num { filter: blur(0); opacity: 1; }
 /* Světlá varianta na šedém podkladu (homepage pod videem) */
 .counters-light { margin-top: 0; gap: 24px; }
+.section-head + .counters-light { margin-top: clamp(40px, 5vw, 72px); }
 .counters-light .counter { padding-top: 28px; border-top: 1px solid var(--gray-200); }
 .counters-light .counter .num { color: var(--black); }
 .counters-light .counter .cap { color: var(--gray-500); font-size: var(--fs-base); }
@@ -2160,5 +2172,5 @@ a, button { -webkit-tap-highlight-color: transparent; }
   /* Na úzkém displeji nechť nadpisy zalamuje prohlížeč, ne pevné zlomy řádků */
   .h-hero br, .h-xl br { display: none; }
   /* Kartové sekce mají na mobilu menší odsazení od okrajů */
-  .bg-dark, .bg-sand, .edge-split, .switch-section { margin-left: 10px; margin-right: 10px; border-radius: 24px; }
+  .bg-dark, .bg-sand, .edge-split, .switch-section { border-radius: 24px; }
 }
