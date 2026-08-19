@@ -207,11 +207,16 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; letter-spacing:
 /* ---------- Header: plovoucí skleněná pilulka ---------- */
 .site-header {
   position: fixed;
-  left: 16px; right: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  /* Stejná šířka jako boxy obsahu */
+  width: calc(100% - 48px);
+  max-width: 1344px;
   top: 24px;
   z-index: 100;
   transition: top .5s var(--ease);
 }
+@media (min-width: 1024px) { .site-header { width: calc(100% - 96px); } }
 .site-header.scrolled { top: 14px; }
 
 /* Úplně nahoře lišta splývá s pozadím stránky, po odscrollování vystoupí
@@ -310,7 +315,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; letter-spacing:
 .mobile-toggle { display: none; }
 
 @media (max-width: 1023px) {
-  .site-header { left: 12px; right: 12px; top: 14px; }
+  .site-header { width: calc(100% - 24px); top: 14px; }
   .site-header.scrolled { top: 10px; }
   .main-nav, .nav-right .lang { display: none; }
   .header-inner { height: 60px; padding: 0 8px 0 18px; gap: 12px; }
