@@ -755,7 +755,10 @@ body.detail-open .detail-drawer { transform: none; }
 .stack-card .media.media-contain img { object-fit: contain; padding: clamp(12px, 2vw, 28px); }
 
 /* Skleněné karty: lehce průsvitné, přes sklo prosvítá karta pod nimi.
-   Jemný světlý rámeček podtrhuje skleněný vzhled. */
+   Jemný světlý rámeček podtrhuje skleněný vzhled.
+   Text zabírá 30 % šířky, obrázek 70 %. */
+.stack-glass .stack-card { grid-template-columns: minmax(0, 3fr) minmax(0, 7fr); }
+@media (max-width: 900px) { .stack-glass .stack-card { grid-template-columns: 1fr; } }
 .stack-glass .stack-card {
   background: rgba(255, 255, 255, .55);
   -webkit-backdrop-filter: blur(22px) saturate(170%);
@@ -771,10 +774,19 @@ body.detail-open .detail-drawer { transform: none; }
    Obrázek je celý, maximálně velký a zarovnaný k pravému spodnímu rohu karty. */
 .stack-glass .stack-card .media.media-contain { background: transparent; }
 .stack-glass .stack-card .media.media-contain img {
+  /* Fotka drží u pravého spodního rohu a zabírá téměř celou výšku karty */
+  position: absolute;
+  inset: auto 0 0 auto;
+  width: auto; height: 88%;
+  max-width: 100%;
   object-fit: contain;
   object-position: right bottom;
   padding: 0;
   filter: drop-shadow(0 22px 26px rgba(56, 56, 68, .25));
+}
+@media (max-width: 900px) {
+  .stack-glass .stack-card .media.media-contain { min-height: 300px; }
+  .stack-glass .stack-card .media.media-contain img { height: 100%; }
 }
 @media (max-width: 900px) {
   .stack-card { grid-template-columns: 1fr; border-radius: 24px; min-height: 0; }
