@@ -2212,14 +2212,19 @@ body.detail-open .detail-drawer { transform: none; }
   width: calc(100% - 48px);
   max-width: 1344px;
   margin: 0 auto;
-  height: min(calc(100svh - 160px), 680px);
+  /* Video na výšku celé obrazovky, text volně na pozadí stránky */
+  height: calc(100svh - 48px);
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  border-radius: 32px;
-  overflow: hidden;
+  gap: clamp(28px, 4vw, 72px);
 }
 @media (min-width: 1024px) { .craft-card { width: calc(100% - 96px); } }
-.craft-video { position: relative; }
+.craft-video {
+  position: relative;
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow: 0 24px 48px -28px rgba(56, 56, 68, .25);
+}
 .craft-video video {
   position: absolute;
   inset: 0;
@@ -2237,7 +2242,7 @@ body.detail-open .detail-drawer { transform: none; }
   flex-direction: column;
   justify-content: center;
   gap: 18px;
-  padding: clamp(32px, 4vw, 64px);
+  padding: 0;
   will-change: transform, opacity;
 }
 .craft-step h2 {
@@ -2248,14 +2253,14 @@ body.detail-open .detail-drawer { transform: none; }
 }
 .craft-step p { color: var(--gray-700); max-width: 44ch; }
 @media (max-width: 900px) {
-  .craft-card { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; height: min(calc(100svh - 120px), 760px); border-radius: 24px; }
-  .craft-step { justify-content: center; padding: 24px; }
+  .craft-card { grid-template-columns: 1fr; grid-template-rows: 3fr 2fr; height: calc(100svh - 32px); gap: 20px; }
+  .craft-video { border-radius: 24px; }
 }
 
 /* ---------- Jednotné sklo: všechny bílé boxy mají stejnou průsvitnou barvu a rámeček ---------- */
 .usp, .feature-card, .b2b-card, .scenario-card, .product-card,
 .review-card:not(.big), .m-card, .stat-card, .stack-card, .edge-split,
-.summary-card, .doc-card, .legal-note, .done-next, .konf-stage, .xray-wrap, .partner-logo, .craft-card {
+.summary-card, .doc-card, .legal-note, .done-next, .konf-stage, .xray-wrap, .partner-logo {
   background: rgba(255, 255, 255, .55);
   -webkit-backdrop-filter: blur(22px) saturate(170%);
   backdrop-filter: blur(22px) saturate(170%);
