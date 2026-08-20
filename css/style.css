@@ -774,6 +774,7 @@ body.detail-open .detail-drawer { transform: none; }
   object-fit: contain;
   object-position: right bottom;
   padding: 0;
+  filter: drop-shadow(0 22px 26px rgba(56, 56, 68, .25));
 }
 @media (max-width: 900px) {
   .stack-card { grid-template-columns: 1fr; border-radius: 24px; min-height: 0; }
@@ -2180,6 +2181,20 @@ body.detail-open .detail-drawer { transform: none; }
   font-weight: 500;
   letter-spacing: -.02em;
   line-height: 1.25;
+}
+
+/* ---------- Jednotné sklo: všechny bílé boxy mají stejnou průsvitnou barvu a rámeček ---------- */
+.usp, .feature-card, .b2b-card, .scenario-card, .product-card,
+.review-card:not(.big), .m-card, .stat-card, .stack-card, .edge-split,
+.summary-card, .doc-card, .legal-note, .done-next, .konf-stage, .xray-wrap, .partner-logo {
+  background: rgba(255, 255, 255, .55);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  backdrop-filter: blur(22px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, .75);
+  box-shadow:
+    0 24px 48px -28px rgba(56, 56, 68, .18),
+    inset 0 1px 0 0 rgba(255, 255, 255, .9),
+    inset 0 0 0 1px rgba(255, 255, 255, .25);
 }
 
 /* ---------- Drobnosti ---------- */
