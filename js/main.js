@@ -177,6 +177,49 @@
     update();
   });
 
+  /* ---------- Výroba: ukotvené video, texty kroků projíždějí zespodu nahoru ---------- */
+  document.querySelectorAll('[data-craft]').forEach((root) => {
+    const sticky = root.querySelector('.craft-sticky');
+    const steps = [...root.querySelectorAll('.craft-step')];
+    const vids = [...root.querySelectorAll('.craft-video video')];
+    if (!steps.length) return;
+    let ticking = false;
+    let aktivni = -1;
+
+    function update() {
+      ticking = false;
+      const rect = root.getBoundingClientRect();
+      const drahaCelkem = rect.height - sticky.offsetHeight;
+      const p = Math.min(1, Math.max(0, -rect.top / drahaCelkem));
+      const x = p * steps.length;
+      const idx = Math.min(steps.length - 1, Math.floor(x));
+      if (idx !== aktivni) {
+        aktivni = idx;
+        vids.forEach((v, i) => {
+          v.classList.toggle('active', i === idx);
+          if (i !== idx) v.pause();
+        });
+      }
+      /* Aktivní video se vždy dohraje, i kdyby dřívější spuštění prohlížeč zablokoval */
+      const av = vids[idx];
+      if (av && av.paused) { const pl = av.play(); if (pl) pl.catch(() => {}); }
+      steps.forEach((st, i) => {
+        /* local: 0 = krok začíná (text dole), 0.5 = uprostřed, 1 = končí (text nahoře) */
+        const local = Math.min(1.4, Math.max(-0.4, x - i));
+        const y = (0.5 - local) * 110;
+        const op = Math.max(0, 1 - Math.abs(local - 0.5) * 2);
+        st.style.transform = 'translateY(' + y.toFixed(2) + '%)';
+        st.style.opacity = op.toFixed(3);
+      });
+    }
+    function onScrollCraft() {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }
+    window.addEventListener('scroll', onScrollCraft, { passive: true });
+    window.addEventListener('resize', onScrollCraft);
+    update();
+  });
+
   /* ---------- Chytrý obrázek: polohy postele ---------- */
   document.querySelectorAll('[data-positions]').forEach((root) => {
     const btns = [...root.querySelectorAll('.pos-btn')];

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>evobeds | Chytrá elektrická polohovací postel</title>
   <meta name="description" content="Když běžná postel nestačí, domov může zůstat domovem. evobeds je chytrá elektrická polohovací postel s designem domácího nábytku a funkcemi zdravotnického lůžka. Česká výroba.">
-  <link rel="stylesheet" href="css/style.css?v=34">
+  <link rel="stylesheet" href="css/style.css?v=35">
   <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
@@ -157,7 +157,7 @@
   <!-- Systém postele: hotspoty -->
   <section class="section bg-off" id="postel">
     <div class="container">
-      <div class="section-head center reveal">
+      <div class="section-head reveal">
         <p class="eyebrow">Systém postele</p>
         <h2 class="h-xl">Jedna postel.<br>Vše, co péče potřebuje.</h2>
         <p class="lead">Funkce zdravotnického lůžka, vzhled moderní domácí postele. Prozkoumejte klíčové body. Každý detail evobeds má svůj důvod.</p>
@@ -300,29 +300,31 @@
     </div>
   </section>
 
-  <!-- Výroba: vrstvící se karty s videi -->
-  <section class="stack-section" data-stack style="margin-bottom:clamp(64px,9vw,128px)">
-    <article class="stack-card">
-      <div class="media"><video autoplay muted loop playsinline preload="metadata" poster="assets/img/vyroba-4-poster.jpg"><source src="assets/video/vyroba-4.mp4" type="video/mp4"></video></div>
-      <div class="content content-bottom">
-        <h2>Řezání a lakování rámů</h2>
-        <p>Každý rám vzniká z české oceli. Díly řežeme laserem s vysokou přesností a lakujeme barvou, která vydrží roky každodenního provozu.</p>
+  <!-- Výroba: ukotvené video vlevo, texty kroků projíždějí vpravo -->
+  <section class="craft-scroll" data-craft style="margin-bottom:clamp(64px,9vw,128px)">
+    <div class="craft-sticky">
+      <div class="craft-card">
+        <div class="craft-video">
+          <video class="active" autoplay muted loop playsinline preload="metadata" poster="assets/img/vyroba-4-poster.jpg"><source src="assets/video/vyroba-4.mp4" type="video/mp4"></video>
+          <video muted loop playsinline preload="metadata" poster="assets/img/vyroba-2-poster.jpg"><source src="assets/video/vyroba-2.mp4" type="video/mp4"></video>
+          <video muted loop playsinline preload="metadata" poster="assets/img/vyroba-3-poster.jpg"><source src="assets/video/vyroba-3.mp4" type="video/mp4"></video>
+        </div>
+        <div class="craft-texts">
+          <div class="craft-step">
+            <h2>Řezání a lakování rámů</h2>
+            <p>Každý rám vzniká z české oceli. Díly řežeme laserem s vysokou přesností a lakujeme barvou, která vydrží roky každodenního provozu.</p>
+          </div>
+          <div class="craft-step">
+            <h2>Kompletace</h2>
+            <p>Postel sestavují zkušení technici ručně. Každý spoj, motor i rošt projde jejich rukama, než postel opustí dílnu.</p>
+          </div>
+          <div class="craft-step">
+            <h2>Výstupní kontrola</h2>
+            <p>Před expedicí každou postel rozpohybujeme a vyzkoušíme všechny funkce. K vám domů odjíždí jen postel, za kterou si stojíme.</p>
+          </div>
+        </div>
       </div>
-    </article>
-    <article class="stack-card">
-      <div class="media"><video autoplay muted loop playsinline preload="metadata" poster="assets/img/vyroba-2-poster.jpg"><source src="assets/video/vyroba-2.mp4" type="video/mp4"></video></div>
-      <div class="content content-bottom">
-        <h2>Kompletace</h2>
-        <p>Postel sestavují zkušení technici ručně. Každý spoj, motor i rošt projde jejich rukama, než postel opustí dílnu.</p>
-      </div>
-    </article>
-    <article class="stack-card">
-      <div class="media"><video autoplay muted loop playsinline preload="metadata" poster="assets/img/vyroba-3-poster.jpg"><source src="assets/video/vyroba-3.mp4" type="video/mp4"></video></div>
-      <div class="content content-bottom">
-        <h2>Výstupní kontrola</h2>
-        <p>Před expedicí každou postel rozpohybujeme a vyzkoušíme všechny funkce. K vám domů odjíždí jen postel, za kterou si stojíme.</p>
-      </div>
-    </article>
+    </div>
   </section>
 
   <!-- Příběhy: proč právě tato postel + skuteční lidé -->
@@ -682,6 +684,6 @@
     </div>
   </footer>
 
-  <script src="js/main.js?v=5"></script>
+  <script src="js/main.js?v=8"></script>
 </body>
 </html>
