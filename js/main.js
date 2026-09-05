@@ -220,6 +220,39 @@
     update();
   });
 
+  /* ---------- Vodorovné projíždění karet: rolování stránky posouvá lištu ---------- */
+  document.querySelectorAll('section[data-hscroll]').forEach((root) => {
+    const sticky = root.querySelector('.hscroll-sticky');
+    const rail = root.querySelector('.cards-rail');
+    if (!sticky || !rail) return;
+    const mq = window.matchMedia('(min-width: 900px)');
+    let ticking = false;
+
+    function maxPosun() { return Math.max(0, rail.scrollWidth - rail.clientWidth); }
+
+    function layout() {
+      /* Výška sekce = obrazovka + dráha vodorovného posunu */
+      root.style.height = mq.matches ? (sticky.offsetHeight + maxPosun()) + 'px' : '';
+    }
+    function update() {
+      ticking = false;
+      if (!mq.matches) return;
+      const rect = root.getBoundingClientRect();
+      const draha = rect.height - sticky.offsetHeight;
+      if (draha <= 0) return;
+      const p = Math.min(1, Math.max(0, -rect.top / draha));
+      rail.scrollLeft = p * maxPosun();
+    }
+    function onScrollH() {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }
+    window.addEventListener('scroll', onScrollH, { passive: true });
+    window.addEventListener('resize', () => { layout(); onScrollH(); });
+    /* Rozměry se dopočítají až po načtení fotek karet */
+    window.addEventListener('load', () => { layout(); onScrollH(); });
+    layout(); update();
+  });
+
   /* ---------- Chytrý obrázek: polohy postele ---------- */
   document.querySelectorAll('[data-positions]').forEach((root) => {
     const btns = [...root.querySelectorAll('.pos-btn')];

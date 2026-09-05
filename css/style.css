@@ -1030,6 +1030,22 @@ body.detail-open .detail-drawer { transform: none; }
   margin-bottom: clamp(32px, 4vw, 56px);
 }
 
+/* ---------- Vodorovné projíždění karet podle rolování (scrollytelling) ---------- */
+@media (min-width: 900px) {
+  section[data-hscroll] { position: relative; padding: 0; }
+  section[data-hscroll] .hscroll-sticky {
+    position: sticky;
+    top: 0;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  /* Posun řídí rolování stránky, šipky ani přichytávání tu nedávají smysl */
+  section[data-hscroll] .rail-arrows { display: none; }
+  section[data-hscroll] .cards-rail { scroll-snap-type: none; scroll-behavior: auto; }
+}
+
 /* ---------- Statistiky ---------- */
 .stats-grid {
   display: grid;
