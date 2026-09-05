@@ -726,6 +726,10 @@ body.detail-open .detail-drawer { transform: none; }
 .stack-card:nth-child(1) { top: 104px; }
 .stack-card:nth-child(2) { top: 118px; }
 .stack-card:nth-child(3) { top: 132px; }
+/* Po ukotvení poslední karty zůstane celé souvrství chvíli stát,
+   aby byly vidět stejné proužky všech tří karet nad sebou.
+   Rozpěrka musí být obsahem sekce, o padding se ukotvení opřít neumí. */
+.stack-section::after { content: ''; display: block; height: clamp(300px, 45svh, 480px); }
 .stack-card + .stack-card { margin-top: 24px; }
 .stack-card .content {
   display: flex;
