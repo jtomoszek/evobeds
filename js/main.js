@@ -211,11 +211,11 @@
           scale = lerp(.8, 1, t);
           op = 1;
         } else {
-          /* odjíždí doleva pod text a mizí */
+          /* zůstává skoro na místě, vzdaluje se a rozplývá, než ho překryje další video */
           const t = ease(off);
-          tx = lerp(stred, -slideW * .7, t);
-          scale = lerp(1, .82, t);
-          op = 1 - t;
+          tx = lerp(stred, stred - slideW * .12, t);
+          scale = lerp(1, .7, t);
+          op = 1 - Math.min(1, t * 1.6);
         }
         sl.style.transform = 'translateX(' + tx.toFixed(1) + 'px) scale(' + scale.toFixed(3) + ')';
         sl.style.opacity = op.toFixed(3);
@@ -234,6 +234,39 @@
     window.addEventListener('scroll', onScrollCraft, { passive: true });
     window.addEventListener('resize', onScrollCraft);
     update();
+  });
+
+  /* ---------- Vodorovné projíždění karet: rolování stránky posouvá lištu ---------- */
+  document.querySelectorAll('section[data-hscroll]').forEach((root) => {
+    const sticky = root.querySelector('.hscroll-sticky');
+    const rail = root.querySelector('.cards-rail');
+    if (!sticky || !rail) return;
+    const mq = window.matchMedia('(min-width: 900px)');
+    let ticking = false;
+
+    function maxPosun() { return Math.max(0, rail.scrollWidth - rail.clientWidth); }
+
+    function layout() {
+      /* Výška sekce = obrazovka + dráha vodorovného posunu */
+      root.style.height = mq.matches ? (sticky.offsetHeight + maxPosun()) + 'px' : '';
+    }
+    function update() {
+      ticking = false;
+      if (!mq.matches) return;
+      const rect = root.getBoundingClientRect();
+      const draha = rect.height - sticky.offsetHeight;
+      if (draha <= 0) return;
+      const p = Math.min(1, Math.max(0, -rect.top / draha));
+      rail.scrollLeft = p * maxPosun();
+    }
+    function onScrollH() {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }
+    window.addEventListener('scroll', onScrollH, { passive: true });
+    window.addEventListener('resize', () => { layout(); onScrollH(); });
+    /* Rozměry se dopočítají až po načtení fotek karet */
+    window.addEventListener('load', () => { layout(); onScrollH(); });
+    layout(); update();
   });
 
   /* ---------- Chytrý obrázek: polohy postele ---------- */
