@@ -177,40 +177,56 @@
     update();
   });
 
-  /* ---------- Výroba: ukotvené video, texty kroků projíždějí zespodu nahoru ---------- */
+  /* ---------- Výroba: videa přijíždějí zprava, přehrají se a odjedou doleva ---------- */
   document.querySelectorAll('[data-craft]').forEach((root) => {
     const sticky = root.querySelector('.craft-sticky');
-    const steps = [...root.querySelectorAll('.craft-step')];
-    const vids = [...root.querySelectorAll('.craft-video video')];
-    if (!steps.length) return;
+    const stage = root.querySelector('.craft-stage');
+    const slides = [...root.querySelectorAll('.craft-slide')];
+    const kroky = [...root.querySelectorAll('.craft-steps-list li')];
+    if (!slides.length) return;
     let ticking = false;
-    let aktivni = -1;
+
+    const lerp = (a, b, t) => a + (b - a) * t;
+    const ease = (t) => t * t * (3 - 2 * t); /* plynulý dojezd */
 
     function update() {
       ticking = false;
       const rect = root.getBoundingClientRect();
-      const drahaCelkem = rect.height - sticky.offsetHeight;
-      const p = Math.min(1, Math.max(0, -rect.top / drahaCelkem));
-      const x = p * steps.length;
-      const idx = Math.min(steps.length - 1, Math.floor(x));
-      if (idx !== aktivni) {
-        aktivni = idx;
-        vids.forEach((v, i) => {
-          v.classList.toggle('active', i === idx);
-          if (i !== idx) v.pause();
-        });
-      }
-      /* Aktivní video se vždy dohraje, i kdyby dřívější spuštění prohlížeč zablokoval */
-      const av = vids[idx];
-      if (av && av.paused) { const pl = av.play(); if (pl) pl.catch(() => {}); }
-      steps.forEach((st, i) => {
-        /* local: 0 = krok začíná (text dole), 0.5 = uprostřed, 1 = končí (text nahoře) */
-        const local = Math.min(1.4, Math.max(-0.4, x - i));
-        const y = (0.5 - local) * 110;
-        const op = Math.max(0, 1 - Math.abs(local - 0.5) * 2);
-        st.style.transform = 'translateY(' + y.toFixed(2) + '%)';
-        st.style.opacity = op.toFixed(3);
+      const draha = rect.height - sticky.offsetHeight;
+      if (draha <= 0) return;
+      const p = Math.min(1, Math.max(0, -rect.top / draha));
+      const x = p * (slides.length - 1);
+      const idx = Math.min(slides.length - 1, Math.round(x));
+      const stageW = stage.clientWidth;
+
+      slides.forEach((sl, i) => {
+        const off = Math.min(1, Math.max(-1, x - i));
+        const slideW = sl.offsetWidth;
+        const stred = (stageW - slideW) / 2;
+        let tx, scale, op;
+        if (off < 0) {
+          /* přijíždí zprava a roste */
+          const t = ease(1 + off);
+          tx = lerp(stageW + 60, stred, t);
+          scale = lerp(.8, 1, t);
+          op = 1;
+        } else {
+          /* odjíždí doleva pod text a mizí */
+          const t = ease(off);
+          tx = lerp(stred, -slideW * .7, t);
+          scale = lerp(1, .82, t);
+          op = 1 - t;
+        }
+        sl.style.transform = 'translateX(' + tx.toFixed(1) + 'px) scale(' + scale.toFixed(3) + ')';
+        sl.style.opacity = op.toFixed(3);
+        sl.style.zIndex = off < 0 ? 3 : (off > 0 ? 1 : 2);
+        const v = sl.querySelector('video');
+        if (v) {
+          if (Math.abs(off) < .35) { if (v.paused) { const pl = v.play(); if (pl) pl.catch(() => {}); } }
+          else if (!v.paused) v.pause();
+        }
       });
+      kroky.forEach((k, i) => k.classList.toggle('active', i === idx));
     }
     function onScrollCraft() {
       if (!ticking) { ticking = true; requestAnimationFrame(update); }
@@ -218,39 +234,6 @@
     window.addEventListener('scroll', onScrollCraft, { passive: true });
     window.addEventListener('resize', onScrollCraft);
     update();
-  });
-
-  /* ---------- Vodorovné projíždění karet: rolování stránky posouvá lištu ---------- */
-  document.querySelectorAll('section[data-hscroll]').forEach((root) => {
-    const sticky = root.querySelector('.hscroll-sticky');
-    const rail = root.querySelector('.cards-rail');
-    if (!sticky || !rail) return;
-    const mq = window.matchMedia('(min-width: 900px)');
-    let ticking = false;
-
-    function maxPosun() { return Math.max(0, rail.scrollWidth - rail.clientWidth); }
-
-    function layout() {
-      /* Výška sekce = obrazovka + dráha vodorovného posunu */
-      root.style.height = mq.matches ? (sticky.offsetHeight + maxPosun()) + 'px' : '';
-    }
-    function update() {
-      ticking = false;
-      if (!mq.matches) return;
-      const rect = root.getBoundingClientRect();
-      const draha = rect.height - sticky.offsetHeight;
-      if (draha <= 0) return;
-      const p = Math.min(1, Math.max(0, -rect.top / draha));
-      rail.scrollLeft = p * maxPosun();
-    }
-    function onScrollH() {
-      if (!ticking) { ticking = true; requestAnimationFrame(update); }
-    }
-    window.addEventListener('scroll', onScrollH, { passive: true });
-    window.addEventListener('resize', () => { layout(); onScrollH(); });
-    /* Rozměry se dopočítají až po načtení fotek karet */
-    window.addEventListener('load', () => { layout(); onScrollH(); });
-    layout(); update();
   });
 
   /* ---------- Chytrý obrázek: polohy postele ---------- */

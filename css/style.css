@@ -2215,11 +2215,11 @@ body.detail-open .detail-drawer { transform: none; }
   line-height: 1.25;
 }
 
-/* ---------- Výroba: ukotvené video, texty kroků projíždějí ---------- */
+/* ---------- Výroba: text vlevo, videa přijíždějí zprava a mizí vlevo ---------- */
 .craft-scroll {
   position: relative;
   /* Délka rolování: tři kroky */
-  height: 320svh;
+  height: 340svh;
 }
 .craft-sticky {
   position: sticky;
@@ -2227,54 +2227,86 @@ body.detail-open .detail-drawer { transform: none; }
   height: 100svh;
   display: flex;
   align-items: center;
-}
-.craft-card {
-  width: calc(100% - 48px);
-  max-width: 1344px;
-  margin: 0 auto;
-  /* Video na výšku celé obrazovky, text volně na pozadí stránky */
-  height: calc(100svh - 48px);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(28px, 4vw, 72px);
-}
-@media (min-width: 1024px) { .craft-card { width: calc(100% - 96px); } }
-.craft-video {
-  position: relative;
-  border-radius: 32px;
   overflow: hidden;
-  box-shadow: 0 24px 48px -28px rgba(56, 56, 68, .25);
 }
-.craft-video video {
+.craft-layout {
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  gap: clamp(32px, 5vw, 96px);
+  align-items: center;
+}
+.craft-left { display: flex; flex-direction: column; gap: 20px; }
+.craft-left h2 { margin: 0; }
+.craft-lead { color: var(--gray-700); max-width: 46ch; }
+.craft-steps-list {
+  list-style: none;
+  margin: clamp(20px, 3vw, 44px) 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+.craft-steps-list li {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--gray-400);
+  padding: 9px 16px;
+  border-radius: 100px;
+  border: 1px solid transparent;
+  transition: color .3s, background .3s, border-color .3s;
+}
+.craft-steps-list li.active {
+  color: var(--black);
+  background: rgba(56, 56, 68, .07);
+  border-color: rgba(56, 56, 68, .14);
+}
+/* Jeviště s videokartami */
+.craft-stage {
+  position: relative;
+  height: min(76svh, 760px);
+}
+.craft-slide {
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  width: min(82%, 560px);
+  border-radius: 28px;
+  overflow: hidden;
+  background: var(--dark);
+  box-shadow: 0 30px 60px -30px rgba(56, 56, 68, .35);
+  will-change: transform, opacity;
+  display: flex;
+  align-items: flex-end;
+}
+.craft-slide video {
   position: absolute;
   inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
-  opacity: 0;
-  transition: opacity .5s var(--ease);
 }
-.craft-video video.active { opacity: 1; }
-.craft-texts { position: relative; overflow: hidden; }
-.craft-step {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 18px;
-  padding: 0;
-  will-change: transform, opacity;
+.craft-slide .cap {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: 26px 26px 28px;
+  color: #fff;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, .72));
 }
-.craft-step h2 {
-  font-size: clamp(30px, 3.2vw, 48px);
-  font-weight: 400;
-  line-height: 1.02;
-  letter-spacing: -.04em;
+.craft-slide .cap h3 {
+  font-family: var(--font);
+  font-size: var(--fs-lg);
+  font-weight: 500;
+  letter-spacing: -.02em;
+  margin-bottom: 6px;
 }
-.craft-step p { color: var(--gray-700); max-width: 44ch; }
+.craft-slide .cap p { font-size: var(--fs-sm); color: rgba(255, 255, 255, .85); max-width: 46ch; }
 @media (max-width: 900px) {
-  .craft-card { grid-template-columns: 1fr; grid-template-rows: 3fr 2fr; height: calc(100svh - 32px); gap: 20px; }
-  .craft-video { border-radius: 24px; }
+  .craft-layout { grid-template-columns: 1fr; gap: 24px; align-content: center; }
+  .craft-left { gap: 12px; }
+  .craft-steps-list { flex-direction: row; flex-wrap: wrap; margin-top: 8px; }
+  .craft-stage { height: min(52svh, 520px); }
+  .craft-slide { width: min(88%, 420px); border-radius: 24px; }
 }
 
 /* ---------- Jednotné sklo: všechny bílé boxy mají stejnou průsvitnou barvu a rámeček ---------- */
