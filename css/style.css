@@ -2311,6 +2311,43 @@ body.detail-open .detail-drawer { transform: none; }
   .craft-slide { width: min(88%, 420px); border-radius: 24px; }
 }
 
+/* ---------- Reference: loga partnerů a seznam realizací ---------- */
+.ref-logos {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+@media (max-width: 900px) { .ref-logos { grid-template-columns: repeat(2, 1fr); } }
+.ref-logo {
+  background: rgba(255, 255, 255, .55);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  backdrop-filter: blur(22px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, .75);
+  border-radius: 20px;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 28px;
+}
+.ref-logo img { max-height: 64px; max-width: 100%; width: auto; object-fit: contain; }
+/* Bílá loga dostanou tmavou kartu */
+.ref-logo.dark { background: var(--dark); border-color: transparent; }
+
+.ref-list { display: flex; flex-direction: column; }
+.ref-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
+  padding: 22px 0;
+  border-top: 1px solid var(--gray-200);
+}
+.ref-row:last-child { border-bottom: 1px solid var(--gray-200); }
+.ref-row .t { font-size: var(--fs-lg); font-weight: 500; letter-spacing: -.02em; }
+.ref-row .d { font-size: var(--fs-sm); color: var(--gray-500); white-space: nowrap; }
+.ref-note { margin-top: 24px; font-size: var(--fs-sm); color: var(--gray-500); }
+
 /* ---------- Jednotné sklo: všechny bílé boxy mají stejnou průsvitnou barvu a rámeček ---------- */
 .usp, .feature-card, .b2b-card, .scenario-card, .product-card,
 .review-card:not(.big), .m-card, .stat-card, .stack-card, .edge-split,
