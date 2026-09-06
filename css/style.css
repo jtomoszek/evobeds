@@ -2348,6 +2348,62 @@ body.detail-open .detail-drawer { transform: none; }
 .ref-row .d { font-size: var(--fs-sm); color: var(--gray-500); white-space: nowrap; }
 .ref-note { margin-top: 24px; font-size: var(--fs-sm); color: var(--gray-500); }
 
+/* Případové studie */
+.case {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+  gap: clamp(28px, 4vw, 72px);
+  align-items: center;
+  padding: clamp(40px, 5vw, 72px) 0;
+  border-top: 1px solid var(--gray-200);
+}
+.case.flip .case-media { order: 2; }
+@media (max-width: 900px) {
+  .case { grid-template-columns: 1fr; gap: 24px; }
+  .case.flip .case-media { order: 0; }
+}
+.case-media { display: flex; flex-direction: column; gap: 12px; }
+.case-media img {
+  border-radius: 20px;
+  width: 100%;
+  object-fit: cover;
+}
+.case-media .big { aspect-ratio: 16 / 10; }
+.case-media .thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.case-media .thumbs img { aspect-ratio: 4 / 3; }
+.case-body { display: flex; flex-direction: column; gap: 18px; }
+.case-body h3 {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 2.6vw, 38px);
+  font-weight: 400;
+  letter-spacing: -.035em;
+  line-height: 1.05;
+}
+.case-block h4 {
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--gray-500);
+  margin-bottom: 4px;
+}
+.case-block p { font-size: var(--fs-sm); color: var(--gray-700); max-width: 52ch; }
+
+/* Fotografie z Pražského hradu */
+.prez-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@media (max-width: 767px) { .prez-grid { grid-template-columns: 1fr; } }
+.prez-grid img {
+  border-radius: 20px;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
 /* ---------- Jednotné sklo: všechny bílé boxy mají stejnou průsvitnou barvu a rámeček ---------- */
 .usp, .feature-card, .b2b-card, .scenario-card, .product-card,
 .review-card:not(.big), .m-card, .stat-card, .stack-card, .edge-split,
