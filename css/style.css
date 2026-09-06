@@ -983,7 +983,9 @@ body.detail-open .detail-drawer { transform: none; }
   gap: 20px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  padding-bottom: 12px;
+  /* Prostor pro měkký stín karet, aby ho oříznutí lišty neuseklo */
+  padding: 8px 24px 56px;
+  margin: -8px -24px -24px;
   scrollbar-width: none;
 }
 .cards-rail::-webkit-scrollbar { display: none; }
