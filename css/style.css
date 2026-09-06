@@ -2019,6 +2019,11 @@ body.detail-open .detail-drawer { transform: none; }
   align-items: center;
   justify-content: center;
 }
+/* Logo média místo ikony */
+.doc-logo { flex-shrink: 0; width: 140px; display: flex; align-items: flex-start; }
+.doc-logo img { width: 100%; height: auto; }
+@media (max-width: 640px) { .doc-logo { width: 110px; } }
+
 .doc-card h2 { font-family: var(--font); font-size: var(--fs-lg); font-weight: 500; letter-spacing: -.02em; margin: 0 0 6px; }
 .doc-card p { font-size: var(--fs-sm); color: var(--gray-500); margin-bottom: 16px; }
 .doc-meta { font-size: var(--fs-xs); color: var(--gray-400); margin-top: 12px; }
