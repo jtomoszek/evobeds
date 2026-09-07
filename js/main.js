@@ -288,6 +288,64 @@
     updateParallax();
   }
 
+  /* ---------- Milníky: roky přijíždějí zprava, osa se vybarvuje ---------- */
+  document.querySelectorAll('[data-timeline]').forEach((root) => {
+    const sticky = root.querySelector('.tl-sticky');
+    const stage = root.querySelector('.tl-stage');
+    const karty = [...root.querySelectorAll('.tl-card')];
+    const body = [...root.querySelectorAll('.tl-dot')];
+    const fill = root.querySelector('.tl-fill');
+    if (!karty.length) return;
+    let ticking = false;
+
+    const lerpT = (a, b, t) => a + (b - a) * t;
+    const easeT = (t) => t * t * (3 - 2 * t);
+
+    function update() {
+      ticking = false;
+      const rect = root.getBoundingClientRect();
+      const draha = rect.height - sticky.offsetHeight;
+      if (draha <= 0) return;
+      const p = Math.min(1, Math.max(0, -rect.top / draha));
+      const x = p * (karty.length - 1);
+      const idx = Math.min(karty.length - 1, Math.round(x));
+      const stageW = stage.clientWidth;
+
+      karty.forEach((k, i) => {
+        const off = Math.min(1, Math.max(-1, x - i));
+        let tx, scale, op, blur;
+        if (off < 0) {
+          /* přijíždí zprava, roste a zaostřuje se */
+          const t = easeT(1 + off);
+          tx = lerpT(stageW * .9, 0, t);
+          scale = lerpT(.85, 1, t);
+          op = t;
+          blur = lerpT(14, 0, t);
+        } else {
+          /* vzdaluje se na místě a rozplývá */
+          const t = easeT(off);
+          tx = lerpT(0, -stageW * .08, t);
+          scale = lerpT(1, .8, t);
+          op = 1 - Math.min(1, t * 1.5);
+          blur = lerpT(0, 10, t);
+        }
+        k.style.transform = 'translateX(' + tx.toFixed(1) + 'px) scale(' + scale.toFixed(3) + ')';
+        k.style.opacity = op.toFixed(3);
+        k.style.filter = 'blur(' + blur.toFixed(1) + 'px)';
+        k.style.zIndex = off < 0 ? 3 : (off > 0 ? 1 : 2);
+      });
+      /* Vybarvení osy: plynule mezi body */
+      fill.style.width = (p * 100).toFixed(2) + '%';
+      body.forEach((b, i) => b.classList.toggle('active', x >= i - .1));
+    }
+    function onScrollTl() {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }
+    window.addEventListener('scroll', onScrollTl, { passive: true });
+    window.addEventListener('resize', onScrollTl);
+    update();
+  });
+
   /* ---------- Chytrý obrázek: polohy postele ---------- */
   document.querySelectorAll('[data-positions]').forEach((root) => {
     const btns = [...root.querySelectorAll('.pos-btn')];

@@ -2454,6 +2454,84 @@ body.detail-open .detail-drawer { transform: none; }
   object-fit: cover;
 }
 
+/* ---------- Milníky: ukotvená časová osa ---------- */
+.tl-scroll { position: relative; height: 320svh; }
+.tl-sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.tl-sticky .container { width: 100%; }
+.tl-head { margin-bottom: clamp(28px, 4vw, 56px); }
+/* Osa s postupně se vybarvující linkou a body */
+.tl-track { position: relative; margin-bottom: clamp(28px, 4vw, 48px); }
+.tl-line {
+  height: 2px;
+  background: var(--gray-200);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.tl-fill {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--dark);
+}
+.tl-dots {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.tl-dot {
+  position: relative;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--page);
+  border: 2px solid var(--gray-400);
+  transition: border-color .4s, background .4s, transform .4s;
+}
+.tl-dot::after {
+  content: attr(data-rok);
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: .07em;
+  color: var(--gray-400);
+  transition: color .4s;
+}
+.tl-dot.active { background: var(--dark); border-color: var(--dark); transform: scale(1.25); }
+.tl-dot.active::after { color: var(--black); }
+/* Jeviště s kartami roků */
+.tl-stage { position: relative; height: clamp(260px, 38svh, 380px); }
+.tl-card {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 10px;
+  will-change: transform, opacity, filter;
+}
+.tl-year {
+  font-family: var(--font-display);
+  font-size: clamp(96px, 14vw, 210px);
+  font-weight: 400;
+  line-height: .95;
+  letter-spacing: -.05em;
+}
+.tl-text { font-size: var(--fs-base); color: var(--gray-700); max-width: 52ch; }
+@media (max-width: 640px) {
+  .tl-stage { height: clamp(300px, 48svh, 420px); }
+}
+
 /* ---------- Jednotné sklo: všechny bílé boxy mají stejnou průsvitnou barvu a rámeček ---------- */
 .usp, .feature-card, .b2b-card, .scenario-card, .product-card,
 .review-card:not(.big), .m-card, .stat-card, .stack-card, .edge-split,
