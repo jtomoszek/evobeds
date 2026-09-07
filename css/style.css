@@ -372,6 +372,8 @@ body.menu-open .mobile-menu { opacity: 1; visibility: visible; }
 }
 @keyframes heroIn { to { opacity: 1; transform: none; } }
 .hero-content .eyebrow { margin-bottom: 22px; }
+/* Samostatné tlačítko pod nadpisem hero (podstránky) */
+.hero-content > .btn { margin-top: 36px; }
 /* Řádek pod nadpisem: vlevo perex, vpravo tlačítka */
 .hero-row {
   display: flex;
@@ -2352,6 +2354,43 @@ body.detail-open .detail-drawer { transform: none; }
 .ref-row .t { font-size: var(--fs-lg); font-weight: 500; letter-spacing: -.02em; }
 .ref-row .d { font-size: var(--fs-sm); color: var(--gray-500); white-space: nowrap; }
 .ref-note { margin-top: 24px; font-size: var(--fs-sm); color: var(--gray-500); }
+
+/* Napsali o nás: karta s náhledem článku v telefonu */
+.press-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(28px, 4vw, 72px);
+  align-items: center;
+  background: rgba(255, 255, 255, .55);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  backdrop-filter: blur(22px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, .75);
+  border-radius: 28px;
+  padding: clamp(28px, 4vw, 56px) clamp(24px, 4vw, 64px);
+}
+@media (max-width: 767px) { .press-card { grid-template-columns: 1fr; justify-items: start; } }
+.press-text { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+.press-text .press-logo { width: 130px; height: auto; }
+.press-text h3 {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 2.4vw, 34px);
+  font-weight: 400;
+  letter-spacing: -.035em;
+  line-height: 1.08;
+  max-width: 22ch;
+}
+.press-text p { font-size: var(--fs-sm); color: var(--gray-700); max-width: 52ch; }
+.press-text .btn { margin-top: 6px; }
+/* Rámeček telefonu */
+.press-phone {
+  width: min(250px, 64vw);
+  background: #16181d;
+  border-radius: 44px;
+  padding: 10px;
+  box-shadow: 0 34px 60px -30px rgba(56, 56, 68, .45), inset 0 0 0 2px rgba(255, 255, 255, .06);
+  justify-self: center;
+}
+.press-phone img { width: 100%; height: auto; display: block; border-radius: 34px; }
 
 /* Případové studie */
 .case {
