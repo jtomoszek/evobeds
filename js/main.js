@@ -269,6 +269,25 @@
     layout(); update();
   });
 
+  /* ---------- Jemná paralaxa: prvek se posouvá proti směru rolování ---------- */
+  const paralaxy = [...document.querySelectorAll('[data-parallax]')];
+  if (paralaxy.length) {
+    let parTick = false;
+    function updateParallax() {
+      parTick = false;
+      paralaxy.forEach((el) => {
+        const sila = parseFloat(el.dataset.parallax) || -0.1;
+        const r = el.getBoundingClientRect();
+        const odStredu = r.top + r.height / 2 - window.innerHeight / 2;
+        el.style.transform = 'translateY(' + (odStredu * sila).toFixed(1) + 'px)';
+      });
+    }
+    window.addEventListener('scroll', () => {
+      if (!parTick) { parTick = true; requestAnimationFrame(updateParallax); }
+    }, { passive: true });
+    updateParallax();
+  }
+
   /* ---------- Chytrý obrázek: polohy postele ---------- */
   document.querySelectorAll('[data-positions]').forEach((root) => {
     const btns = [...root.querySelectorAll('.pos-btn')];

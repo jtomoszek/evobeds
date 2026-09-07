@@ -2366,9 +2366,13 @@ body.detail-open .detail-drawer { transform: none; }
   backdrop-filter: blur(22px) saturate(170%);
   border: 1px solid rgba(255, 255, 255, .75);
   border-radius: 28px;
-  padding: clamp(28px, 4vw, 56px) clamp(24px, 4vw, 64px);
+  /* Nižší karta, telefon ji přesahuje nahoře i dole */
+  padding: clamp(24px, 3vw, 40px) clamp(24px, 4vw, 64px);
 }
-@media (max-width: 767px) { .press-card { grid-template-columns: 1fr; justify-items: start; } }
+@media (max-width: 767px) {
+  .press-card { grid-template-columns: 1fr; justify-items: start; }
+  .press-phone { margin: 0 !important; }
+}
 .press-text { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
 .press-text .press-logo { width: 130px; height: auto; }
 .press-text h3 {
@@ -2384,6 +2388,8 @@ body.detail-open .detail-drawer { transform: none; }
 /* Rámeček telefonu */
 .press-phone {
   width: min(250px, 64vw);
+  margin: -64px 0;
+  will-change: transform;
   background: #16181d;
   border-radius: 44px;
   padding: 10px;
