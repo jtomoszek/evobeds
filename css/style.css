@@ -2455,7 +2455,7 @@ body.detail-open .detail-drawer { transform: none; }
 }
 
 /* ---------- Milníky: ukotvená časová osa ---------- */
-.tl-scroll { position: relative; height: 320svh; }
+.tl-scroll { position: relative; height: 400svh; }
 .tl-sticky {
   position: sticky;
   top: 0;
