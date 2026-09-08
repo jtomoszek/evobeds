@@ -1,0 +1,239 @@
+/* CRM evobeds: jednotná správa zakázek (B2C objednávky z webu i ruční B2B obchody).
+   Úložiště drží linii zbytku backendu: jeden JSON soubor na zakázku ve složce
+   data/zakazky, žádná databáze. Objem zakázek je malý, soubory jdou zálohovat
+   i číst ručně a seznam se drží v paměti. */
+
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+
+const SLOZKA = path.join(__dirname, '..', 'data', 'zakazky');
+
+/* ---------- Pipeline ----------
+   Každý typ zakázky má vlastní posloupnost stavů. Změna stavu se vždy
+   zapisuje do historie události, takže je zpětně vidět celý průběh. */
+const PIPELINE = {
+  b2c: [
+    { id: 'prijata',     nazev: 'Přijatá' },
+    { id: 'zaplacena',   nazev: 'Zaplacená' },
+    { id: 'vyroba',      nazev: 'Ve výrobě' },
+    { id: 'sklad',       nazev: 'Ze skladu' },
+    { id: 'expedice',    nazev: 'Expedice a montáž' },
+    { id: 'dorucena',    nazev: 'Doručená' },
+    { id: 'fakturovana', nazev: 'Fakturovaná' }
+  ],
+  b2b: [
+    { id: 'potencial',   nazev: 'Potenciál' },
+    { id: 'jednani',     nazev: 'Jednání' },
+    { id: 'nabidka',     nazev: 'Nabídka' },
+    { id: 'objednano',   nazev: 'Objednáno' },
+    { id: 'vyroba',      nazev: 'Ve výrobě' },
+    { id: 'dodani',      nazev: 'Dodání a montáž' },
+    { id: 'fakturace',   nazev: 'Fakturace' },
+    { id: 'uzavreno',    nazev: 'Uzavřeno' }
+  ]
+};
+
+/* Koncové stavy mimo pipeline (prohraný obchod, stornovaná objednávka). */
+const KONECNE = [
+  { id: 'storno',   nazev: 'Storno' },
+  { id: 'ztraceno', nazev: 'Ztraceno' }
+];
+
+function vsechnyStavy(typ) {
+  return [...(PIPELINE[typ] || []), ...KONECNE].map(s => s.id);
+}
+
+/* ---------- Úložiště ---------- */
+function cesta(id) {
+  if (!/^\d+$/.test(String(id))) throw new Error('Neplatné číslo zakázky');
+  return path.join(SLOZKA, id + '.json');
+}
+
+function uloz(z) {
+  fs.mkdirSync(SLOZKA, { recursive: true });
+  const docasny = cesta(z.id) + '.tmp';
+  fs.writeFileSync(docasny, JSON.stringify(z, null, 2));
+  fs.renameSync(docasny, cesta(z.id));
+}
+
+function nacti(id) {
+  try {
+    return JSON.parse(fs.readFileSync(cesta(id), 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+function seznam() {
+  let soubory = [];
+  try {
+    soubory = fs.readdirSync(SLOZKA).filter(f => /^\d+\.json$/.test(f));
+  } catch {
+    return [];
+  }
+  const zakazky = [];
+  for (const f of soubory) {
+    try {
+      zakazky.push(JSON.parse(fs.readFileSync(path.join(SLOZKA, f), 'utf8')));
+    } catch (e) {
+      console.error('Poškozený soubor zakázky:', f, e.message);
+    }
+  }
+  zakazky.sort((a, b) => b.id - a.id);
+  return zakazky;
+}
+
+/* ---------- Události (historie zakázky) ---------- */
+function pridejUdalost(z, typ, text) {
+  z.udalosti = z.udalosti || [];
+  z.udalosti.push({ kdy: new Date().toISOString(), typ, text: String(text || '').slice(0, 2000) });
+}
+
+/* ---------- Vytváření a úpravy ---------- */
+function ocisti(text, max) {
+  return String(text == null ? '' : text).trim().slice(0, max);
+}
+
+function vytvor(vstup) {
+  const typ = vstup.typ === 'b2b' ? 'b2b' : 'b2c';
+  const stav = vsechnyStavy(typ).includes(vstup.stav) ? vstup.stav : PIPELINE[typ][0].id;
+  const polozky = (Array.isArray(vstup.polozky) ? vstup.polozky : [])
+    .slice(0, 50)
+    .map(p => ({
+      nazev: ocisti(p.nazev, 160),
+      pocet: Math.max(1, Math.min(999, Math.round(+p.pocet || 1))),
+      cenaKc: Math.max(0, Math.min(10000000, Math.round(+p.cenaKc || 0)))
+    }))
+    .filter(p => p.nazev);
+  const celkemKc = vstup.celkemKc != null
+    ? Math.max(0, Math.round(+vstup.celkemKc || 0))
+    : polozky.reduce((s, p) => s + p.pocet * p.cenaKc, 0);
+
+  const z = {
+    id: vstup.id || Date.now(),
+    vytvoreno: new Date().toISOString(),
+    typ,
+    stav,
+    zdroj: vstup.zdroj === 'web' ? 'web' : 'rucni',
+    nazev: ocisti(vstup.nazev, 200) || (typ === 'b2b' ? 'Nový obchod' : 'Objednávka'),
+    zakaznik: {
+      jmeno: ocisti(vstup.zakaznik && vstup.zakaznik.jmeno, 120),
+      firma: ocisti(vstup.zakaznik && vstup.zakaznik.firma, 160),
+      telefon: ocisti(vstup.zakaznik && vstup.zakaznik.telefon, 40),
+      email: ocisti(vstup.zakaznik && vstup.zakaznik.email, 120),
+      adresa: ocisti(vstup.zakaznik && vstup.zakaznik.adresa, 300),
+      ic: ocisti(vstup.zakaznik && vstup.zakaznik.ic, 20),
+      dic: ocisti(vstup.zakaznik && vstup.zakaznik.dic, 20)
+    },
+    polozky,
+    celkemKc,
+    /* U B2B potenciálu ještě nemusí být položky, jen odhad hodnoty. */
+    hodnotaKc: Math.max(0, Math.round(+vstup.hodnotaKc || 0)) || celkemKc,
+    vyroba: { rezim: '', termin: '' },
+    pohoda: { zalozeno: false },
+    udalosti: []
+  };
+  pridejUdalost(z, 'vznik', z.zdroj === 'web' ? 'Zakázka přijata z webu.' : 'Zakázka založena ručně.');
+  uloz(z);
+  return z;
+}
+
+/* Povolené úpravy z administrace. Vrací upravenou zakázku, nebo vyhodí chybu. */
+function uprav(id, zmeny) {
+  const z = nacti(id);
+  if (!z) throw new Error('Zakázka nenalezena');
+
+  if (zmeny.stav && zmeny.stav !== z.stav) {
+    if (!vsechnyStavy(z.typ).includes(zmeny.stav)) throw new Error('Neznámý stav: ' + zmeny.stav);
+    const nazvy = Object.fromEntries([...PIPELINE[z.typ], ...KONECNE].map(s => [s.id, s.nazev]));
+    pridejUdalost(z, 'stav', `Stav změněn: ${nazvy[z.stav] || z.stav} → ${nazvy[zmeny.stav]}`);
+    z.stav = zmeny.stav;
+  }
+  if (zmeny.nazev != null) z.nazev = ocisti(zmeny.nazev, 200) || z.nazev;
+  if (zmeny.hodnotaKc != null) z.hodnotaKc = Math.max(0, Math.round(+zmeny.hodnotaKc || 0));
+  if (zmeny.zakaznik && typeof zmeny.zakaznik === 'object') {
+    for (const pole of ['jmeno', 'firma', 'telefon', 'email', 'adresa', 'ic', 'dic']) {
+      if (zmeny.zakaznik[pole] != null) z.zakaznik[pole] = ocisti(zmeny.zakaznik[pole], pole === 'adresa' ? 300 : 160);
+    }
+  }
+  if (Array.isArray(zmeny.polozky)) {
+    z.polozky = zmeny.polozky.slice(0, 50).map(p => ({
+      nazev: ocisti(p.nazev, 160),
+      pocet: Math.max(1, Math.min(999, Math.round(+p.pocet || 1))),
+      cenaKc: Math.max(0, Math.min(10000000, Math.round(+p.cenaKc || 0)))
+    })).filter(p => p.nazev);
+    z.celkemKc = z.polozky.reduce((s, p) => s + p.pocet * p.cenaKc, 0);
+  }
+  if (zmeny.vyroba && typeof zmeny.vyroba === 'object') {
+    const rezim = ['vyroba', 'sklad', ''].includes(zmeny.vyroba.rezim) ? zmeny.vyroba.rezim : z.vyroba.rezim;
+    if (rezim !== z.vyroba.rezim) {
+      pridejUdalost(z, 'vyroba', rezim === 'sklad' ? 'Zakázka půjde ze skladu.' : (rezim === 'vyroba' ? 'Zakázka zadána do výroby.' : 'Režim výroby zrušen.'));
+      z.vyroba.rezim = rezim;
+    }
+    if (zmeny.vyroba.termin != null) z.vyroba.termin = ocisti(zmeny.vyroba.termin, 40);
+  }
+  if (zmeny.poznamka) {
+    pridejUdalost(z, 'poznamka', zmeny.poznamka);
+  }
+  uloz(z);
+  return z;
+}
+
+/* ---------- Napojení na objednávky z webu ---------- */
+/* Z webové objednávky (formát ulozeni.js) vytvoří zakázku se stejným číslem. */
+function zWebu(o) {
+  if (nacti(o.cislo)) return nacti(o.cislo);
+  const polozky = [
+    { nazev: `Postel evobeds One, ${o.konfigurace.material}, ${o.konfigurace.barva}`, pocet: 1, cenaKc: o.konfigurace.zakladKc },
+    ...(o.konfigurace.matraceKc > 0 ? [{ nazev: o.konfigurace.matrace, pocet: 1, cenaKc: o.konfigurace.matraceKc }] : []),
+    ...o.konfigurace.doplnky.map(d => ({ nazev: d.nazev, pocet: 1, cenaKc: d.cena }))
+  ];
+  return vytvor({
+    id: o.cislo,
+    typ: 'b2c',
+    zdroj: 'web',
+    nazev: `Objednávka z webu, ${o.zakaznik.jmeno}`,
+    zakaznik: {
+      jmeno: o.zakaznik.jmeno,
+      firma: o.zakaznik.firma,
+      telefon: o.zakaznik.telefon,
+      email: o.zakaznik.email,
+      adresa: `${o.zakaznik.ulice}, ${o.zakaznik.psc} ${o.zakaznik.mesto}`,
+      ic: o.zakaznik.ic,
+      dic: o.zakaznik.dic
+    },
+    polozky,
+    celkemKc: o.celkemKc
+  });
+}
+
+/* Zápis událostí platby k zakázce z webu (volá se z platebních cest). */
+function udalostPlatby(cislo, typ, text) {
+  const z = nacti(cislo);
+  if (!z) return;
+  if (typ === 'zaplaceno' && z.stav === 'prijata') {
+    pridejUdalost(z, 'stav', 'Stav změněn: Přijatá → Zaplacená (platba na bráně).');
+    z.stav = 'zaplacena';
+  }
+  pridejUdalost(z, 'platba', text);
+  uloz(z);
+}
+
+/* ---------- Souhrn pro nástěnku ---------- */
+function statistiky() {
+  const zakazky = seznam();
+  const out = { b2c: {}, b2b: {}, celkemKc: { b2c: 0, b2b: 0 }, posledni: [] };
+  for (const typ of ['b2c', 'b2b']) {
+    for (const s of [...PIPELINE[typ], ...KONECNE]) out[typ][s.id] = 0;
+  }
+  for (const z of zakazky) {
+    if (out[z.typ][z.stav] != null) out[z.typ][z.stav]++;
+    if (!['storno', 'ztraceno'].includes(z.stav)) out.celkemKc[z.typ] += (z.typ === 'b2b' ? z.hodnotaKc : z.celkemKc) || 0;
+  }
+  out.posledni = zakazky.slice(0, 8).map(z => ({ id: z.id, nazev: z.nazev, typ: z.typ, stav: z.stav }));
+  return out;
+}
+
+module.exports = { PIPELINE, KONECNE, vytvor, uprav, nacti, seznam, zWebu, udalostPlatby, statistiky, uloz, pridejUdalost };

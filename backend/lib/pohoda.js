@@ -33,15 +33,22 @@ function sestavXml(o) {
   const z = o.zakaznik;
   const dnes = new Date().toISOString().slice(0, 10);
 
-  const polozky = [polozkaXml(
-    `Postel evobeds One, ${o.konfigurace.material}, ${o.konfigurace.barva}`,
-    o.konfigurace.zakladKc, sazba
-  )];
-  if (o.konfigurace.matraceKc > 0) {
-    polozky.push(polozkaXml(`Matrace ${o.konfigurace.matrace}`, o.konfigurace.matraceKc, sazba));
-  }
-  for (const d of o.konfigurace.doplnky) {
-    polozky.push(polozkaXml(d.nazev, d.cena, sazba));
+  /* Zakázky z administrace nesou vlastní seznam položek, objednávky
+     z e-shopu se skládají z konfigurace postele. */
+  let polozky;
+  if (Array.isArray(o.polozkyVlastni) && o.polozkyVlastni.length) {
+    polozky = o.polozkyVlastni.map(p => polozkaXml(p.nazev, p.cenaKc, sazba));
+  } else {
+    polozky = [polozkaXml(
+      `Postel evobeds One, ${o.konfigurace.material}, ${o.konfigurace.barva}`,
+      o.konfigurace.zakladKc, sazba
+    )];
+    if (o.konfigurace.matraceKc > 0) {
+      polozky.push(polozkaXml(`Matrace ${o.konfigurace.matrace}`, o.konfigurace.matraceKc, sazba));
+    }
+    for (const d of o.konfigurace.doplnky) {
+      polozky.push(polozkaXml(d.nazev, d.cena, sazba));
+    }
   }
 
   const fakturace = z.firma
@@ -62,7 +69,7 @@ function sestavXml(o) {
         <ord:orderType>receivedOrder</ord:orderType>
         <ord:numberOrder>${xmlEscape(String(o.cislo))}</ord:numberOrder>
         <ord:date>${dnes}</ord:date>
-        <ord:text>Objednávka z e-shopu č. ${xmlEscape(String(o.cislo))}, zaplaceno online (GP webpay)</ord:text>
+        <ord:text>${xmlEscape(o.popisDokladu || `Objednávka z e-shopu č. ${o.cislo}, zaplaceno online (GP webpay)`)}</ord:text>
         <ord:partnerIdentity>
           <typ:address>
             <typ:name>${xmlEscape(z.jmeno)}</typ:name>${fakturace}
@@ -74,7 +81,7 @@ function sestavXml(o) {
           </typ:address>
         </ord:partnerIdentity>
         <ord:note>${xmlEscape([z.poznamka, z.patro ? 'Patro a výtah: ' + z.patro : '', z.fakturacniadresa ? 'Fakturační adresa: ' + z.fakturacniadresa : ''].filter(Boolean).join(' | '))}</ord:note>
-        <ord:intNote>Zaplaceno kartou přes GP webpay, e-shop evobeds.</ord:intNote>
+        <ord:intNote>${xmlEscape(o.internePoznamka || 'Zaplaceno kartou p\u0159es GP webpay, e-shop evobeds.')}</ord:intNote>
       </ord:orderHeader>
       <ord:orderDetail>
 ${polozky.join('\n')}

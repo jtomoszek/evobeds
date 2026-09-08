@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administrace | evobeds</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+  <!-- Přihlášení -->
+  <div id="prihlaseni" class="login-wrap" hidden>
+    <form id="login-form" class="login-card">
+      <div class="brand">evobeds <span>administrace</span></div>
+      <label for="heslo">Heslo</label>
+      <input id="heslo" type="password" autocomplete="current-password" required>
+      <button class="btn btn-dark" type="submit">Přihlásit se</button>
+      <p id="login-chyba" class="chyba" hidden></p>
+    </form>
+  </div>
+
+  <!-- Aplikace -->
+  <div id="aplikace" hidden>
+    <header class="top">
+      <div class="brand">evobeds <span>administrace</span></div>
+      <nav class="zalozky">
+        <button data-pohled="nastenka" class="active">Nástěnka</button>
+        <button data-pohled="b2c">Objednávky</button>
+        <button data-pohled="b2b">Obchody B2B</button>
+      </nav>
+      <div class="top-right">
+        <input id="hledani" type="search" placeholder="Hledat zakázku…">
+        <button id="nova-zakazka" class="btn btn-dark btn-sm">Nová zakázka</button>
+        <button id="odhlasit" class="btn btn-sm" title="Odhlásit se">Odhlásit</button>
+      </div>
+    </header>
+
+    <main id="obsah"></main>
+  </div>
+
+  <!-- Detail zakázky -->
+  <div id="detail-pozadi" class="detail-pozadi" hidden></div>
+  <aside id="detail" class="detail" hidden></aside>
+
+  <!-- Nová zakázka -->
+  <div id="nova-pozadi" class="detail-pozadi" hidden></div>
+  <aside id="nova" class="detail" hidden>
+    <div class="detail-hlava">
+      <h2>Nová zakázka</h2>
+      <button class="zavrit" data-zavri-novou aria-label="Zavřít">×</button>
+    </div>
+    <form id="nova-form" class="detail-telo">
+      <div class="pole-rada">
+        <label class="prepinac"><input type="radio" name="typ" value="b2b" checked> Obchod B2B</label>
+        <label class="prepinac"><input type="radio" name="typ" value="b2c"> Objednávka B2C</label>
+      </div>
+      <label>Název zakázky<input name="nazev" placeholder="Např. Domov seniorů Beroun, 12 lůžek" required></label>
+      <div class="pole-rada">
+        <label>Firma / zařízení<input name="firma"></label>
+        <label>Kontaktní osoba<input name="jmeno"></label>
+      </div>
+      <div class="pole-rada">
+        <label>Telefon<input name="telefon"></label>
+        <label>E-mail<input name="email" type="email"></label>
+      </div>
+      <label>Adresa<input name="adresa" placeholder="Ulice 1, 110 00 Praha"></label>
+      <div class="pole-rada">
+        <label>IČ<input name="ic"></label>
+        <label>DIČ<input name="dic"></label>
+      </div>
+      <label>Odhad hodnoty (Kč)<input name="hodnotaKc" type="number" min="0" step="1000"></label>
+      <label>Poznámka<textarea name="poznamka" rows="3"></textarea></label>
+      <button class="btn btn-dark" type="submit">Založit zakázku</button>
+      <p id="nova-chyba" class="chyba" hidden></p>
+    </form>
+  </aside>
+
+  <script src="admin.js"></script>
+</body>
+</html>

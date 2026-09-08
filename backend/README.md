@@ -95,6 +95,25 @@ Do `.env` patří SMTP údaje schránky, ze které se posílají potvrzení
 (např. info@evobeds.com u vašeho poskytovatele pošty). Obchodní kopie
 chodí na `EMAIL_OBCHOD` (výchozí info@evobeds.com).
 
+## Administrace (CRM)
+
+Na adrese `/admin` (např. https://objednavky.evobeds.cz/admin) běží správa
+zakázek a výroby:
+
+- objednávky z e-shopu se do CRM zapisují samy (včetně událostí platby),
+- B2B obchody se zakládají ručně tlačítkem Nová zakázka,
+- kanban s přetahováním mezi stavy, zvlášť pipeline B2C
+  (přijatá → zaplacená → výroba/sklad → expedice → doručená → fakturovaná)
+  a B2B (potenciál → jednání → nabídka → objednáno → výroba → dodání →
+  fakturace → uzavřeno),
+- u každé zakázky rozhodnutí výroba vs. sklad, termín dodání, položky,
+  poznámky a úplná historie,
+- tlačítko Založit do Pohody pošle zakázku do agendy Přijaté objednávky
+  přes mServer (stejné nastavení jako u e-shopu).
+
+Přihlašuje se heslem `ADMIN_HESLO` z `.env`; přihlášení platí 12 hodin.
+Zakázky se ukládají jako JSON soubory ve složce `data/zakazky/`.
+
 ## Kontrolní seznam před spuštěním
 
 - [ ] `GET /api/zdravi` vrací `{"ok":true}` přes HTTPS
@@ -104,3 +123,4 @@ chodí na `EMAIL_OBCHOD` (výchozí info@evobeds.com).
 - [ ] Neúspěšná platba vrátí `platba=chyba` a jde zopakovat
 - [ ] `GPW_BRANA_URL` přepnuto na produkci
 - [ ] Na webu vyplněno `BACKEND_URL`
+- [ ] Nastaveno `ADMIN_HESLO` a ověřeno přihlášení na `/admin`

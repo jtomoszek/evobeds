@@ -6,12 +6,16 @@
 
 'use strict';
 
-require('dotenv').config();
+/* .env se čte vždy ze složky backendu, ať je server spuštěný odkudkoli. */
+require('dotenv').config({ path: require('path').join(__dirname, '.env') });
 const express = require('express');
 const gpwebpay = require('./lib/gpwebpay');
 const pohoda = require('./lib/pohoda');
 const mail = require('./lib/mail');
 const sklad = require('./lib/ulozeni');
+const crm = require('./lib/crm');
+const auth = require('./lib/auth');
+const path = require('path');
 
 const app = express();
 app.use(express.json({ limit: '100kb' }));
@@ -25,8 +29,8 @@ app.use((req, res, next) => {
   const puvod = req.headers.origin;
   if (puvod && POVOLENE_PUVODY.includes(puvod)) {
     res.setHeader('Access-Control-Allow-Origin', puvod);
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   }
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
@@ -119,6 +123,7 @@ app.post('/api/objednavka', (req, res) => {
   try {
     const platbaUrl = gpwebpay.vytvorPlatbu(objednavka);
     sklad.uloz(objednavka);
+    crm.zWebu(objednavka);
     console.log(`Objednávka ${objednavka.cislo} přijata, ${celkemKc} Kč, přesměrování na bránu.`);
     res.json({ cislo: objednavka.cislo, platbaUrl });
   } catch (e) {
@@ -155,6 +160,7 @@ app.get('/api/platba/navrat', async (req, res) => {
       o.stav = 'zaplacena';
       o.zaplaceno = new Date().toISOString();
       sklad.uloz(o);
+      crm.udalostPlatby(o.cislo, 'zaplaceno', `Platba ${o.celkemKc} Kč potvrzena bránou.`);
       await poZaplaceni(o);
     }
     return res.redirect(adresaNavratu({ platba: 'ok', cislo: o.cislo }));
@@ -163,6 +169,7 @@ app.get('/api/platba/navrat', async (req, res) => {
   o.stav = 'platba-neuspesna';
   o.platbaChyba = `PRCODE=${vysledek.prcode} SRCODE=${vysledek.srcode} ${vysledek.text}`;
   sklad.uloz(o);
+  crm.udalostPlatby(o.cislo, 'platba', 'Platba na bráně neprošla: ' + o.platbaChyba);
   console.warn(`Objednávka ${o.cislo}: platba neprošla (${o.platbaChyba}).`);
   return res.redirect(adresaNavratu({ platba: 'chyba', cislo: o.cislo }));
 });
@@ -198,8 +205,105 @@ app.post('/api/pohoda/znovu/:cislo', async (req, res) => {
   }
 });
 
+/* ---------- Administrace (CRM) ---------- */
+/* Statická aplikace administrace; data jsou chráněná tokenem na API. */
+app.use('/admin', express.static(path.join(__dirname, 'admin')));
+
+app.post('/api/admin/prihlaseni', (req, res) => {
+  try {
+    const token = auth.prihlas(String((req.body || {}).heslo || ''), req.ip);
+    res.json({ token });
+  } catch (e) {
+    res.status(401).json({ chyba: String(e.message || e) });
+  }
+});
+
+app.get('/api/admin/pipeline', auth.vyzadujPrihlaseni, (req, res) => {
+  res.json({ pipeline: crm.PIPELINE, konecne: crm.KONECNE });
+});
+
+app.get('/api/admin/zakazky', auth.vyzadujPrihlaseni, (req, res) => {
+  let zakazky = crm.seznam();
+  const { typ, stav, q } = req.query;
+  if (typ === 'b2c' || typ === 'b2b') zakazky = zakazky.filter(z => z.typ === typ);
+  if (stav) zakazky = zakazky.filter(z => z.stav === stav);
+  if (q) {
+    const hledat = String(q).toLowerCase();
+    zakazky = zakazky.filter(z =>
+      [z.nazev, z.zakaznik.jmeno, z.zakaznik.firma, z.zakaznik.email, z.zakaznik.telefon, String(z.id)]
+        .some(v => String(v || '').toLowerCase().includes(hledat)));
+  }
+  res.json({ zakazky });
+});
+
+app.post('/api/admin/zakazky', auth.vyzadujPrihlaseni, (req, res) => {
+  try {
+    res.json({ zakazka: crm.vytvor(req.body || {}) });
+  } catch (e) {
+    res.status(400).json({ chyba: String(e.message || e) });
+  }
+});
+
+app.get('/api/admin/zakazky/:id', auth.vyzadujPrihlaseni, (req, res) => {
+  const z = crm.nacti(req.params.id);
+  if (!z) return res.status(404).json({ chyba: 'Zakázka nenalezena' });
+  res.json({ zakazka: z });
+});
+
+app.patch('/api/admin/zakazky/:id', auth.vyzadujPrihlaseni, (req, res) => {
+  try {
+    res.json({ zakazka: crm.uprav(req.params.id, req.body || {}) });
+  } catch (e) {
+    res.status(400).json({ chyba: String(e.message || e) });
+  }
+});
+
+/* Založení zakázky do Pohody jako přijaté objednávky. */
+app.post('/api/admin/zakazky/:id/pohoda', auth.vyzadujPrihlaseni, async (req, res) => {
+  const z = crm.nacti(req.params.id);
+  if (!z) return res.status(404).json({ chyba: 'Zakázka nenalezena' });
+  const [ulice, ...zbytekAdresy] = String(z.zakaznik.adresa || '').split(',');
+  const proPohodu = {
+    cislo: z.id,
+    polozkyVlastni: z.polozky.length
+      ? z.polozky.map(p => ({ nazev: p.pocet > 1 ? `${p.nazev} (${p.pocet} ks)` : p.nazev, cenaKc: p.pocet * p.cenaKc }))
+      : [{ nazev: z.nazev, cenaKc: z.celkemKc }],
+    popisDokladu: `Zakázka ${z.id} (${z.typ === 'b2b' ? 'B2B' : 'e-shop'}): ${z.nazev}`,
+    internePoznamka: 'Založeno z administrace evobeds.',
+    konfigurace: { material: '', barva: '', matrace: '', matraceKc: 0, doplnky: [], zakladKc: 0 },
+    zakaznik: {
+      jmeno: z.zakaznik.jmeno || z.zakaznik.firma,
+      telefon: z.zakaznik.telefon,
+      email: z.zakaznik.email,
+      ulice: (ulice || '').trim(),
+      mesto: zbytekAdresy.join(',').replace(/\d{3}\s?\d{2}/, '').trim(),
+      psc: (String(z.zakaznik.adresa || '').match(/\d{3}\s?\d{2}/) || [''])[0],
+      firma: z.zakaznik.firma, ic: z.zakaznik.ic, dic: z.zakaznik.dic,
+      fakturacniadresa: '', poznamka: '', patro: ''
+    }
+  };
+  try {
+    await pohoda.zalozObjednavku(proPohodu);
+    z.pohoda = { zalozeno: true, kdy: new Date().toISOString() };
+    crm.pridejUdalost(z, 'pohoda', 'Zakázka založena do Pohody.');
+    crm.uloz(z);
+    res.json({ zakazka: z });
+  } catch (e) {
+    z.pohoda = { zalozeno: false, chyba: String(e.message || e) };
+    crm.pridejUdalost(z, 'pohoda', 'Založení do Pohody selhalo: ' + z.pohoda.chyba);
+    crm.uloz(z);
+    res.status(502).json({ chyba: z.pohoda.chyba, zakazka: z });
+  }
+});
+
+app.get('/api/admin/statistiky', auth.vyzadujPrihlaseni, (req, res) => {
+  res.json(crm.statistiky());
+});
+
 /* ---------- Kontrola běhu ---------- */
 app.get('/api/zdravi', (req, res) => res.json({ ok: true }));
 
 const port = +(process.env.PORT || 3400);
-app.listen(port, () => console.log(`Backend evobeds běží na portu ${port}.`));
+const host = process.env.HOST || '0.0.0.0';
+const server = app.listen(port, host, () => console.log(`Backend evobeds běží na ${host}:${port}.`));
+server.on('error', (e) => { console.error('Server se nepodařilo spustit:', e.message); process.exit(1); });
