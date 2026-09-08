@@ -21,6 +21,8 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
+/* Atribut hidden musí vyhrát i nad vlastním display prvků */
+[hidden] { display: none !important; }
 body {
   font-family: var(--font);
   background: var(--page);
