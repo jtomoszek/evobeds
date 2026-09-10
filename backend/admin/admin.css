@@ -331,3 +331,8 @@ main { padding: 0 16px 48px; }
 .uzivatel-radek select { width: 130px; }
 .novy-uzivatel { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
 .login-napoveda { font-size: 12px; color: var(--gray-500); }
+
+/* Součty částek v hlavičkách sloupců a trojice přepínačů */
+.sloupec h3 .soucet { text-transform: none; letter-spacing: 0; font-weight: 600; color: var(--black); }
+.pole-rada-3 { grid-template-columns: 1fr 1fr 1fr; }
+@media (max-width: 640px) { .pole-rada-3 { grid-template-columns: 1fr; } }

@@ -252,7 +252,7 @@ app.get('/api/admin/pipeline', auth.vyzadujPrihlaseni, (req, res) => {
 app.get('/api/admin/zakazky', auth.vyzadujPrihlaseni, (req, res) => {
   let zakazky = crm.seznam();
   const { typ, stav, q } = req.query;
-  if (typ === 'b2c' || typ === 'b2b') zakazky = zakazky.filter(z => z.typ === typ);
+  if (['b2c', 'b2b', 'reklamace'].includes(typ)) zakazky = zakazky.filter(z => z.typ === typ);
   if (stav) zakazky = zakazky.filter(z => z.stav === stav);
   if (q) {
     const hledat = String(q).toLowerCase();

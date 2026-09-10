@@ -164,6 +164,7 @@
     const otevreneB2c = Object.entries(stat.b2c).filter(([id]) => !['dorucena', 'fakturovana', 'storno', 'ztraceno'].includes(id)).reduce((s, [, n]) => s + n, 0);
     const rozjednane = Object.entries(stat.b2b).filter(([id]) => ['potencial', 'jednani', 'nabidka'].includes(id)).reduce((s, [, n]) => s + n, 0);
     const veVyrobe = (stat.b2c.vyroba || 0) + (stat.b2b.vyroba || 0);
+    const reklamaci = Object.entries(stat.reklamace || {}).filter(([id]) => !['vyrizena', 'zamitnuta', 'storno', 'ztraceno'].includes(id)).reduce((s, [, n]) => s + n, 0);
     const pocty = {};
     for (const [uid, l] of Object.entries(stat.lide || {})) pocty[uid] = l.zakazek + l.ukolu;
     kresliTym(pocty);
@@ -181,6 +182,7 @@
         <div class="karta"><div class="cislo">${otevreneB2c}</div><div class="popis">otevřené objednávky B2C</div></div>
         <div class="karta"><div class="cislo">${rozjednane}</div><div class="popis">rozjednané obchody B2B</div></div>
         <div class="karta"><div class="cislo">${veVyrobe}</div><div class="popis">zakázek ve výrobě</div></div>
+        <div class="karta"><div class="cislo">${reklamaci}</div><div class="popis">otevřené reklamace</div></div>
         <div class="karta"><div class="cislo">${Kc(stat.celkemKc.b2c + stat.celkemKc.b2b)}</div><div class="popis">hodnota všech aktivních zakázek</div></div>
       </div>
       <div class="nastenka-sloupce">
@@ -233,16 +235,17 @@
     kresliTym();
 
     const clovek = filtrClovek ? tym.find(u => u.id === filtrClovek) : null;
-    const sloupce = [...pipeline.pipeline[typ], ...pipeline.konecne.filter(s =>
-      (typ === 'b2b' ? s.id === 'ztraceno' : s.id === 'storno'))];
+    const koncovy = { b2b: 'ztraceno', b2c: 'storno', reklamace: 'zamitnuta' }[typ];
+    const sloupce = [...pipeline.pipeline[typ], ...pipeline.konecne.filter(s => s.id === koncovy)];
 
     $('#obsah').innerHTML =
       (clovek ? `<p class="filtr-info">Zobrazeny zakázky, které vede ${utec(clovek.jmeno)}. Kliknutím na avatar filtr zrušíte.</p>` : '') +
       `<div class="kanban">` + sloupce.map(s => {
         const veSloupci = zakazky.filter(z => z.stav === s.id);
+        const soucet = veSloupci.reduce((sum, z) => sum + ((typ === 'b2b' ? z.hodnotaKc : z.celkemKc) || 0), 0);
         return `
           <div class="sloupec" data-stav="${s.id}">
-            <h3><span>${s.nazev}</span><span>${veSloupci.length}</span></h3>
+            <h3><span>${s.nazev} · ${veSloupci.length}</span><span class="soucet">${soucet ? Kc(soucet) : ''}</span></h3>
             ${veSloupci.map(kartaZakazky).join('')}
           </div>`;
       }).join('') + `</div>`;
@@ -279,12 +282,13 @@
             <div class="nazev">${utec(z.nazev)}</div>
             <div class="meta">
               <span>${utec(z.zakaznik.firma || z.zakaznik.jmeno || '')}</span>
-              <span class="castka">${Kc(z.typ === 'b2b' ? z.hodnotaKc : z.celkemKc)}</span>
+              <span class="castka">${(z.typ === 'b2b' ? z.hodnotaKc : z.celkemKc) ? Kc(z.typ === 'b2b' ? z.hodnotaKc : z.celkemKc) : ''}</span>
             </div>
           </div>
         </div>
         <div class="stitky">
           ${z.zdroj === 'web' ? '<span class="stitek-mini web">web</span>' : ''}
+          ${z.vazba ? `<span class="stitek-mini">zak. ${utec(z.vazba)}</span>` : ''}
           ${z.vyroba.rezim === 'vyroba' ? '<span class="stitek-mini vyroba">výroba</span>' : ''}
           ${z.vyroba.rezim === 'sklad' ? '<span class="stitek-mini vyroba">sklad</span>' : ''}
           ${ukolu ? `<span class="stitek-mini ukoly">${ukolu} úkol${ukolu > 1 ? 'y' : ''}</span>` : ''}
@@ -412,6 +416,10 @@
             </select></label>
             <label>Termín dodání<input id="d-termin" value="${utec(z.vyroba.termin)}" placeholder="např. 15. 10. 2026"></label>
           </div>
+          <div class="pole-rada">
+            <label>Související zakázka (číslo)<input id="d-vazba" value="${utec(z.vazba || '')}" placeholder="např. u reklamace"></label>
+            ${z.vazba ? `<button class="btn btn-sm d-vazba-otevrit" type="button" data-vazba="${utec(z.vazba)}">Otevřít zakázku ${utec(z.vazba)}</button>` : '<span></span>'}
+          </div>
         </div>
 
         <div class="sekce">
@@ -491,6 +499,11 @@
     const zavri = () => { $('#detail').hidden = true; $('#detail-pozadi').hidden = true; };
     $('#detail .zavrit').addEventListener('click', zavri);
     $('#detail-pozadi').onclick = zavri;
+    const vazbaTl = $('#detail .d-vazba-otevrit');
+    if (vazbaTl) vazbaTl.addEventListener('click', (u) => {
+      u.stopPropagation();
+      otevriDetail(vazbaTl.dataset.vazba).catch(() => oznam('Zakázka ' + vazbaTl.dataset.vazba + ' nebyla nalezena.'));
+    });
 
     /* Úkoly: hotovo / smazat / přidat se ukládají hned */
     $$('#d-ukoly .ukol-radek').forEach(r => {
@@ -535,6 +548,7 @@
     function sesbirej() {
       return {
         stav: $('#d-stav').value,
+        vazba: $('#d-vazba').value,
         prirazeno: osobaPodleId($('#d-prirazeno').value),
         vyroba: { rezim: $('#d-rezim').value, termin: $('#d-termin').value },
         zakaznik: {
@@ -611,6 +625,7 @@
         body: JSON.stringify({
           typ: f.get('typ'),
           nazev: f.get('nazev'),
+          vazba: f.get('vazba') || '',
           hodnotaKc: +f.get('hodnotaKc') || 0,
           zakaznik: {
             firma: f.get('firma'), jmeno: f.get('jmeno'),

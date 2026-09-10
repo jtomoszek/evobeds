@@ -32,13 +32,20 @@ const PIPELINE = {
     { id: 'dodani',      nazev: 'Dodání a montáž' },
     { id: 'fakturace',   nazev: 'Fakturace' },
     { id: 'uzavreno',    nazev: 'Uzavřeno' }
+  ],
+  reklamace: [
+    { id: 'prijata',     nazev: 'Přijatá' },
+    { id: 'posouzeni',   nazev: 'Posouzení' },
+    { id: 'servis',      nazev: 'Servisní zásah' },
+    { id: 'vyrizena',    nazev: 'Vyřízená' }
   ]
 };
 
 /* Koncové stavy mimo pipeline (prohraný obchod, stornovaná objednávka). */
 const KONECNE = [
-  { id: 'storno',   nazev: 'Storno' },
-  { id: 'ztraceno', nazev: 'Ztraceno' }
+  { id: 'storno',    nazev: 'Storno' },
+  { id: 'ztraceno',  nazev: 'Ztraceno' },
+  { id: 'zamitnuta', nazev: 'Zamítnutá' }
 ];
 
 function vsechnyStavy(typ) {
@@ -102,7 +109,7 @@ function ocisti(text, max) {
 }
 
 function vytvor(vstup) {
-  const typ = vstup.typ === 'b2b' ? 'b2b' : 'b2c';
+  const typ = ['b2b', 'reklamace'].includes(vstup.typ) ? vstup.typ : 'b2c';
   const stav = vsechnyStavy(typ).includes(vstup.stav) ? vstup.stav : PIPELINE[typ][0].id;
   const polozky = (Array.isArray(vstup.polozky) ? vstup.polozky : [])
     .slice(0, 50)
@@ -122,7 +129,8 @@ function vytvor(vstup) {
     typ,
     stav,
     zdroj: vstup.zdroj === 'web' ? 'web' : 'rucni',
-    nazev: ocisti(vstup.nazev, 200) || (typ === 'b2b' ? 'Nový obchod' : 'Objednávka'),
+    nazev: ocisti(vstup.nazev, 200) || (typ === 'b2b' ? 'Nový obchod' : (typ === 'reklamace' ? 'Reklamace' : 'Objednávka')),
+    vazba: ocisti(vstup.vazba, 30),   /* číslo související zakázky (hlavně u reklamací) */
     zakaznik: {
       jmeno: ocisti(vstup.zakaznik && vstup.zakaznik.jmeno, 120),
       firma: ocisti(vstup.zakaznik && vstup.zakaznik.firma, 160),
@@ -160,6 +168,7 @@ function uprav(id, zmeny, kdo) {
     z.stav = zmeny.stav;
   }
   if (zmeny.nazev != null) z.nazev = ocisti(zmeny.nazev, 200) || z.nazev;
+  if (zmeny.vazba != null) z.vazba = ocisti(zmeny.vazba, 30);
   if (zmeny.hodnotaKc != null) z.hodnotaKc = Math.max(0, Math.round(+zmeny.hodnotaKc || 0));
   if (zmeny.zakaznik && typeof zmeny.zakaznik === 'object') {
     for (const pole of ['jmeno', 'firma', 'telefon', 'email', 'adresa', 'ic', 'dic']) {
@@ -270,19 +279,21 @@ function udalostPlatby(cislo, typ, text) {
 /* ---------- Souhrn pro nástěnku ---------- */
 function statistiky() {
   const zakazky = seznam();
-  const out = { b2c: {}, b2b: {}, celkemKc: { b2c: 0, b2b: 0 }, posledni: [] };
-  for (const typ of ['b2c', 'b2b']) {
+  const out = { b2c: {}, b2b: {}, reklamace: {}, celkemKc: { b2c: 0, b2b: 0 }, posledni: [] };
+  for (const typ of ['b2c', 'b2b', 'reklamace']) {
     for (const s of [...PIPELINE[typ], ...KONECNE]) out[typ][s.id] = 0;
   }
   for (const z of zakazky) {
     if (out[z.typ][z.stav] != null) out[z.typ][z.stav]++;
-    if (!['storno', 'ztraceno'].includes(z.stav)) out.celkemKc[z.typ] += (z.typ === 'b2b' ? z.hodnotaKc : z.celkemKc) || 0;
+    if (z.typ !== 'reklamace' && !['storno', 'ztraceno'].includes(z.stav)) {
+      out.celkemKc[z.typ] += (z.typ === 'b2b' ? z.hodnotaKc : z.celkemKc) || 0;
+    }
   }
   out.posledni = zakazky.slice(0, 8).map(z => ({ id: z.id, nazev: z.nazev, typ: z.typ, stav: z.stav }));
   /* Souhrn podle lidí: kolik zakázek a otevřených úkolů kdo vede. */
   const lide = {};
   for (const z of zakazky) {
-    if (['storno', 'ztraceno', 'fakturovana', 'uzavreno', 'dorucena'].includes(z.stav)) continue;
+    if (['storno', 'ztraceno', 'zamitnuta', 'fakturovana', 'uzavreno', 'dorucena', 'vyrizena'].includes(z.stav)) continue;
     if (z.prirazeno) {
       const l = lide[z.prirazeno.id] = lide[z.prirazeno.id] || { jmeno: z.prirazeno.jmeno, barva: z.prirazeno.barva, zakazek: 0, ukolu: 0 };
       l.zakazek++;
