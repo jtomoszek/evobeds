@@ -25,7 +25,9 @@
 [hidden] { display: none !important; }
 body {
   font-family: var(--font);
-  background: var(--page);
+  background: linear-gradient(180deg, #eef0f4 0%, #e8ebf2 55%, #e3e7f0 100%);
+  min-height: 100svh;
+  background-attachment: fixed;
   color: var(--black);
   font-size: 15px;
   line-height: 1.5;
@@ -38,12 +40,13 @@ input, textarea, select {
   font-size: 14px;
   color: var(--black);
   background: var(--white);
-  border: 1.5px solid var(--gray-200);
-  border-radius: 12px;
-  padding: 10px 12px;
+  border: 1.5px solid transparent;
+  border-radius: 14px;
+  padding: 10px 14px;
   width: 100%;
+  box-shadow: inset 0 0 0 1px var(--gray-200);
 }
-input:focus, textarea:focus, select:focus { outline: none; border-color: var(--black); }
+input:focus, textarea:focus, select:focus { outline: none; box-shadow: inset 0 0 0 2px var(--black); }
 label { display: block; font-size: 12px; font-weight: 500; color: var(--gray-500); }
 label input, label textarea, label select { margin-top: 4px; }
 
@@ -143,9 +146,9 @@ main { padding: 0 16px 48px; }
   padding-bottom: 24px;
 }
 .sloupec {
-  flex: 0 0 264px;
-  background: var(--gray-100);
-  border-radius: 18px;
+  flex: 0 0 272px;
+  background: rgba(56, 56, 68, .05);
+  border-radius: 22px;
   padding: 10px;
 }
 .sloupec.pretahovani { outline: 2px dashed var(--gray-400); outline-offset: -2px; }
@@ -155,18 +158,25 @@ main { padding: 0 16px 48px; }
   letter-spacing: .07em;
   text-transform: uppercase;
   color: var(--gray-500);
-  padding: 4px 8px 10px;
+  background: rgba(255, 255, 255, .7);
+  border-radius: 999px;
+  padding: 10px 16px;
+  margin-bottom: 10px;
   display: flex;
   justify-content: space-between;
 }
 .zakazka {
   background: var(--white);
-  border-radius: 14px;
+  border-radius: 18px;
   padding: 12px 14px;
   margin-bottom: 8px;
   cursor: grab;
   box-shadow: 0 10px 24px -18px rgba(56, 56, 68, .35);
+  transition: transform .15s, box-shadow .15s;
 }
+.zakazka:hover { transform: translateY(-1px); box-shadow: 0 16px 30px -18px rgba(56, 56, 68, .45); }
+.zakazka-rada { display: flex; gap: 10px; align-items: flex-start; }
+.zakazka-texty { flex: 1; min-width: 0; }
 .zakazka:active { cursor: grabbing; }
 .zakazka .nazev { font-weight: 500; font-size: 14px; line-height: 1.3; }
 .zakazka .meta { display: flex; justify-content: space-between; gap: 8px; margin-top: 6px; font-size: 12px; color: var(--gray-500); }
@@ -240,3 +250,84 @@ main { padding: 0 16px 48px; }
   font-size: 14px;
   box-shadow: 0 16px 40px rgba(0, 0, 0, .3);
 }
+
+
+/* ---------- Avatary ---------- */
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  flex-shrink: 0;
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, .12);
+}
+.avatar-prazdny { background: var(--gray-200); color: var(--gray-500); }
+
+.tym { display: flex; align-items: center; }
+.tym-avatar { position: relative; padding: 0; margin-left: -6px; border-radius: 50%; }
+.tym-avatar:first-child { margin-left: 0; }
+.tym-avatar .avatar { width: 34px; height: 34px; border: 2px solid #fff; }
+.tym-avatar.aktivni .avatar { outline: 2px solid var(--dark); }
+.tym-pocet {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--cervena);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  box-sizing: content-box;
+}
+.filtr-info { font-size: 13px; color: var(--gray-500); margin: 0 4px 12px; }
+
+/* ---------- Úkoly ---------- */
+.ukol-radek {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--white);
+  border-radius: 999px;
+  padding: 8px 12px;
+  margin-bottom: 6px;
+}
+.ukol-radek.hotovo .ukol-text { text-decoration: line-through; color: var(--gray-400); }
+.ukol-radek input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--dark); flex-shrink: 0; }
+.ukol-text { flex: 1; min-width: 0; font-size: 14px; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.ukol-termin { font-size: 12px; color: var(--gray-500); white-space: nowrap; }
+.ukol-smazat { color: var(--gray-400); font-size: 17px; padding: 0 4px; }
+.ukol-novy { display: grid; grid-template-columns: 1fr 130px 90px auto; gap: 6px; }
+@media (max-width: 640px) { .ukol-novy { grid-template-columns: 1fr; } }
+.mini-ukol { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.mini-ukol .avatar { width: 24px; height: 24px; font-size: 10px; }
+.stitek-mini.ukoly { background: #f3e9ef; color: #8a3363; }
+.detail-cislo { color: var(--gray-400); font-weight: 400; }
+
+/* ---------- Uživatelé ---------- */
+.uzivatel-radek {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--gray-200);
+}
+.uzivatel-radek .avatar { width: 34px; height: 34px; }
+.uzivatel-info { flex: 1; min-width: 0; }
+.uzivatel-info .nazev { font-weight: 500; font-size: 14px; }
+.uzivatel-info .popis { font-size: 12px; color: var(--gray-500); }
+.uzivatel-radek select { width: 130px; }
+.novy-uzivatel { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
+.login-napoveda { font-size: 12px; color: var(--gray-500); }

@@ -86,9 +86,14 @@ function seznam() {
 }
 
 /* ---------- Události (historie zakázky) ---------- */
-function pridejUdalost(z, typ, text) {
+function pridejUdalost(z, typ, text, kdo) {
   z.udalosti = z.udalosti || [];
-  z.udalosti.push({ kdy: new Date().toISOString(), typ, text: String(text || '').slice(0, 2000) });
+  z.udalosti.push({
+    kdy: new Date().toISOString(),
+    typ,
+    kdo: String(kdo || '').slice(0, 120),
+    text: String(text || '').slice(0, 2000)
+  });
 }
 
 /* ---------- Vytváření a úpravy ---------- */
@@ -132,23 +137,26 @@ function vytvor(vstup) {
     /* U B2B potenciálu ještě nemusí být položky, jen odhad hodnoty. */
     hodnotaKc: Math.max(0, Math.round(+vstup.hodnotaKc || 0)) || celkemKc,
     vyroba: { rezim: '', termin: '' },
+    prirazeno: null,          /* { id, jmeno, barva } zodpovědného uživatele */
+    ukoly: [],                /* [{ id, text, komu, termin, hotovo, vytvoreno }] */
     pohoda: { zalozeno: false },
     udalosti: []
   };
-  pridejUdalost(z, 'vznik', z.zdroj === 'web' ? 'Zakázka přijata z webu.' : 'Zakázka založena ručně.');
+  pridejUdalost(z, 'vznik', z.zdroj === 'web' ? 'Zakázka přijata z webu.' : 'Zakázka založena ručně.', vstup.kdo);
   uloz(z);
   return z;
 }
 
 /* Povolené úpravy z administrace. Vrací upravenou zakázku, nebo vyhodí chybu. */
-function uprav(id, zmeny) {
+function uprav(id, zmeny, kdo) {
   const z = nacti(id);
   if (!z) throw new Error('Zakázka nenalezena');
+  z.ukoly = z.ukoly || [];
 
   if (zmeny.stav && zmeny.stav !== z.stav) {
     if (!vsechnyStavy(z.typ).includes(zmeny.stav)) throw new Error('Neznámý stav: ' + zmeny.stav);
     const nazvy = Object.fromEntries([...PIPELINE[z.typ], ...KONECNE].map(s => [s.id, s.nazev]));
-    pridejUdalost(z, 'stav', `Stav změněn: ${nazvy[z.stav] || z.stav} → ${nazvy[zmeny.stav]}`);
+    pridejUdalost(z, 'stav', `Stav změněn: ${nazvy[z.stav] || z.stav} → ${nazvy[zmeny.stav]}`, kdo);
     z.stav = zmeny.stav;
   }
   if (zmeny.nazev != null) z.nazev = ocisti(zmeny.nazev, 200) || z.nazev;
@@ -169,13 +177,51 @@ function uprav(id, zmeny) {
   if (zmeny.vyroba && typeof zmeny.vyroba === 'object') {
     const rezim = ['vyroba', 'sklad', ''].includes(zmeny.vyroba.rezim) ? zmeny.vyroba.rezim : z.vyroba.rezim;
     if (rezim !== z.vyroba.rezim) {
-      pridejUdalost(z, 'vyroba', rezim === 'sklad' ? 'Zakázka půjde ze skladu.' : (rezim === 'vyroba' ? 'Zakázka zadána do výroby.' : 'Režim výroby zrušen.'));
+      pridejUdalost(z, 'vyroba', rezim === 'sklad' ? 'Zakázka půjde ze skladu.' : (rezim === 'vyroba' ? 'Zakázka zadána do výroby.' : 'Režim výroby zrušen.'), kdo);
       z.vyroba.rezim = rezim;
     }
     if (zmeny.vyroba.termin != null) z.vyroba.termin = ocisti(zmeny.vyroba.termin, 40);
   }
+  if (zmeny.prirazeno !== undefined) {
+    const nove = zmeny.prirazeno
+      ? { id: +zmeny.prirazeno.id, jmeno: ocisti(zmeny.prirazeno.jmeno, 120), barva: ocisti(zmeny.prirazeno.barva, 20) }
+      : null;
+    const puvodni = z.prirazeno ? z.prirazeno.id : null;
+    if ((nove ? nove.id : null) !== puvodni) {
+      pridejUdalost(z, 'prirazeni', nove ? `Zakázku převzal(a): ${nove.jmeno}` : 'Zakázka je bez zodpovědné osoby.', kdo);
+      z.prirazeno = nove;
+    }
+  }
+  if (zmeny.ukolPridat && zmeny.ukolPridat.text) {
+    const ukol = {
+      id: Date.now() + Math.floor(Math.random() * 1000),
+      text: ocisti(zmeny.ukolPridat.text, 300),
+      komu: zmeny.ukolPridat.komu
+        ? { id: +zmeny.ukolPridat.komu.id, jmeno: ocisti(zmeny.ukolPridat.komu.jmeno, 120), barva: ocisti(zmeny.ukolPridat.komu.barva, 20) }
+        : null,
+      termin: ocisti(zmeny.ukolPridat.termin, 40),
+      hotovo: false,
+      vytvoreno: new Date().toISOString()
+    };
+    z.ukoly.push(ukol);
+    pridejUdalost(z, 'ukol', `Nový úkol: ${ukol.text}` + (ukol.komu ? ` (${ukol.komu.jmeno})` : ''), kdo);
+  }
+  if (zmeny.ukolHotovo) {
+    const ukol = z.ukoly.find(u => u.id === +zmeny.ukolHotovo.id);
+    if (ukol) {
+      ukol.hotovo = !!zmeny.ukolHotovo.hotovo;
+      pridejUdalost(z, 'ukol', (ukol.hotovo ? 'Úkol splněn: ' : 'Úkol vrácen k dořešení: ') + ukol.text, kdo);
+    }
+  }
+  if (zmeny.ukolSmazat) {
+    const ukol = z.ukoly.find(u => u.id === +zmeny.ukolSmazat);
+    if (ukol) {
+      z.ukoly = z.ukoly.filter(u => u.id !== ukol.id);
+      pridejUdalost(z, 'ukol', 'Úkol odstraněn: ' + ukol.text, kdo);
+    }
+  }
   if (zmeny.poznamka) {
-    pridejUdalost(z, 'poznamka', zmeny.poznamka);
+    pridejUdalost(z, 'poznamka', zmeny.poznamka, kdo);
   }
   uloz(z);
   return z;
@@ -233,6 +279,21 @@ function statistiky() {
     if (!['storno', 'ztraceno'].includes(z.stav)) out.celkemKc[z.typ] += (z.typ === 'b2b' ? z.hodnotaKc : z.celkemKc) || 0;
   }
   out.posledni = zakazky.slice(0, 8).map(z => ({ id: z.id, nazev: z.nazev, typ: z.typ, stav: z.stav }));
+  /* Souhrn podle lidí: kolik zakázek a otevřených úkolů kdo vede. */
+  const lide = {};
+  for (const z of zakazky) {
+    if (['storno', 'ztraceno', 'fakturovana', 'uzavreno', 'dorucena'].includes(z.stav)) continue;
+    if (z.prirazeno) {
+      const l = lide[z.prirazeno.id] = lide[z.prirazeno.id] || { jmeno: z.prirazeno.jmeno, barva: z.prirazeno.barva, zakazek: 0, ukolu: 0 };
+      l.zakazek++;
+    }
+    for (const u of (z.ukoly || [])) {
+      if (u.hotovo || !u.komu) continue;
+      const l = lide[u.komu.id] = lide[u.komu.id] || { jmeno: u.komu.jmeno, barva: u.komu.barva, zakazek: 0, ukolu: 0 };
+      l.ukolu++;
+    }
+  }
+  out.lide = lide;
   return out;
 }
 

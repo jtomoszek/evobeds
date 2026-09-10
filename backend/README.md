@@ -111,8 +111,18 @@ zakázek a výroby:
 - tlačítko Založit do Pohody pošle zakázku do agendy Přijaté objednávky
   přes mServer (stejné nastavení jako u e-shopu).
 
-Přihlašuje se heslem `ADMIN_HESLO` z `.env`; přihlášení platí 12 hodin.
-Zakázky se ukládají jako JSON soubory ve složce `data/zakazky/`.
+Přihlašuje se e-mailem a heslem; přihlášení platí 12 hodin. Při úplně
+prvním přihlášení (dokud neexistují žádné účty) se použije hlavní heslo
+`ADMIN_HESLO` z `.env` a účet administrátora se založí automaticky.
+Další uživatele zakládá role Admin v záložce Uživatelé; role Člen týmu
+spravuje zakázky a úkoly, ale ne uživatele.
+
+Zakázkám lze přiřadit zodpovědnou osobu a úkoly s termíny. Lišta avatarů
+nahoře ukazuje, kolik toho kdo vede, kliknutím na avatar se kanban
+vyfiltruje na zakázky daného člověka.
+
+Zakázky se ukládají jako JSON soubory ve složce `data/zakazky/`,
+uživatelé v `data/uzivatele.json` (hesla jen jako scrypt otisky).
 
 ## Kontrolní seznam před spuštěním
 

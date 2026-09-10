@@ -15,6 +15,7 @@ const mail = require('./lib/mail');
 const sklad = require('./lib/ulozeni');
 const crm = require('./lib/crm');
 const auth = require('./lib/auth');
+const uzivatele = require('./lib/uzivatele');
 const path = require('path');
 
 const app = express();
@@ -211,10 +212,36 @@ app.use('/admin', express.static(path.join(__dirname, 'admin')));
 
 app.post('/api/admin/prihlaseni', (req, res) => {
   try {
-    const token = auth.prihlas(String((req.body || {}).heslo || ''), req.ip);
-    res.json({ token });
+    const t = req.body || {};
+    res.json(auth.prihlas(String(t.email || ''), String(t.heslo || ''), req.ip));
   } catch (e) {
     res.status(401).json({ chyba: String(e.message || e) });
+  }
+});
+
+/* Kdo jsem: obnova přihlášení po načtení stránky. */
+app.get('/api/admin/ja', auth.vyzadujPrihlaseni, (req, res) => {
+  res.json({ uzivatel: req.uzivatel, prvniPrihlaseni: false });
+});
+
+/* ---------- Správa uživatelů ---------- */
+app.get('/api/admin/uzivatele', auth.vyzadujPrihlaseni, (req, res) => {
+  res.json({ uzivatele: uzivatele.seznam() });
+});
+
+app.post('/api/admin/uzivatele', auth.vyzadujPrihlaseni, auth.vyzadujAdmina, (req, res) => {
+  try {
+    res.json({ uzivatel: uzivatele.vytvor(req.body || {}) });
+  } catch (e) {
+    res.status(400).json({ chyba: String(e.message || e) });
+  }
+});
+
+app.patch('/api/admin/uzivatele/:id', auth.vyzadujPrihlaseni, auth.vyzadujAdmina, (req, res) => {
+  try {
+    res.json({ uzivatel: uzivatele.uprav(req.params.id, req.body || {}) });
+  } catch (e) {
+    res.status(400).json({ chyba: String(e.message || e) });
   }
 });
 
@@ -238,7 +265,7 @@ app.get('/api/admin/zakazky', auth.vyzadujPrihlaseni, (req, res) => {
 
 app.post('/api/admin/zakazky', auth.vyzadujPrihlaseni, (req, res) => {
   try {
-    res.json({ zakazka: crm.vytvor(req.body || {}) });
+    res.json({ zakazka: crm.vytvor({ ...(req.body || {}), kdo: req.uzivatel.jmeno }) });
   } catch (e) {
     res.status(400).json({ chyba: String(e.message || e) });
   }
@@ -252,7 +279,7 @@ app.get('/api/admin/zakazky/:id', auth.vyzadujPrihlaseni, (req, res) => {
 
 app.patch('/api/admin/zakazky/:id', auth.vyzadujPrihlaseni, (req, res) => {
   try {
-    res.json({ zakazka: crm.uprav(req.params.id, req.body || {}) });
+    res.json({ zakazka: crm.uprav(req.params.id, req.body || {}, req.uzivatel.jmeno) });
   } catch (e) {
     res.status(400).json({ chyba: String(e.message || e) });
   }
@@ -285,12 +312,12 @@ app.post('/api/admin/zakazky/:id/pohoda', auth.vyzadujPrihlaseni, async (req, re
   try {
     await pohoda.zalozObjednavku(proPohodu);
     z.pohoda = { zalozeno: true, kdy: new Date().toISOString() };
-    crm.pridejUdalost(z, 'pohoda', 'Zakázka založena do Pohody.');
+    crm.pridejUdalost(z, 'pohoda', 'Zakázka založena do Pohody.', req.uzivatel.jmeno);
     crm.uloz(z);
     res.json({ zakazka: z });
   } catch (e) {
     z.pohoda = { zalozeno: false, chyba: String(e.message || e) };
-    crm.pridejUdalost(z, 'pohoda', 'Založení do Pohody selhalo: ' + z.pohoda.chyba);
+    crm.pridejUdalost(z, 'pohoda', 'Založení do Pohody selhalo: ' + z.pohoda.chyba, req.uzivatel.jmeno);
     crm.uloz(z);
     res.status(502).json({ chyba: z.pohoda.chyba, zakazka: z });
   }

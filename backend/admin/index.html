@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Administrace | evobeds</title>
   <meta name="robots" content="noindex, nofollow">
-  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="admin.css?v=2">
 </head>
 <body>
 
@@ -13,9 +13,10 @@
   <div id="prihlaseni" class="login-wrap" hidden>
     <form id="login-form" class="login-card">
       <div class="brand">evobeds <span>administrace</span></div>
-      <label for="heslo">Heslo</label>
-      <input id="heslo" type="password" autocomplete="current-password" required>
+      <label>E-mail<input id="login-email" type="email" autocomplete="username" placeholder="jmeno@evobeds.cz"></label>
+      <label>Heslo<input id="heslo" type="password" autocomplete="current-password" required></label>
       <button class="btn btn-dark" type="submit">Přihlásit se</button>
+      <p class="login-napoveda">Při úplně prvním přihlášení použijte hlavní heslo z nastavení serveru, účet administrátora se založí sám.</p>
       <p id="login-chyba" class="chyba" hidden></p>
     </form>
   </div>
@@ -28,7 +29,9 @@
         <button data-pohled="nastenka" class="active">Nástěnka</button>
         <button data-pohled="b2c">Objednávky</button>
         <button data-pohled="b2b">Obchody B2B</button>
+        <button data-pohled="uzivatele" data-jen-admin>Uživatelé</button>
       </nav>
+      <div id="tym" class="tym" title="Kliknutím vyfiltrujete zakázky člověka"></div>
       <div class="top-right">
         <input id="hledani" type="search" placeholder="Hledat zakázku…">
         <button id="nova-zakazka" class="btn btn-dark btn-sm">Nová zakázka</button>
@@ -56,6 +59,7 @@
         <label class="prepinac"><input type="radio" name="typ" value="b2c"> Objednávka B2C</label>
       </div>
       <label>Název zakázky<input name="nazev" placeholder="Např. Domov seniorů Beroun, 12 lůžek" required></label>
+      <label>Zodpovídá<select name="prirazeno" id="nova-prirazeno"></select></label>
       <div class="pole-rada">
         <label>Firma / zařízení<input name="firma"></label>
         <label>Kontaktní osoba<input name="jmeno"></label>
@@ -76,6 +80,6 @@
     </form>
   </aside>
 
-  <script src="admin.js"></script>
+  <script src="admin.js?v=2"></script>
 </body>
 </html>
