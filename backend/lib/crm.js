@@ -145,6 +145,8 @@ function vytvor(vstup) {
     /* U B2B potenciálu ještě nemusí být položky, jen odhad hodnoty. */
     hodnotaKc: Math.max(0, Math.round(+vstup.hodnotaKc || 0)) || celkemKc,
     vyroba: { rezim: '', termin: '' },
+    dorucenoDne: '',          /* den předání zákazníkovi (RRRR-MM-DD), od něj běží záruka */
+    zarukaMesicu: 24,
     prirazeno: null,          /* { id, jmeno, barva } zodpovědného uživatele */
     ukoly: [],                /* [{ id, text, komu, termin, hotovo, vytvoreno }] */
     pohoda: { zalozeno: false },
@@ -166,9 +168,19 @@ function uprav(id, zmeny, kdo) {
     const nazvy = Object.fromEntries([...PIPELINE[z.typ], ...KONECNE].map(s => [s.id, s.nazev]));
     pridejUdalost(z, 'stav', `Stav změněn: ${nazvy[z.stav] || z.stav} → ${nazvy[zmeny.stav]}`, kdo);
     z.stav = zmeny.stav;
+    /* Předání zákazníkovi: datum se zapíše samo při prvním dosažení
+       doručeného stavu a od něj běží záruka. Jde kdykoli ručně upravit. */
+    const predano = (z.typ === 'b2c' && ['dorucena', 'fakturovana'].includes(z.stav)) ||
+                    (z.typ === 'b2b' && ['dodani', 'fakturace', 'uzavreno'].includes(z.stav));
+    if (predano && !z.dorucenoDne) {
+      z.dorucenoDne = new Date().toISOString().slice(0, 10);
+      pridejUdalost(z, 'zaruka', `Zapsáno datum předání ${z.dorucenoDne}, záruka ${z.zarukaMesicu || 24} měsíců.`, kdo);
+    }
   }
   if (zmeny.nazev != null) z.nazev = ocisti(zmeny.nazev, 200) || z.nazev;
   if (zmeny.vazba != null) z.vazba = ocisti(zmeny.vazba, 30);
+  if (zmeny.dorucenoDne != null) z.dorucenoDne = /^\d{4}-\d{2}-\d{2}$/.test(zmeny.dorucenoDne) ? zmeny.dorucenoDne : '';
+  if (zmeny.zarukaMesicu != null) z.zarukaMesicu = Math.max(0, Math.min(120, Math.round(+zmeny.zarukaMesicu || 0))) || 24;
   if (zmeny.hodnotaKc != null) z.hodnotaKc = Math.max(0, Math.round(+zmeny.hodnotaKc || 0));
   if (zmeny.zakaznik && typeof zmeny.zakaznik === 'object') {
     for (const pole of ['jmeno', 'firma', 'telefon', 'email', 'adresa', 'ic', 'dic']) {
@@ -276,6 +288,74 @@ function udalostPlatby(cislo, typ, text) {
   uloz(z);
 }
 
+/* ---------- Klienti ---------- */
+/* Konec záruky: datum předání plus délka záruky (výchozí 24 měsíců). */
+function zarukaDo(z) {
+  if (!z.dorucenoDne) return null;
+  const d = new Date(z.dorucenoDne + 'T12:00:00');
+  if (isNaN(d)) return null;
+  d.setMonth(d.getMonth() + (z.zarukaMesicu || 24));
+  return d.toISOString().slice(0, 10);
+}
+
+/* Klienti se nevedou zvlášť, skládají se ze zakázek. Stejný klient se pozná
+   podle IČ, jinak e-mailu, jinak telefonu, jinak jména; nic se nezadává dvakrát
+   a přehled nikdy nemůže rozjet od skutečných zakázek. */
+function klientKlic(zak) {
+  const z = zak.zakaznik || {};
+  if (z.ic) return 'ic:' + z.ic.replace(/\s/g, '');
+  if (z.email) return 'em:' + z.email.toLowerCase();
+  if (z.telefon) return 'tel:' + z.telefon.replace(/\D/g, '');
+  const jmeno = (z.firma || z.jmeno || '').toLowerCase().trim();
+  return jmeno ? 'jm:' + jmeno : 'zak:' + zak.id;
+}
+
+function klienti() {
+  const zakazky = seznam();
+  const mapa = new Map();
+  const klicPodleCisla = new Map();   /* číslo zakázky → klíč klienta */
+
+  const zarad = (klic, zak) => {
+    let k = mapa.get(klic);
+    if (!k) {
+      k = { klic, typ: 'b2c', jmeno: '', firma: '', email: '', telefon: '', adresa: '', ic: '', dic: '',
+            zakazky: [], celkemKc: 0, otevrenychReklamaci: 0, posledni: zak.vytvoreno };
+      mapa.set(klic, k);
+    }
+    for (const pole of ['jmeno', 'firma', 'email', 'telefon', 'adresa', 'ic', 'dic']) {
+      if (!k[pole] && zak.zakaznik && zak.zakaznik[pole]) k[pole] = zak.zakaznik[pole];
+    }
+    if (zak.typ === 'b2b') k.typ = 'b2b';
+    k.zakazky.push({
+      id: zak.id, typ: zak.typ, nazev: zak.nazev, stav: zak.stav, vytvoreno: zak.vytvoreno,
+      castkaKc: (zak.typ === 'b2b' ? zak.hodnotaKc : zak.celkemKc) || 0,
+      vazba: zak.vazba || '', dorucenoDne: zak.dorucenoDne || '',
+      zarukaMesicu: zak.zarukaMesicu || 24, zarukaDo: zarukaDo(zak)
+    });
+    if (zak.typ !== 'reklamace' && !['storno', 'ztraceno'].includes(zak.stav)) {
+      k.celkemKc += (zak.typ === 'b2b' ? zak.hodnotaKc : zak.celkemKc) || 0;
+    }
+    if (zak.typ === 'reklamace' && !['vyrizena', 'zamitnuta', 'storno', 'ztraceno'].includes(zak.stav)) {
+      k.otevrenychReklamaci++;
+    }
+    if (zak.vytvoreno > k.posledni) k.posledni = zak.vytvoreno;
+    return k;
+  };
+
+  for (const zak of zakazky) {
+    if (zak.typ === 'reklamace') continue;
+    zarad(klientKlic(zak), zak);
+    klicPodleCisla.set(String(zak.id), klientKlic(zak));
+  }
+  /* Reklamace patří ke klientovi související zakázky; bez vazby se přiřadí podle kontaktů. */
+  for (const zak of zakazky) {
+    if (zak.typ !== 'reklamace') continue;
+    zarad((zak.vazba && klicPodleCisla.get(String(zak.vazba))) || klientKlic(zak), zak);
+  }
+
+  return [...mapa.values()].sort((a, b) => String(b.posledni).localeCompare(String(a.posledni)));
+}
+
 /* ---------- Souhrn pro nástěnku ---------- */
 function statistiky() {
   const zakazky = seznam();
@@ -308,4 +388,4 @@ function statistiky() {
   return out;
 }
 
-module.exports = { PIPELINE, KONECNE, vytvor, uprav, nacti, seznam, zWebu, udalostPlatby, statistiky, uloz, pridejUdalost };
+module.exports = { PIPELINE, KONECNE, vytvor, uprav, nacti, seznam, zWebu, udalostPlatby, statistiky, klienti, zarukaDo, uloz, pridejUdalost };

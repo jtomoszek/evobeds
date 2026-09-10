@@ -151,7 +151,29 @@
   async function prekresli() {
     if (pohled === 'nastenka') return kresliNastenku();
     if (pohled === 'uzivatele') return kresliUzivatele();
+    if (pohled === 'klienti') return kresliKlienty();
     return kresliKanban(pohled);
+  }
+
+  /* ---------- Záruka ---------- */
+  const datumKratce = d => new Date(d).toLocaleDateString('cs-CZ');
+
+  /* Konec záruky spočtený z data předání; server posílá zarukaDo u klientů,
+     v detailu zakázky se počítá stejně tady. */
+  function spocitejZarukaDo(dorucenoDne, mesicu) {
+    if (!dorucenoDne) return null;
+    const d = new Date(dorucenoDne + 'T12:00:00');
+    if (isNaN(d)) return null;
+    d.setMonth(d.getMonth() + (mesicu || 24));
+    return d.toISOString().slice(0, 10);
+  }
+
+  function zarukaStitek(zarukaDo) {
+    if (!zarukaDo) return '';
+    const dni = Math.ceil((new Date(zarukaDo + 'T12:00:00') - Date.now()) / 86400000);
+    if (dni < 0) return `<span class="stitek-mini zaruka-po">po záruce od ${datumKratce(zarukaDo)}</span>`;
+    if (dni <= 90) return `<span class="stitek-mini zaruka-konci">záruka končí ${datumKratce(zarukaDo)}</span>`;
+    return `<span class="stitek-mini zaruka-plati">záruka do ${datumKratce(zarukaDo)}</span>`;
   }
 
   /* ---------- Nástěnka ---------- */
@@ -209,6 +231,21 @@
               <span>${utec(z.nazev)}</span>
               <span class="stitek">${nazevStavu(z.typ, z.stav)}</span>
             </div>`).join('') || '<p class="popis">Zatím žádné zakázky.</p>'}
+        </div>
+        <div class="karta">
+          <h3>Záruky</h3>
+          ${(() => {
+            const zaruky = zakazky
+              .filter(z => z.typ !== 'reklamace' && z.dorucenoDne)
+              .map(z => ({ z, konec: spocitejZarukaDo(z.dorucenoDne, z.zarukaMesicu) }))
+              .filter(p => p.konec)
+              .sort((a, b) => a.konec.localeCompare(b.konec));
+            return zaruky.slice(0, 8).map(p => `
+              <div class="mini-radek" data-id="${p.z.id}">
+                <span>${utec(p.z.zakaznik.firma || p.z.zakaznik.jmeno || p.z.nazev)}</span>
+                ${zarukaStitek(p.konec)}
+              </div>`).join('') || '<p class="popis">Zatím žádná předaná postel. Záruka se hlídá od data předání v detailu zakázky.</p>';
+          })()}
         </div>
         <div class="karta">
           <h3>Pipeline B2B (hodnota)</h3>
@@ -378,6 +415,124 @@
     });
   }
 
+  /* ---------- Klienti ---------- */
+  let klientiData = [];
+
+  /* Nejbližší konec záruky klienta: nejdřív ta, která ještě platí a končí
+     nejdřív; když žádná neplatí, ukáže se poslední propadlá. */
+  function zarukaKlienta(k) {
+    const terminy = k.zakazky.filter(z => z.typ !== 'reklamace' && z.zarukaDo).map(z => z.zarukaDo).sort();
+    if (!terminy.length) return null;
+    return terminy.find(t => new Date(t + 'T12:00:00') >= Date.now()) || terminy[terminy.length - 1];
+  }
+
+  async function kresliKlienty() {
+    kresliTym();
+    const params = new URLSearchParams();
+    if (hledani) params.set('q', hledani);
+    klientiData = (await api('/api/admin/klienti?' + params)).klienti;
+
+    const b2b = klientiData.filter(k => k.typ === 'b2b').length;
+    $('#obsah').innerHTML = `
+      <div class="karta klienti-karta">
+        <h3>Klienti (${klientiData.length}${b2b ? `, z toho ${b2b} B2B` : ''})</h3>
+        ${klientiData.map((k, i) => {
+          const nazev = k.firma || k.jmeno || 'Bez jména';
+          const reklamaceZak = k.zakazky.filter(z => z.typ === 'reklamace').length;
+          return `
+          <div class="klient-radek" data-i="${i}">
+            <span class="avatar klient-avatar">${utec(inicialy(nazev))}</span>
+            <div class="klient-info">
+              <div class="nazev">${utec(nazev)} <span class="stitek-mini ${k.typ === 'b2b' ? 'chip-b2b' : ''}">${k.typ === 'b2b' ? 'B2B' : 'B2C'}</span></div>
+              <div class="popis">${utec([k.jmeno !== nazev ? k.jmeno : '', k.email, k.telefon].filter(Boolean).join(' · '))}</div>
+            </div>
+            <div class="klient-stitky">
+              ${k.otevrenychReklamaci ? `<span class="stitek-mini ukoly">${k.otevrenychReklamaci} reklamace</span>` : ''}
+              ${zarukaStitek(zarukaKlienta(k))}
+            </div>
+            <div class="klient-cisla">
+              <div class="nazev">${k.celkemKc ? Kc(k.celkemKc) : ''}</div>
+              <div class="popis">${k.zakazky.length - reklamaceZak} zak.${reklamaceZak ? ` · ${reklamaceZak} rekl.` : ''}</div>
+            </div>
+          </div>`;
+        }).join('') || '<p class="popis">Žádný klient neodpovídá hledání.</p>'}
+      </div>`;
+
+    $$('.klient-radek').forEach(r => r.addEventListener('click', () => otevriKlienta(klientiData[+r.dataset.i])));
+  }
+
+  function otevriKlienta(k) {
+    const nazev = k.firma || k.jmeno || 'Bez jména';
+    $('#detail').innerHTML = `
+      <div class="detail-hlava">
+        <h2>${utec(nazev)} <span class="stitek-mini ${k.typ === 'b2b' ? 'chip-b2b' : ''}">${k.typ === 'b2b' ? 'B2B' : 'B2C'}</span></h2>
+        <button class="zavrit" aria-label="Zavřít">×</button>
+      </div>
+      <div class="detail-telo">
+        <div class="sekce">
+          <h3>Kontakty</h3>
+          ${[
+            k.jmeno && k.jmeno !== nazev ? ['Kontaktní osoba', k.jmeno] : null,
+            k.telefon ? ['Telefon', k.telefon] : null,
+            k.email ? ['E-mail', k.email] : null,
+            k.adresa ? ['Adresa', k.adresa] : null,
+            k.ic ? ['IČ', k.ic + (k.dic ? ' · DIČ ' + k.dic : '')] : null
+          ].filter(Boolean).map(([p, h]) => `<div class="mini-radek klient-kontakt"><span class="stitek">${p}</span><span>${utec(h)}</span></div>`).join('') || '<p class="popis">Bez kontaktních údajů.</p>'}
+          <div class="souhrn-cena"><span>Hodnota všech zakázek</span><span>${Kc(k.celkemKc)}</span></div>
+        </div>
+        <div class="sekce">
+          <h3>Zakázky a postele (${k.zakazky.length})</h3>
+          ${k.zakazky.map(z => `
+            <div class="klient-zakazka" data-id="${z.id}">
+              <div class="klient-zakazka-hlava">
+                <span class="nazev">${utec(z.nazev)}</span>
+                <span class="castka">${z.castkaKc ? Kc(z.castkaKc) : ''}</span>
+              </div>
+              <div class="stitky">
+                <span class="stitek-mini ${z.typ === 'reklamace' ? 'ukoly' : ''}">${z.typ === 'reklamace' ? 'reklamace' : nazevStavu(z.typ, z.stav)}</span>
+                ${z.typ === 'reklamace' ? `<span class="stitek-mini">${nazevStavu('reklamace', z.stav)}</span>` : ''}
+                ${z.dorucenoDne ? `<span class="stitek-mini">předáno ${datumKratce(z.dorucenoDne)}</span>` : ''}
+                ${z.typ !== 'reklamace' ? zarukaStitek(z.zarukaDo) : ''}
+              </div>
+              <div class="klient-zakazka-akce">
+                <button class="btn btn-sm kz-otevrit" type="button">Otevřít</button>
+                ${z.typ !== 'reklamace' ? '<button class="btn btn-sm kz-reklamace" type="button">Založit reklamaci</button>' : ''}
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>`;
+
+    $('#detail').hidden = false;
+    $('#detail-pozadi').hidden = false;
+    const zavri = () => { $('#detail').hidden = true; $('#detail-pozadi').hidden = true; };
+    $('#detail .zavrit').addEventListener('click', zavri);
+    $('#detail-pozadi').onclick = zavri;
+
+    $$('#detail .klient-zakazka').forEach(el => {
+      const id = el.dataset.id;
+      $('.kz-otevrit', el).addEventListener('click', () => otevriDetail(id));
+      const tlR = $('.kz-reklamace', el);
+      if (tlR) tlR.addEventListener('click', () => { zavri(); novaReklamaceZ(id, k); });
+    });
+  }
+
+  /* Předvyplněná reklamace z karty klienta: typ, vazba i kontakty jsou hotové. */
+  function novaReklamaceZ(cisloZakazky, k) {
+    otevriNovou();
+    const f = $('#nova-form');
+    f.querySelector('[name="typ"][value="reklamace"]').checked = true;
+    f.nazev.value = 'Reklamace, ' + (k.firma || k.jmeno || cisloZakazky);
+    f.vazba.value = cisloZakazky;
+    f.firma.value = k.firma || '';
+    f.jmeno.value = k.jmeno || '';
+    f.telefon.value = k.telefon || '';
+    f.email.value = k.email || '';
+    f.adresa.value = k.adresa || '';
+    f.ic.value = k.ic || '';
+    f.dic.value = k.dic || '';
+    ukazVazbaInfo(cisloZakazky);
+  }
+
   /* ---------- Detail zakázky ---------- */
   function volbyLidi(vybrany) {
     return '<option value="">Bez zodpovědné osoby</option>' + tym.map(u =>
@@ -421,6 +576,19 @@
             ${z.vazba ? `<button class="btn btn-sm d-vazba-otevrit" type="button" data-vazba="${utec(z.vazba)}">Otevřít zakázku ${utec(z.vazba)}</button>` : '<span></span>'}
           </div>
         </div>
+
+        ${z.typ !== 'reklamace' ? `
+        <div class="sekce">
+          <h3>Předání a záruka</h3>
+          <div class="pole-rada">
+            <label>Předáno zákazníkovi<input id="d-doruceno" type="date" value="${utec(z.dorucenoDne || '')}"></label>
+            <label>Záruka (měsíců)<input id="d-zaruka" type="number" min="0" max="120" value="${z.zarukaMesicu || 24}"></label>
+          </div>
+          <p class="popis" id="d-zaruka-do">${(() => {
+            const konec = spocitejZarukaDo(z.dorucenoDne, z.zarukaMesicu);
+            return konec ? '' : 'Datum se zapíše samo při přesunu do doručeného stavu, nebo ho vyplňte ručně.';
+          })()}${zarukaStitek(spocitejZarukaDo(z.dorucenoDne, z.zarukaMesicu))}</p>
+        </div>` : ''}
 
         <div class="sekce">
           <h3>Úkoly (${z.ukoly.filter(u => !u.hotovo).length} otevřených)</h3>
@@ -561,8 +729,19 @@
           pocet: +$('.p-pocet', r).value || 1,
           cenaKc: +$('.p-cena', r).value || 0
         })).filter(p => p.nazev.trim()),
-        ...($('#d-hodnota') ? { hodnotaKc: +$('#d-hodnota').value || 0 } : {})
+        ...($('#d-hodnota') ? { hodnotaKc: +$('#d-hodnota').value || 0 } : {}),
+        ...($('#d-doruceno') ? { dorucenoDne: $('#d-doruceno').value, zarukaMesicu: +$('#d-zaruka').value || 24 } : {})
       };
+    }
+
+    /* Náhled konce záruky se přepočítává hned při psaní. */
+    if ($('#d-doruceno')) {
+      const prepocti = () => {
+        $('#d-zaruka-do').innerHTML = zarukaStitek(spocitejZarukaDo($('#d-doruceno').value, +$('#d-zaruka').value || 24)) ||
+          'Datum se zapíše samo při přesunu do doručeného stavu, nebo ho vyplňte ručně.';
+      };
+      $('#d-doruceno').addEventListener('input', prepocti);
+      $('#d-zaruka').addEventListener('input', prepocti);
     }
 
     $('#d-ulozit').addEventListener('click', async () => {
@@ -606,11 +785,41 @@
   }
 
   /* ---------- Nová zakázka ---------- */
+  let vsechnyZakazky = [];   /* pro našeptávač související zakázky */
+
   const otevriNovou = () => {
     $('#nova-prirazeno').innerHTML = volbyLidi(ja ? { id: ja.id } : null);
+    $('#vazba-info').hidden = true;
+    delete $('#nova-form').dataset.typRucne;
     $('#nova').hidden = false;
     $('#nova-pozadi').hidden = false;
+    /* Našeptávač: všechny zakázky kromě reklamací, hledá se jménem i číslem. */
+    api('/api/admin/zakazky').then(({ zakazky: vse }) => {
+      vsechnyZakazky = vse.filter(z => z.typ !== 'reklamace');
+      $('#seznam-zakazek').innerHTML = vsechnyZakazky.map(z =>
+        `<option value="${z.id}">${utec(z.nazev)} · ${utec(z.zakaznik.firma || z.zakaznik.jmeno || '')}</option>`).join('');
+      if ($('#nova-form').vazba.value) ukazVazbaInfo($('#nova-form').vazba.value);
+    }).catch(() => {});
   };
+
+  /* Po vybrání související zakázky se doplní kontakty klienta a potvrdí výběr. */
+  function ukazVazbaInfo(cislo) {
+    const z = vsechnyZakazky.find(x => String(x.id) === String(cislo).trim());
+    const info = $('#vazba-info');
+    if (!z) { info.hidden = true; return; }
+    info.textContent = `Navázáno na: ${z.nazev} (${z.zakaznik.firma || z.zakaznik.jmeno || 'bez kontaktu'})`;
+    info.hidden = false;
+    const f = $('#nova-form');
+    for (const pole of ['firma', 'jmeno', 'telefon', 'email', 'adresa', 'ic', 'dic']) {
+      if (!f[pole].value) f[pole].value = z.zakaznik[pole] || '';
+    }
+    if (!f.nazev.value) f.nazev.value = 'Reklamace, ' + (z.zakaznik.firma || z.zakaznik.jmeno || z.nazev);
+    if (f.querySelector('[name="typ"]:checked').value !== 'reklamace' && !f.dataset.typRucne) {
+      f.querySelector('[name="typ"][value="reklamace"]').checked = true;
+    }
+  }
+  $('#nova-form [name="vazba"]').addEventListener('input', (u) => ukazVazbaInfo(u.target.value));
+  $$('#nova-form [name="typ"]').forEach(r => r.addEventListener('change', () => { $('#nova-form').dataset.typRucne = '1'; }));
   const zavriNovou = () => { $('#nova').hidden = true; $('#nova-pozadi').hidden = true; };
   $('#nova-zakazka').addEventListener('click', otevriNovou);
   $('[data-zavri-novou]').addEventListener('click', zavriNovou);

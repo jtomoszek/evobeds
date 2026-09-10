@@ -263,6 +263,18 @@ app.get('/api/admin/zakazky', auth.vyzadujPrihlaseni, (req, res) => {
   res.json({ zakazky });
 });
 
+/* Přehled klientů poskládaný ze zakázek (B2C i B2B, včetně záruk a reklamací). */
+app.get('/api/admin/klienti', auth.vyzadujPrihlaseni, (req, res) => {
+  let klienti = crm.klienti();
+  if (req.query.q) {
+    const hledat = String(req.query.q).toLowerCase();
+    klienti = klienti.filter(k =>
+      [k.jmeno, k.firma, k.email, k.telefon, k.ic, k.adresa, ...k.zakazky.map(z => String(z.id))]
+        .some(v => String(v || '').toLowerCase().includes(hledat)));
+  }
+  res.json({ klienti });
+});
+
 app.post('/api/admin/zakazky', auth.vyzadujPrihlaseni, (req, res) => {
   try {
     res.json({ zakazka: crm.vytvor({ ...(req.body || {}), kdo: req.uzivatel.jmeno }) });

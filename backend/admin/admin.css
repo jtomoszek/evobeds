@@ -332,6 +332,44 @@ main { padding: 0 16px 48px; }
 .novy-uzivatel { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
 .login-napoveda { font-size: 12px; color: var(--gray-500); }
 
+/* ---------- Klienti ---------- */
+.klienti-karta { padding: 20px 24px; }
+.klienti-karta h3 { font-size: 15px; margin-bottom: 6px; }
+.klient-radek {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 10px;
+  margin: 0 -10px;
+  border-top: 1px solid var(--gray-200);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background .15s;
+}
+.klient-radek:hover { background: rgba(255, 255, 255, .75); }
+.klient-avatar { width: 38px; height: 38px; background: var(--dark); font-size: 13px; }
+.klient-info { flex: 1; min-width: 0; }
+.klient-info .nazev { font-weight: 500; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+.klient-info .popis, .klient-cisla .popis { font-size: 12px; color: var(--gray-500); }
+.klient-stitky { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.klient-cisla { text-align: right; min-width: 110px; }
+.klient-cisla .nazev { font-weight: 500; font-size: 14px; }
+.chip-b2b { background: var(--dark); color: var(--white); }
+.zaruka-plati { background: #e8f0e9; color: var(--zelena); }
+.zaruka-konci { background: #f9ead9; color: #b35b00; }
+.zaruka-po { background: var(--gray-100); color: var(--gray-500); }
+.klient-kontakt { cursor: default; }
+.klient-kontakt:hover { color: inherit; }
+.klient-zakazka { border-top: 1px solid var(--gray-200); padding: 12px 0; display: flex; flex-direction: column; gap: 8px; }
+.klient-zakazka-hlava { display: flex; justify-content: space-between; gap: 12px; }
+.klient-zakazka-hlava .nazev { font-weight: 500; font-size: 14px; }
+.klient-zakazka-hlava .castka { font-weight: 500; white-space: nowrap; }
+.klient-zakazka-akce { display: flex; gap: 8px; }
+@media (max-width: 640px) {
+  .klient-stitky { display: none; }
+  .klient-cisla { min-width: 0; }
+}
+
 /* Součty částek v hlavičkách sloupců a trojice přepínačů */
 .sloupec h3 .soucet { text-transform: none; letter-spacing: 0; font-weight: 600; color: var(--black); }
 .pole-rada-3 { grid-template-columns: 1fr 1fr 1fr; }
