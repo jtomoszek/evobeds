@@ -23,15 +23,13 @@ const PIPELINE = {
     { id: 'dorucena',    nazev: 'Doručená' },
     { id: 'fakturovana', nazev: 'Fakturovaná' }
   ],
+  /* Obchod je jen obchodní fáze; výhrou obchod končí a automaticky
+     se z něj založí zakázka, která projde výrobou a dodáním. */
   b2b: [
     { id: 'potencial',   nazev: 'Potenciál' },
     { id: 'jednani',     nazev: 'Jednání' },
     { id: 'nabidka',     nazev: 'Nabídka' },
-    { id: 'objednano',   nazev: 'Objednáno' },
-    { id: 'vyroba',      nazev: 'Ve výrobě' },
-    { id: 'dodani',      nazev: 'Dodání a montáž' },
-    { id: 'fakturace',   nazev: 'Fakturace' },
-    { id: 'uzavreno',    nazev: 'Uzavřeno' }
+    { id: 'vyhrano',     nazev: 'Vyhráno' }
   ],
   reklamace: [
     { id: 'prijata',     nazev: 'Přijatá' },
@@ -128,7 +126,7 @@ function vytvor(vstup) {
     vytvoreno: new Date().toISOString(),
     typ,
     stav,
-    zdroj: vstup.zdroj === 'web' ? 'web' : 'rucni',
+    zdroj: ['web', 'obchod'].includes(vstup.zdroj) ? vstup.zdroj : 'rucni',
     nazev: ocisti(vstup.nazev, 200) || (typ === 'b2b' ? 'Nový obchod' : (typ === 'reklamace' ? 'Reklamace' : 'Objednávka')),
     vazba: ocisti(vstup.vazba, 30),   /* číslo související zakázky (hlavně u reklamací) */
     zakaznik: {
@@ -152,7 +150,9 @@ function vytvor(vstup) {
     pohoda: { zalozeno: false },
     udalosti: []
   };
-  pridejUdalost(z, 'vznik', z.zdroj === 'web' ? 'Zakázka přijata z webu.' : 'Zakázka založena ručně.', vstup.kdo);
+  pridejUdalost(z, 'vznik',
+    z.zdroj === 'web' ? 'Zakázka přijata z webu.' :
+    z.zdroj === 'obchod' ? `Zakázka vznikla z vyhraného obchodu ${z.vazba}.` : 'Zakázka založena ručně.', vstup.kdo);
   uloz(z);
   return z;
 }
@@ -170,11 +170,31 @@ function uprav(id, zmeny, kdo) {
     z.stav = zmeny.stav;
     /* Předání zákazníkovi: datum se zapíše samo při prvním dosažení
        doručeného stavu a od něj běží záruka. Jde kdykoli ručně upravit. */
-    const predano = (z.typ === 'b2c' && ['dorucena', 'fakturovana'].includes(z.stav)) ||
-                    (z.typ === 'b2b' && ['dodani', 'fakturace', 'uzavreno'].includes(z.stav));
-    if (predano && !z.dorucenoDne) {
+    if (z.typ === 'b2c' && ['dorucena', 'fakturovana'].includes(z.stav) && !z.dorucenoDne) {
       z.dorucenoDne = new Date().toISOString().slice(0, 10);
       pridejUdalost(z, 'zaruka', `Zapsáno datum předání ${z.dorucenoDne}, záruka ${z.zarukaMesicu || 24} měsíců.`, kdo);
+    }
+    /* Vyhraný obchod: automaticky se založí zakázka s položkami i kontakty
+       a obě strany se provážou. Založí se jen jednou. */
+    if (z.typ === 'b2b' && z.stav === 'vyhrano' && !z.zakazkaZVyhry) {
+      const nova = vytvor({
+        typ: 'b2c',
+        zdroj: 'obchod',
+        nazev: z.nazev,
+        vazba: String(z.id),
+        zakaznik: { ...z.zakaznik },
+        polozky: z.polozky,
+        celkemKc: z.celkemKc || z.hodnotaKc,
+        kdo
+      });
+      if (z.prirazeno) {
+        nova.prirazeno = { ...z.prirazeno };
+        pridejUdalost(nova, 'prirazeni', `Zakázku převzal(a): ${nova.prirazeno.jmeno} (z obchodu).`, kdo);
+        uloz(nova);
+      }
+      z.zakazkaZVyhry = nova.id;
+      if (!z.vazba) z.vazba = String(nova.id);
+      pridejUdalost(z, 'vyhrano', `Obchod vyhrán, automaticky založena zakázka ${nova.id}.`, kdo);
     }
   }
   if (zmeny.nazev != null) z.nazev = ocisti(zmeny.nazev, 200) || z.nazev;
@@ -332,7 +352,8 @@ function klienti() {
       vazba: zak.vazba || '', dorucenoDne: zak.dorucenoDne || '',
       zarukaMesicu: zak.zarukaMesicu || 24, zarukaDo: zarukaDo(zak)
     });
-    if (zak.typ !== 'reklamace' && !['storno', 'ztraceno'].includes(zak.stav)) {
+    if (zak.typ !== 'reklamace' && !['storno', 'ztraceno'].includes(zak.stav) &&
+        !(zak.typ === 'b2b' && zak.stav === 'vyhrano')) {
       k.celkemKc += (zak.typ === 'b2b' ? zak.hodnotaKc : zak.celkemKc) || 0;
     }
     if (zak.typ === 'reklamace' && !['vyrizena', 'zamitnuta', 'storno', 'ztraceno'].includes(zak.stav)) {
@@ -365,7 +386,9 @@ function statistiky() {
   }
   for (const z of zakazky) {
     if (out[z.typ][z.stav] != null) out[z.typ][z.stav]++;
-    if (z.typ !== 'reklamace' && !['storno', 'ztraceno'].includes(z.stav)) {
+    /* Vyhraný obchod se do peněz nepočítá, jeho hodnotu už nese založená zakázka. */
+    if (z.typ !== 'reklamace' && !['storno', 'ztraceno'].includes(z.stav) &&
+        !(z.typ === 'b2b' && z.stav === 'vyhrano')) {
       out.celkemKc[z.typ] += (z.typ === 'b2b' ? z.hodnotaKc : z.celkemKc) || 0;
     }
   }
@@ -373,7 +396,7 @@ function statistiky() {
   /* Souhrn podle lidí: kolik zakázek a otevřených úkolů kdo vede. */
   const lide = {};
   for (const z of zakazky) {
-    if (['storno', 'ztraceno', 'zamitnuta', 'fakturovana', 'uzavreno', 'dorucena', 'vyrizena'].includes(z.stav)) continue;
+    if (['storno', 'ztraceno', 'zamitnuta', 'fakturovana', 'vyhrano', 'dorucena', 'vyrizena'].includes(z.stav)) continue;
     if (z.prirazeno) {
       const l = lide[z.prirazeno.id] = lide[z.prirazeno.id] || { jmeno: z.prirazeno.jmeno, barva: z.prirazeno.barva, zakazek: 0, ukolu: 0 };
       l.zakazek++;

@@ -103,13 +103,61 @@ label input, label textarea, label select { margin-top: 4px; }
   border-radius: 999px;
   box-shadow: var(--stin);
 }
-.zalozky { display: flex; gap: 4px; flex: 1; }
-.zalozky button { padding: 8px 16px; border-radius: 999px; color: var(--gray-500); font-weight: 500; }
+/* Workflow nahoře: kapsle s ikonkou (Přehled → Zakázky → Obchod → Reklamace) */
+.zalozky { display: flex; gap: 8px; flex: 1; }
+.zalozky button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  color: var(--gray-700);
+  font-weight: 500;
+  background: rgba(255, 255, 255, .72);
+  box-shadow: 0 8px 18px -14px rgba(56, 56, 68, .45);
+  transition: background .2s, color .2s, transform .2s;
+}
+.zalozky button svg { width: 17px; height: 17px; flex-shrink: 0; }
+.zalozky button:hover { transform: translateY(-1px); }
 .zalozky button.active { background: var(--dark); color: var(--white); }
+@media (max-width: 1240px) { .zalozky button span { display: none; } .zalozky button { padding: 9px 13px; } }
 .top-right { display: flex; gap: 10px; align-items: center; }
 .top-right input[type="search"] { width: 220px; border-radius: 999px; }
 
-main { padding: 0 16px 48px; }
+/* Seznamy vlevo: kuličky (Klienti, Uživatelé) */
+.rail {
+  position: fixed;
+  left: 16px;
+  top: 110px;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.rail button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-500);
+  background: var(--glass);
+  backdrop-filter: blur(22px) saturate(170%);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  border: var(--glass-border);
+  box-shadow: var(--stin);
+  transition: transform .2s, background .2s, color .2s;
+}
+.rail button svg { width: 20px; height: 20px; }
+.rail button:hover { transform: translateY(-2px); }
+.rail button.active { background: var(--dark); color: var(--white); }
+
+main { padding: 0 16px 48px 84px; }
+@media (max-width: 720px) {
+  .rail { position: static; flex-direction: row; margin: 0 16px 14px; }
+  main { padding-left: 16px; }
+}
 
 /* ---------- Nástěnka ---------- */
 .dlazdice {

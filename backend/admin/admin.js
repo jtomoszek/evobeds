@@ -129,16 +129,18 @@
     $$('#tym .tym-avatar').forEach(b => b.addEventListener('click', () => {
       const uid = +b.dataset.uid;
       filtrClovek = filtrClovek === uid ? null : uid;
-      if (pohled === 'nastenka' || pohled === 'uzivatele') pohled = 'b2b';
-      $$('.zalozky button').forEach(x => x.classList.toggle('active', x.dataset.pohled === pohled));
+      aktivujPohled(['nastenka', 'uzivatele', 'klienti'].includes(pohled) ? 'b2b' : pohled);
       prekresli();
     }));
   }
 
-  /* ---------- Přepínání pohledů ---------- */
-  $$('.zalozky button').forEach(b => b.addEventListener('click', () => {
-    pohled = b.dataset.pohled;
-    $$('.zalozky button').forEach(x => x.classList.toggle('active', x === b));
+  /* ---------- Přepínání pohledů (kapsle nahoře i kuličky vlevo) ---------- */
+  function aktivujPohled(p) {
+    pohled = p;
+    $$('[data-pohled]').forEach(x => x.classList.toggle('active', x.dataset.pohled === p));
+  }
+  $$('[data-pohled]').forEach(b => b.addEventListener('click', () => {
+    aktivujPohled(b.dataset.pohled);
     prekresli();
   }));
 
@@ -185,7 +187,7 @@
     zakazky = seznamData.zakazky;
     const otevreneB2c = Object.entries(stat.b2c).filter(([id]) => !['dorucena', 'fakturovana', 'storno', 'ztraceno'].includes(id)).reduce((s, [, n]) => s + n, 0);
     const rozjednane = Object.entries(stat.b2b).filter(([id]) => ['potencial', 'jednani', 'nabidka'].includes(id)).reduce((s, [, n]) => s + n, 0);
-    const veVyrobe = (stat.b2c.vyroba || 0) + (stat.b2b.vyroba || 0);
+    const veVyrobe = stat.b2c.vyroba || 0;
     const reklamaci = Object.entries(stat.reklamace || {}).filter(([id]) => !['vyrizena', 'zamitnuta', 'storno', 'ztraceno'].includes(id)).reduce((s, [, n]) => s + n, 0);
     const pocty = {};
     for (const [uid, l] of Object.entries(stat.lide || {})) pocty[uid] = l.zakazek + l.ukolu;
@@ -201,8 +203,8 @@
 
     $('#obsah').innerHTML = `
       <div class="dlazdice">
-        <div class="karta"><div class="cislo">${otevreneB2c}</div><div class="popis">otevřené objednávky B2C</div></div>
-        <div class="karta"><div class="cislo">${rozjednane}</div><div class="popis">rozjednané obchody B2B</div></div>
+        <div class="karta"><div class="cislo">${otevreneB2c}</div><div class="popis">otevřené zakázky</div></div>
+        <div class="karta"><div class="cislo">${rozjednane}</div><div class="popis">rozjednané obchody</div></div>
         <div class="karta"><div class="cislo">${veVyrobe}</div><div class="popis">zakázek ve výrobě</div></div>
         <div class="karta"><div class="cislo">${reklamaci}</div><div class="popis">otevřené reklamace</div></div>
         <div class="karta"><div class="cislo">${Kc(stat.celkemKc.b2c + stat.celkemKc.b2b)}</div><div class="popis">hodnota všech aktivních zakázek</div></div>
@@ -248,7 +250,7 @@
           })()}
         </div>
         <div class="karta">
-          <h3>Pipeline B2B (hodnota)</h3>
+          <h3>Pipeline obchodu (hodnota)</h3>
           ${pipeline.pipeline.b2b.map(s => {
             const castka = zakazky.filter(z => z.typ === 'b2b' && z.stav === s.id)
               .reduce((sum, z) => sum + (z.hodnotaKc || 0), 0);
@@ -325,6 +327,7 @@
         </div>
         <div class="stitky">
           ${z.zdroj === 'web' ? '<span class="stitek-mini web">web</span>' : ''}
+          ${z.zdroj === 'obchod' ? '<span class="stitek-mini pohoda">z obchodu</span>' : ''}
           ${z.vazba ? `<span class="stitek-mini">zak. ${utec(z.vazba)}</span>` : ''}
           ${z.vyroba.rezim === 'vyroba' ? '<span class="stitek-mini vyroba">výroba</span>' : ''}
           ${z.vyroba.rezim === 'sklad' ? '<span class="stitek-mini vyroba">sklad</span>' : ''}
@@ -853,8 +856,7 @@
       }
       u.target.reset();
       zavriNovou();
-      pohled = zakazka.typ;
-      $$('.zalozky button').forEach(x => x.classList.toggle('active', x.dataset.pohled === pohled));
+      aktivujPohled(zakazka.typ);
       await prekresli();
       oznam('Zakázka založena.');
     } catch (e) {
