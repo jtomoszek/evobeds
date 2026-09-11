@@ -846,7 +846,8 @@ body.detail-open .detail-drawer { transform: none; }
 .positions-hero { display: flex; flex-direction: column; align-items: center; }
 .positions-stage {
   position: relative;
-  width: 100%;
+  /* Šířka se řídí i výškou okna, aby se postel vešla celá i na menších monitorech */
+  width: min(100%, 115svh);
   /* Výška odpovídá poměru stran fotografií, postel je vždy vidět celá */
   aspect-ratio: 2560 / 1273;
   /* Nahoře místo pro postel, která přesahuje nad rámec slova */
@@ -859,7 +860,8 @@ body.detail-open .detail-drawer { transform: none; }
   top: 0;
   transform: translateX(-50%);
   font-family: var(--font-display);
-  font-size: clamp(120px, 31vw, 460px);
+  /* Slovo se zmenšuje spolu s postelí, na nižších monitorech ho omezuje výška okna */
+  font-size: min(clamp(120px, 31vw, 460px), 36svh);
   font-weight: 400;
   line-height: .9;
   letter-spacing: -.05em;
@@ -1307,6 +1309,20 @@ body.detail-open .detail-drawer { transform: none; }
   justify-content: center;
   flex-wrap: wrap;
 }
+.partner-logo img { max-height: 40px; max-width: 76%; width: auto; object-fit: contain; }
+.partner-logo.dark { background: var(--dark); }
+/* Logo zařízení u případové studie */
+.case-logo {
+  display: inline-flex;
+  align-items: center;
+  height: 52px;
+  padding: 0 18px;
+  border-radius: 14px;
+  background: var(--white);
+  margin-bottom: 16px;
+}
+.case-logo img { max-height: 34px; max-width: 160px; width: auto; object-fit: contain; }
+.case-logo.dark { background: var(--dark); }
 .partner-logo {
   width: 170px;
   height: 64px;

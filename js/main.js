@@ -205,9 +205,11 @@
         const stred = (stageW - slideW) / 2;
         let tx, scale, op;
         if (off < 0) {
-          /* přijíždí zprava a roste */
+          /* přijíždí zprava a roste; start je až za pravým okrajem OKNA,
+             aby čekající video nevykukovalo vedle jeviště */
           const t = ease(1 + off);
-          tx = lerp(stageW + 60, stred, t);
+          const start = window.innerWidth - stage.getBoundingClientRect().left + 40;
+          tx = lerp(Math.max(start, stageW + 60), stred, t);
           scale = lerp(.8, 1, t);
           op = 1;
         } else {

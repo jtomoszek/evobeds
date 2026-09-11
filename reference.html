@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reference | evobeds</title>
   <meta name="description" content="Reference a realizace evobeds: domovy pro seniory, sanatoria i lázně, kde chytré polohovací postele slouží každý den. Videoreference a případové studie.">
-  <link rel="stylesheet" href="css/style.css?v=48">
+  <link rel="stylesheet" href="css/style.css?v=49">
   <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
@@ -55,22 +55,12 @@
     <a class="btn btn-dark" href="eshop.html">e-shop</a>
   </div>
 
-  <!-- Hero -->
-  <section class="hero hero-sub">
-    <img class="hero-img" src="assets/img/header-8.jpg" alt="Postele evobeds v zařízení">
-    <div class="container">
-      <div class="hero-content">
-        <p class="eyebrow">Reference</p>
-        <h1 class="h-hero">Postele, které už slouží.<br>Lidem i zařízením.</h1>
-      </div>
-    </div>
-  </section>
-
   <!-- Úvod -->
-  <section class="section">
+  <section class="section" style="padding-top:clamp(130px, 15vw, 190px)">
     <div class="container">
       <div class="section-head reveal">
-        <h2 class="h-xl">Nemusíte věřit slovům.<br>Podívejte se, kde evobeds funguje.</h2>
+        <p class="eyebrow">Reference</p>
+        <h1 class="h-xl">Nemusíte věřit slovům.<br>Podívejte se, kde evobeds funguje.</h1>
         <p class="lead">Postele evobeds slouží v domovech pro seniory, sanatoriích i lázních po celé republice. A každý den doma u rodin, které pečují o své blízké.</p>
       </div>
       <div class="ref-logos reveal">
@@ -82,8 +72,9 @@
     </div>
   </section>
 
-  <!-- Videoreference: připravené pozice pro natáčená videa -->
-  <section class="section bg-off" id="videoreference">
+  <!-- Videoreference: připravené pozice pro natáčená videa.
+       SKRYTO pro produkci: odkrýt, až budou natočená videa (smazat hidden a display:none). -->
+  <section class="section bg-off" id="videoreference" hidden style="display:none">
     <div class="container">
       <div class="section-head reveal">
         <p class="eyebrow">Videoreference</p>
@@ -134,6 +125,7 @@
           </div>
         </div>
         <div class="case-body">
+          <div class="case-logo dark"><img src="assets/img/ref-libella.webp" alt="Logo Sanatorium Libella" loading="lazy"></div>
           <p class="eyebrow">Sanatorium</p>
           <h3>Sanatorium Libella</h3>
           <div class="case-block"><h4>Výchozí situace</h4><p>Sanatorium potřebovalo lůžka, která zvládnou každodenní dlouhodobou péči a přitom nepromění pokoje v nemocniční prostředí.</p></div>
@@ -151,6 +143,7 @@
           </div>
         </div>
         <div class="case-body">
+          <div class="case-logo"><img src="assets/img/ref-dobravoda.webp" alt="Logo Domov Lázně Dobrá Voda" loading="lazy"></div>
           <p class="eyebrow">Domov pro seniory</p>
           <h3>Domov Lázně Dobrá Voda</h3>
           <div class="case-block"><h4>Výchozí situace</h4><p>Domov obnovoval vybavení pokojů a hledal lůžka vhodná i pro klienty s omezenou pohyblivostí, aniž by pokoje ztratily útulnost.</p></div>
@@ -393,6 +386,6 @@
     </div>
   </footer>
 
-  <script src="js/main.js?v=13"></script>
+  <script src="js/main.js?v=14"></script>
 </body>
 </html>
