@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Administrace | evobeds</title>
   <meta name="robots" content="noindex, nofollow">
-  <link rel="stylesheet" href="admin.css?v=5">
+  <link rel="stylesheet" href="admin.css?v=6">
 </head>
 <body>
 
@@ -77,10 +77,10 @@
       <button class="zavrit" data-zavri-novou aria-label="Zavřít">×</button>
     </div>
     <form id="nova-form" class="detail-telo">
-      <div class="pole-rada pole-rada-3">
-        <label class="prepinac"><input type="radio" name="typ" value="b2b" checked> Obchod</label>
-        <label class="prepinac"><input type="radio" name="typ" value="b2c"> Zakázka</label>
-        <label class="prepinac"><input type="radio" name="typ" value="reklamace"> Reklamace</label>
+      <div class="prepinac-skupina">
+        <label><input type="radio" name="typ" value="b2b" checked><span>Obchod</span></label>
+        <label><input type="radio" name="typ" value="b2c"><span>Zakázka</span></label>
+        <label><input type="radio" name="typ" value="reklamace"><span>Reklamace</span></label>
       </div>
       <label>Název zakázky<input name="nazev" placeholder="Např. Domov seniorů Beroun, 12 lůžek" required></label>
       <label>Zodpovídá<select name="prirazeno" id="nova-prirazeno"></select></label>
@@ -94,9 +94,10 @@
       </div>
       <label>Adresa<input name="adresa" placeholder="Ulice 1, 110 00 Praha"></label>
       <div class="pole-rada">
-        <label>IČ<input name="ic"></label>
+        <label>IČ<span class="ic-rada"><input name="ic" inputmode="numeric" placeholder="8 číslic"><button type="button" class="btn btn-sm" id="nova-ares" title="Doplní firmu, adresu a DIČ z registru">ARES</button></span></label>
         <label>DIČ<input name="dic"></label>
       </div>
+      <p id="ares-info" class="login-napoveda" hidden></p>
       <label>Odhad hodnoty (Kč)<input name="hodnotaKc" type="number" min="0" step="1000"></label>
       <label>Související zakázka (u reklamací)<input name="vazba" list="seznam-zakazek" placeholder="začněte psát jméno, firmu nebo číslo…" autocomplete="off"></label>
       <datalist id="seznam-zakazek"></datalist>
@@ -107,6 +108,6 @@
     </form>
   </aside>
 
-  <script src="admin.js?v=5"></script>
+  <script src="admin.js?v=6"></script>
 </body>
 </html>

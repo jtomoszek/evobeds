@@ -418,6 +418,63 @@ main { padding: 0 16px 48px 84px; }
   .klient-cisla { min-width: 0; }
 }
 
+/* ---------- Grafy na nástěnce ---------- */
+.grafy {
+  display: grid;
+  grid-template-columns: 1.55fr 1fr;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+@media (max-width: 1000px) { .grafy { grid-template-columns: 1fr; } }
+.graf-karta { padding: 20px 24px; display: flex; flex-direction: column; gap: 12px; }
+.graf-hlava { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+.graf-hlava h3 { font-size: 15px; }
+.graf-hlava .popis { font-size: 12px; }
+.graf-cisla { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+.graf-velke { font-size: 22px; font-weight: 600; letter-spacing: -.02em; white-space: nowrap; }
+.trend { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
+.trend-nahoru { background: #e8f0e9; color: var(--zelena); }
+.trend-dolu { background: #f7e9e8; color: var(--cervena); }
+.graf { width: 100%; height: auto; }
+.graf rect { transition: opacity .15s; }
+.graf rect:hover { opacity: .75; }
+.graf-popisek { font-size: 9.5px; fill: var(--gray-400); font-family: var(--font); }
+.graf-legenda { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--gray-500); }
+.graf-legenda i, .kolo-legenda i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; }
+.kolo-rada { display: flex; align-items: center; gap: 22px; flex: 1; }
+.kolo { width: 140px; height: 140px; flex-shrink: 0; }
+.kolo-cislo { font-size: 25px; font-weight: 600; fill: var(--black); font-family: var(--font); letter-spacing: -.02em; }
+.kolo-legenda p { font-size: 13px; margin-bottom: 5px; }
+.zdroje { display: flex; flex-direction: column; gap: 12px; flex: 1; justify-content: center; }
+.zdroj-radek { display: grid; grid-template-columns: 118px 1fr 34px; align-items: center; gap: 10px; font-size: 13px; }
+.zdroj-nazev { color: var(--gray-700); }
+.zdroj-pruh { height: 12px; border-radius: 999px; background: var(--gray-100); overflow: hidden; display: block; }
+.zdroj-pruh i { display: block; height: 100%; border-radius: 999px; }
+.zdroj-pocet { text-align: right; font-weight: 600; }
+
+/* ---------- Segmentový přepínač typu zakázky ---------- */
+.prepinac-skupina { display: flex; background: var(--gray-100); border-radius: 999px; padding: 4px; gap: 4px; }
+.prepinac-skupina label { flex: 1; margin: 0; }
+.prepinac-skupina input { position: absolute; opacity: 0; pointer-events: none; }
+.prepinac-skupina span {
+  display: block;
+  text-align: center;
+  padding: 10px 6px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-500);
+  cursor: pointer;
+  transition: background .2s, color .2s;
+}
+.prepinac-skupina span:hover { color: var(--black); }
+.prepinac-skupina label:has(input:checked) span { background: var(--dark); color: var(--white); box-shadow: 0 8px 16px -10px rgba(0, 0, 0, .5); }
+
+/* IČ s tlačítkem ARES */
+.ic-rada { display: flex; gap: 6px; margin-top: 4px; }
+.ic-rada input { margin-top: 0; flex: 1; min-width: 0; }
+.ic-rada .btn { flex-shrink: 0; }
+
 /* Součty částek v hlavičkách sloupců a trojice přepínačů */
 .sloupec h3 .soucet { text-transform: none; letter-spacing: 0; font-weight: 600; color: var(--black); }
 .pole-rada-3 { grid-template-columns: 1fr 1fr 1fr; }

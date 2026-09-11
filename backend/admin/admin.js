@@ -178,11 +178,59 @@
     return `<span class="stitek-mini zaruka-plati">záruka do ${datumKratce(zarukaDo)}</span>`;
   }
 
+  /* ---------- Grafy (čisté SVG, bez knihoven) ---------- */
+  const KcTis = n => n >= 1000000
+    ? (n / 1000000).toLocaleString('cs-CZ', { maximumFractionDigits: 1 }) + ' mil. Kč'
+    : Math.round(n / 1000).toLocaleString('cs-CZ') + ' tis. Kč';
+  const mesicPopisek = m => (+m.slice(5)) + '/' + m.slice(2, 4);
+
+  /* Skupinový sloupcový graf po měsících. serie: [{klic, barva, nazev, format}] */
+  function grafMesicu(mesice, serie) {
+    const W = 560, H = 200, dole = 24, horni = 8;
+    const max = Math.max(1, ...mesice.flatMap(m => serie.map(s => m[s.klic] || 0)));
+    const slot = W / mesice.length;
+    const sirka = Math.min(16, (slot - 12) / serie.length);
+    let out = `<svg class="graf" viewBox="0 0 ${W} ${H}">`;
+    mesice.forEach((m, i) => {
+      serie.forEach((s, j) => {
+        const v = m[s.klic] || 0;
+        const h = Math.max(v > 0 ? 3 : 0, (v / max) * (H - dole - horni));
+        const x = i * slot + (slot - serie.length * sirka - (serie.length - 1) * 3) / 2 + j * (sirka + 3);
+        out += `<rect x="${x.toFixed(1)}" y="${(H - dole - h).toFixed(1)}" width="${sirka.toFixed(1)}" height="${h.toFixed(1)}" rx="4" fill="${s.barva}"><title>${mesicPopisek(m.mesic)} · ${s.nazev}: ${s.format(v)}</title></rect>`;
+      });
+      out += `<text x="${(i * slot + slot / 2).toFixed(1)}" y="${H - 7}" text-anchor="middle" class="graf-popisek">${mesicPopisek(m.mesic)}</text>`;
+    });
+    return out + '</svg>';
+  }
+
+  /* Kolo s podílem (např. úspěšnost obchodů) */
+  function grafKolo(podil, barva) {
+    const r = 52, obvod = 2 * Math.PI * r;
+    return `<svg class="kolo" viewBox="0 0 140 140">
+      <circle cx="70" cy="70" r="${r}" fill="none" stroke="rgba(56,56,68,.1)" stroke-width="16"/>
+      <circle cx="70" cy="70" r="${r}" fill="none" stroke="${barva}" stroke-width="16" stroke-linecap="round"
+        stroke-dasharray="${(obvod * podil).toFixed(1)} ${obvod.toFixed(1)}" transform="rotate(-90 70 70)"/>
+      <text x="70" y="79" text-anchor="middle" class="kolo-cislo">${Math.round(podil * 100)} %</text>
+    </svg>`;
+  }
+
+  /* Trendová známka: srovnání posledních 6 měsíců s předchozími 6 */
+  function trendZnamka(mesice, klic) {
+    const soucet = cast => cast.reduce((s, m) => s + (m[klic] || 0), 0);
+    const nyni = soucet(mesice.slice(6));
+    const drive = soucet(mesice.slice(0, 6));
+    if (!drive) return '';
+    const zmena = Math.round((nyni - drive) / drive * 100);
+    const trida = zmena >= 0 ? 'trend-nahoru' : 'trend-dolu';
+    return `<span class="trend ${trida}" title="Posledních 6 měsíců proti předchozím 6">${zmena >= 0 ? '↗' : '↘'} ${zmena >= 0 ? '+' : ''}${zmena} %</span>`;
+  }
+
   /* ---------- Nástěnka ---------- */
   async function kresliNastenku() {
-    const [stat, seznamData] = await Promise.all([
+    const [stat, seznamData, vyvoj] = await Promise.all([
       api('/api/admin/statistiky'),
-      api('/api/admin/zakazky')
+      api('/api/admin/zakazky'),
+      api('/api/admin/vyvoj')
     ]);
     zakazky = seznamData.zakazky;
     const otevreneB2c = Object.entries(stat.b2c).filter(([id]) => !['dorucena', 'fakturovana', 'storno', 'ztraceno'].includes(id)).reduce((s, [, n]) => s + n, 0);
@@ -209,6 +257,66 @@
         <div class="karta"><div class="cislo">${reklamaci}</div><div class="popis">otevřené reklamace</div></div>
         <div class="karta"><div class="cislo">${Kc(stat.celkemKc.b2c + stat.celkemKc.b2b)}</div><div class="popis">hodnota všech aktivních zakázek</div></div>
       </div>
+      ${(() => {
+        const ms = vyvoj.mesice;
+        const celkem12 = ms.reduce((s, m) => s + m.zakazkyKc, 0);
+        const uzavrenych = vyvoj.vyhranoCelkem + vyvoj.ztracenoCelkem;
+        const uspesnost = uzavrenych ? vyvoj.vyhranoCelkem / uzavrenych : 0;
+        const reklamovanost = vyvoj.dorucenoCelkem ? vyvoj.reklamaciCelkem / vyvoj.dorucenoCelkem : 0;
+        const zdrojeCelkem = (vyvoj.zdroje.web + vyvoj.zdroje.obchod + vyvoj.zdroje.rucni) || 1;
+        const zdrojRadek = (nazev, pocet, barva) => `
+          <div class="zdroj-radek">
+            <span class="zdroj-nazev">${nazev}</span>
+            <span class="zdroj-pruh"><i style="width:${Math.round(pocet / zdrojeCelkem * 100)}%;background:${barva}"></i></span>
+            <span class="zdroj-pocet">${pocet}</span>
+          </div>`;
+        return `
+      <div class="grafy">
+        <div class="karta graf-karta">
+          <div class="graf-hlava">
+            <div><h3>Tržby z nových zakázek</h3><p class="popis">posledních 12 měsíců, včetně zakázek z vyhraných obchodů</p></div>
+            <div class="graf-cisla"><span class="graf-velke">${KcTis(celkem12)}</span>${trendZnamka(ms, 'zakazkyKc')}</div>
+          </div>
+          ${grafMesicu(ms, [
+            { klic: 'zakazkyKc', barva: '#323842', nazev: 'Nové zakázky', format: Kc },
+            { klic: 'vyhranoKc', barva: '#8fa3bd', nazev: 'Vyhrané obchody', format: Kc }
+          ])}
+          <div class="graf-legenda"><span><i style="background:#323842"></i>Nové zakázky (Kč)</span><span><i style="background:#8fa3bd"></i>Vyhrané obchody (Kč)</span></div>
+        </div>
+        <div class="karta graf-karta">
+          <div class="graf-hlava"><div><h3>Úspěšnost obchodů</h3><p class="popis">podíl vyhraných z uzavřených jednání</p></div></div>
+          <div class="kolo-rada">
+            ${grafKolo(uspesnost, '#2e7d4f')}
+            <div class="kolo-legenda">
+              <p><i style="background:#2e7d4f"></i>Vyhráno <strong>${vyvoj.vyhranoCelkem}</strong></p>
+              <p><i style="background:#a4443f"></i>Ztraceno <strong>${vyvoj.ztracenoCelkem}</strong></p>
+              <p class="popis" style="margin-top:8px">Průměrná zakázka<br><strong>${Kc(vyvoj.prumernaZakazkaKc)}</strong></p>
+            </div>
+          </div>
+        </div>
+        <div class="karta graf-karta">
+          <div class="graf-hlava">
+            <div><h3>Zakázky, doručení a reklamace</h3><p class="popis">počty po měsících</p></div>
+            <div class="graf-cisla">${trendZnamka(ms, 'zakazkyPocet')}</div>
+          </div>
+          ${grafMesicu(ms, [
+            { klic: 'zakazkyPocet', barva: '#323842', nazev: 'Nové zakázky', format: v => v + '' },
+            { klic: 'dorucenoPocet', barva: '#2e7d4f', nazev: 'Doručené postele', format: v => v + '' },
+            { klic: 'reklamacePocet', barva: '#a4443f', nazev: 'Reklamace', format: v => v + '' }
+          ])}
+          <div class="graf-legenda"><span><i style="background:#323842"></i>Nové zakázky</span><span><i style="background:#2e7d4f"></i>Doručené postele</span><span><i style="background:#a4443f"></i>Reklamace</span></div>
+        </div>
+        <div class="karta graf-karta">
+          <div class="graf-hlava"><div><h3>Odkud zakázky přicházejí</h3><p class="popis">za posledních 12 měsíců</p></div></div>
+          <div class="zdroje">
+            ${zdrojRadek('E-shop', vyvoj.zdroje.web, '#323842')}
+            ${zdrojRadek('Vyhrané obchody', vyvoj.zdroje.obchod, '#8fa3bd')}
+            ${zdrojRadek('Ručně založené', vyvoj.zdroje.rucni, '#b8a98f')}
+          </div>
+          <p class="popis" style="margin-top:14px">Reklamovanost <strong>${(reklamovanost * 100).toFixed(1).replace('.', ',')} %</strong> z ${vyvoj.dorucenoCelkem} doručených postelí · ${vyvoj.reklamaciCelkem} reklamací celkem</p>
+        </div>
+      </div>`;
+      })()}
       <div class="nastenka-sloupce">
         <div class="karta">
           <h3>Otevřené úkoly (${ukoly.length})</h3>
@@ -627,7 +735,7 @@
           </div>
           <label>Adresa<input id="d-adresa" value="${utec(z.zakaznik.adresa)}"></label>
           <div class="pole-rada">
-            <label>IČ<input id="d-ic" value="${utec(z.zakaznik.ic)}"></label>
+            <label>IČ<span class="ic-rada"><input id="d-ic" value="${utec(z.zakaznik.ic)}" inputmode="numeric"><button class="btn btn-sm" id="d-ares" type="button" title="Doplní firmu, adresu a DIČ z registru">ARES</button></span></label>
             <label>DIČ<input id="d-dic" value="${utec(z.zakaznik.dic)}"></label>
           </div>
         </div>
@@ -704,6 +812,17 @@
         });
         await otevriDetail(z.id);
       } catch (e) { oznam(e.message); }
+    });
+
+    $('#d-ares').addEventListener('click', async () => {
+      try {
+        const data = await nactiAres($('#d-ic').value);
+        if (data.nazev) $('#d-firma').value = data.nazev;
+        if (data.adresa) $('#d-adresa').value = data.adresa;
+        if (data.dic) $('#d-dic').value = data.dic;
+        $('#d-ic').value = data.ico;
+        oznam('Načteno z ARES: ' + data.nazev);
+      } catch (e) { oznam('ARES: ' + e.message); }
     });
 
     $('#d-pridat-polozku').addEventListener('click', () => {
@@ -823,6 +942,35 @@
   }
   $('#nova-form [name="vazba"]').addEventListener('input', (u) => ukazVazbaInfo(u.target.value));
   $$('#nova-form [name="typ"]').forEach(r => r.addEventListener('change', () => { $('#nova-form').dataset.typRucne = '1'; }));
+
+  /* ---------- Načtení firmy z ARES podle IČ ---------- */
+  async function nactiAres(ico) {
+    ico = String(ico || '').replace(/\D/g, '');
+    if (!/^\d{8}$/.test(ico)) throw new Error('Zadejte osmimístné IČ.');
+    return await api('/api/admin/ares/' + ico);
+  }
+
+  const novaAresInfo = $('#ares-info');
+  async function novaAres() {
+    const f = $('#nova-form');
+    novaAresInfo.hidden = false;
+    novaAresInfo.textContent = 'Hledám v registru ARES…';
+    try {
+      const data = await nactiAres(f.ic.value);
+      if (data.nazev) f.firma.value = data.nazev;
+      if (data.adresa) f.adresa.value = data.adresa;
+      if (data.dic) f.dic.value = data.dic;
+      f.ic.value = data.ico;
+      if (!f.nazev.value && data.nazev) f.nazev.value = data.nazev;
+      novaAresInfo.textContent = 'Načteno z ARES: ' + data.nazev + (data.adresa ? ', ' + data.adresa : '');
+    } catch (e) {
+      novaAresInfo.textContent = 'ARES: ' + e.message;
+    }
+  }
+  $('#nova-ares').addEventListener('click', novaAres);
+  $('#nova-form [name="ic"]').addEventListener('change', (u) => {
+    if (/^\d{8}$/.test(u.target.value.replace(/\s/g, ''))) novaAres();
+  });
   const zavriNovou = () => { $('#nova').hidden = true; $('#nova-pozadi').hidden = true; };
   $('#nova-zakazka').addEventListener('click', otevriNovou);
   $('[data-zavri-novou]').addEventListener('click', zavriNovou);

@@ -339,6 +339,33 @@ app.get('/api/admin/statistiky', auth.vyzadujPrihlaseni, (req, res) => {
   res.json(crm.statistiky());
 });
 
+/* Měsíční řady pro grafy vývoje na nástěnce. */
+app.get('/api/admin/vyvoj', auth.vyzadujPrihlaseni, (req, res) => {
+  res.json(crm.vyvoj());
+});
+
+/* Načtení firmy z registru ARES podle IČ (server dělá prostředníka kvůli CORS). */
+app.get('/api/admin/ares/:ico', auth.vyzadujPrihlaseni, async (req, res) => {
+  const ico = String(req.params.ico || '').replace(/\D/g, '');
+  if (!/^\d{8}$/.test(ico)) return res.status(400).json({ chyba: 'IČ musí mít 8 číslic.' });
+  try {
+    const odpoved = await fetch('https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/' + ico, {
+      headers: { accept: 'application/json' }
+    });
+    if (odpoved.status === 404) return res.status(404).json({ chyba: 'Subjekt s tímto IČ nebyl v ARES nalezen.' });
+    if (!odpoved.ok) throw new Error('ARES odpověděl stavem ' + odpoved.status);
+    const data = await odpoved.json();
+    res.json({
+      ico,
+      nazev: data.obchodniJmeno || '',
+      dic: data.dic ? (String(data.dic).startsWith('CZ') ? data.dic : 'CZ' + data.dic) : '',
+      adresa: (data.sidlo && data.sidlo.textovaAdresa) || ''
+    });
+  } catch (e) {
+    res.status(502).json({ chyba: 'ARES se nepodařilo kontaktovat: ' + String(e.message || e) });
+  }
+});
+
 /* ---------- Kontrola běhu ---------- */
 app.get('/api/zdravi', (req, res) => res.json({ ok: true }));
 

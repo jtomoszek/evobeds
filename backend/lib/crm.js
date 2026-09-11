@@ -377,6 +377,77 @@ function klienti() {
   return [...mapa.values()].sort((a, b) => String(b.posledni).localeCompare(String(a.posledni)));
 }
 
+/* ---------- Vývoj v čase pro grafy na nástěnce ---------- */
+/* Měsíční řady za posledních 12 měsíců: nové zakázky (počet, Kč, zdroje),
+   vyhrané a ztracené obchody, doručené postele a přijaté reklamace.
+   Okamžik výhry či prohry se bere z historie událostí. */
+function vyvoj(mesicu) {
+  mesicu = mesicu || 12;
+  const zakazky = seznam();
+  const ted = new Date();
+  const mapa = new Map();
+  for (let i = mesicu - 1; i >= 0; i--) {
+    const d = new Date(ted.getFullYear(), ted.getMonth() - i, 15);
+    const klic = d.toISOString().slice(0, 7);
+    mapa.set(klic, { mesic: klic, zakazkyPocet: 0, zakazkyKc: 0, webPocet: 0, obchodPocet: 0, rucniPocet: 0,
+                     vyhranoPocet: 0, vyhranoKc: 0, ztracenoPocet: 0, dorucenoPocet: 0, reklamacePocet: 0 });
+  }
+  const m = (iso) => String(iso || '').slice(0, 7);
+
+  const zdroje = { web: 0, obchod: 0, rucni: 0 };
+  let b2cKcCelkem = 0, b2cPocetCelkem = 0, vyhranoCelkem = 0, ztracenoCelkem = 0, dorucenoCelkem = 0, reklamaciCelkem = 0;
+
+  for (const z of zakazky) {
+    if (z.typ === 'b2c') {
+      if (z.stav !== 'storno') {
+        zdroje[z.zdroj] = (zdroje[z.zdroj] || 0) + 1;
+        b2cKcCelkem += z.celkemKc || 0;
+        b2cPocetCelkem++;
+        const b = mapa.get(m(z.vytvoreno));
+        if (b) {
+          b.zakazkyPocet++;
+          b.zakazkyKc += z.celkemKc || 0;
+          if (z.zdroj === 'web') b.webPocet++;
+          else if (z.zdroj === 'obchod') b.obchodPocet++;
+          else b.rucniPocet++;
+        }
+      }
+      if (z.dorucenoDne) {
+        dorucenoCelkem++;
+        const bd = mapa.get(m(z.dorucenoDne));
+        if (bd) bd.dorucenoPocet++;
+      }
+    } else if (z.typ === 'b2b') {
+      if (z.stav === 'vyhrano' || z.zakazkaZVyhry) {
+        vyhranoCelkem++;
+        const u = (z.udalosti || []).find(u => u.typ === 'vyhrano') ||
+                  (z.udalosti || []).find(u => u.typ === 'stav' && /Vyhráno$/.test(u.text));
+        const b = mapa.get(m(u ? u.kdy : z.vytvoreno));
+        if (b) { b.vyhranoPocet++; b.vyhranoKc += z.hodnotaKc || 0; }
+      } else if (z.stav === 'ztraceno') {
+        ztracenoCelkem++;
+        const u = [...(z.udalosti || [])].reverse().find(u => u.typ === 'stav' && /Ztraceno$/.test(u.text));
+        const b = mapa.get(m(u ? u.kdy : z.vytvoreno));
+        if (b) b.ztracenoPocet++;
+      }
+    } else if (z.typ === 'reklamace') {
+      reklamaciCelkem++;
+      const b = mapa.get(m(z.vytvoreno));
+      if (b) b.reklamacePocet++;
+    }
+  }
+
+  return {
+    mesice: [...mapa.values()],
+    zdroje,
+    vyhranoCelkem,
+    ztracenoCelkem,
+    dorucenoCelkem,
+    reklamaciCelkem,
+    prumernaZakazkaKc: b2cPocetCelkem ? Math.round(b2cKcCelkem / b2cPocetCelkem) : 0
+  };
+}
+
 /* ---------- Souhrn pro nástěnku ---------- */
 function statistiky() {
   const zakazky = seznam();
@@ -411,4 +482,4 @@ function statistiky() {
   return out;
 }
 
-module.exports = { PIPELINE, KONECNE, vytvor, uprav, nacti, seznam, zWebu, udalostPlatby, statistiky, klienti, zarukaDo, uloz, pridejUdalost };
+module.exports = { PIPELINE, KONECNE, vytvor, uprav, nacti, seznam, zWebu, udalostPlatby, statistiky, vyvoj, klienti, zarukaDo, uloz, pridejUdalost };
