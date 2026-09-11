@@ -1311,17 +1311,19 @@ body.detail-open .detail-drawer { transform: none; }
 }
 .partner-logo img { max-height: 40px; max-width: 76%; width: auto; object-fit: contain; }
 .partner-logo.dark { background: var(--dark); }
-/* Logo zařízení u případové studie */
+/* Logo zařízení u případové studie: jen na šířku obsahu, ne přes celý sloupec */
 .case-logo {
   display: inline-flex;
   align-items: center;
-  height: 52px;
-  padding: 0 18px;
-  border-radius: 14px;
+  align-self: flex-start;
+  width: fit-content;
+  height: 72px;
+  padding: 0 24px;
+  border-radius: 16px;
   background: var(--white);
-  margin-bottom: 16px;
+  margin-bottom: 4px;
 }
-.case-logo img { max-height: 34px; max-width: 160px; width: auto; object-fit: contain; }
+.case-logo img { max-height: 48px; max-width: 220px; width: auto; object-fit: contain; }
 .case-logo.dark { background: var(--dark); }
 .partner-logo {
   width: 170px;
