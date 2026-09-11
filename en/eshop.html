@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-shop | evobeds One | Smart electric positioning bed</title>
+  <meta name="description" content="Build your own evobeds One smart electric positioning bed. Evo Home, Evo Care and Evo Clinic sets, replaceable covers and accessories. Made in the Czech Republic, a medical device under the MDR.">
+  <link rel="stylesheet" href="../css/style.css?v=51">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
+  <meta name="theme-color" content="#2f4156">
+</head>
+<body>
+
+
+  <header class="site-header">
+    <div class="header-bar">
+      <div class="header-inner">
+        <button class="mobile-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+        <a class="brand" href="index.html"><img src="../assets/img/logo.png" alt="evobeds"></a>
+        <nav class="main-nav">
+          <a class="nav-link" href="home-care.html">Home care</a>
+          <a class="nav-link" href="professional-care.html">Professional care</a>
+          <a class="nav-link" href="eshop.html#prislusenstvi">Accessories</a>
+          <a class="nav-link" href="references.html">References</a>
+          <a class="nav-link" href="about-us.html">About us</a>
+          <a class="nav-link" href="contact.html">Contact</a>
+        </nav>
+        <div class="nav-right">
+          <div class="lang">
+            <button class="lang-toggle" aria-label="Change language">
+              <span class="flag">🇬🇧</span> EN
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+            <div class="lang-menu">
+              <a href="eshop.html"><span>🇬🇧</span> English</a>
+              <a href="../eshop.html"><span>🇨🇿</span> Čeština</a>
+            </div>
+          </div>
+          <a class="btn btn-dark btn-sm" href="eshop.html">e-shop</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-menu">
+    <a href="home-care.html">Home care</a>
+    <a href="professional-care.html">Professional care</a>
+    <a href="eshop.html#prislusenstvi">Accessories</a>
+    <a href="references.html">References</a>
+    <a href="about-us.html">About us</a>
+    <a href="contact.html">Contact</a>
+    <a class="btn btn-dark" href="eshop.html">e-shop</a>
+  </div>
+
+  <!-- PDP: gallery + buy box -->
+  <section class="container pdp" id="konfigurace">
+    <div class="pdp-gallery">
+      <!-- Configurator: preview of the assembled bed -->
+      <div class="konf-stage">
+        <img id="konf-img" src="../assets/img/konfigurator/00cover0-10sidewalls0-20wheels0-30mattress0-40trapeze0-50bedding0.jpg" alt="Preview of your evobeds One bed configuration">
+      </div>
+    </div>
+
+    <div class="buybox">
+      <div class="badge-row">
+        <span class="badge">Class I medical device under the MDR</span>
+        <span class="badge">Made in the Czech Republic</span>
+      </div>
+      <h1>evobeds One</h1>
+      <p class="sub">Smart electric positioning bed. The functions of a medical bed, the look of a modern home bed.</p>
+
+      <!-- Cover material -->
+      <div class="opt-group apple-group">
+        <h2 class="opt-title">Cover. <span>Choose the upholstery material.</span></h2>
+        <div class="opt-cards" id="opt-material">
+          <button class="opt-card active" data-material="leather">
+            <span><span class="t">Padded eco-leather</span><span class="d" style="display:block">Durable, easy to wipe clean, suitable for facilities too</span></span>
+          </button>
+          <button class="opt-card" data-material="textil">
+            <span><span class="t">Padded fabric</span><span class="d" style="display:block">Pleasant to the touch, feels like home furniture</span></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Cover colour -->
+      <div class="opt-group apple-group">
+        <h2 class="opt-title">Colour. <span>Matched to your interior.</span></h2>
+        <p class="opt-selected">Colour, <span id="color-name">light grey</span></p>
+        <div class="swatch-row" data-material-group="leather">
+          <button class="swatch active" data-cover="0" data-color="light grey" title="Light grey eco-leather"><img src="../assets/img/konfigurator/swatch-leather-grey.png" alt="Light grey eco-leather"></button>
+          <button class="swatch" data-cover="1" data-color="dark grey" title="Dark grey eco-leather"><img src="../assets/img/konfigurator/swatch-leather-dark-grey.png" alt="Dark grey eco-leather"></button>
+          <button class="swatch" data-cover="2" data-color="beige" title="Beige eco-leather"><img src="../assets/img/konfigurator/swatch-leather-yellow.png" alt="Beige eco-leather"></button>
+          <button class="swatch" data-cover="3" data-color="burgundy" title="Burgundy eco-leather"><img src="../assets/img/konfigurator/swatch-leather-red.png" alt="Burgundy eco-leather"></button>
+          <button class="swatch" data-cover="4" data-color="black" title="Black eco-leather"><img src="../assets/img/konfigurator/swatch-leather-black.png" alt="Black eco-leather"></button>
+        </div>
+        <div class="swatch-row" data-material-group="textil" hidden>
+          <button class="swatch" data-cover="5" data-color="light grey" title="Light grey fabric"><img src="../assets/img/konfigurator/swatch-textil-grey.png" alt="Light grey fabric"></button>
+          <button class="swatch" data-cover="6" data-color="dark grey" title="Dark grey fabric"><img src="../assets/img/konfigurator/swatch-textil-dark-grey.png" alt="Dark grey fabric"></button>
+          <button class="swatch" data-cover="7" data-color="beige" title="Beige fabric"><img src="../assets/img/konfigurator/swatch-textil-yellow.png" alt="Beige fabric"></button>
+          <button class="swatch" data-cover="8" data-color="burgundy" title="Burgundy fabric"><img src="../assets/img/konfigurator/swatch-textil-red.png" alt="Burgundy fabric"></button>
+          <button class="swatch" data-cover="9" data-color="black" title="Black fabric"><img src="../assets/img/konfigurator/swatch-textil-black.png" alt="Black fabric"></button>
+        </div>
+      </div>
+
+      <!-- Mattress -->
+      <div class="opt-group apple-group">
+        <h2 class="opt-title">Mattress. <span>For comfortable and safe lying.</span></h2>
+        <div class="opt-cards" id="konf-mattress">
+          <button class="opt-card active" data-mattress="0">
+            <span><span class="t">No mattress</span><span class="d" style="display:block">If you already have a mattress or are arranging one separately</span></span>
+            <span class="p">0 CZK</span>
+          </button>
+          <button class="opt-card" data-mattress="1" data-price="5500">
+            <span><span class="t">Clinic mattress</span><span class="d" style="display:block">A medical mattress for everyday care</span></span>
+            <span class="p">+ 5,500 CZK</span>
+          </button>
+          <button class="opt-card" data-mattress="2" data-price="5900">
+            <span><span class="t">Silver ProAir mattress</span><span class="d" style="display:block">A breathable mattress with an antibacterial finish</span></span>
+            <span class="p">+ 5,900 CZK</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Accessories -->
+      <div class="opt-group apple-group">
+        <h2 class="opt-title">Accessories. <span>Add what your care needs.</span></h2>
+        <div class="opt-cards" id="opt-addons">
+          <button class="opt-card" data-price="2200">
+            <span style="display:flex;align-items:center;gap:12px"><span class="addon-check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span><span class="t">Lifting pole with handle</span><span class="d" style="display:block">Height 95 cm, placed at the head of the bed</span></span></span>
+            <span class="p plus">+ 2,200 CZK</span>
+          </button>
+          <button class="opt-card" data-price="5500">
+            <span style="display:flex;align-items:center;gap:12px"><span class="addon-check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span><span class="t">Side rail set (2 pcs)</span><span class="d" style="display:block">Padded, integrated into the frame, 120 cm</span></span></span>
+            <span class="p plus">+ 5,500 CZK</span>
+          </button>
+          <button class="opt-card" data-price="3300">
+            <span style="display:flex;align-items:center;gap:12px"><span class="addon-check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span><span class="t">Castor set (4 pcs)</span><span class="d" style="display:block">Double castors with brakes</span></span></span>
+            <span class="p plus">+ 3,300 CZK</span>
+          </button>
+          <button class="opt-card" data-price="2500">
+            <span style="display:flex;align-items:center;gap:12px"><span class="addon-check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span><span class="t">Bedding</span><span class="d" style="display:block">A bedding set matching the cover</span></span></span>
+            <span class="p plus">+ 2,500 CZK</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Buy / rent -->
+      <div class="opt-group apple-group">
+        <h2 class="opt-title">Acquisition. <span>Buy, or rent.</span></h2>
+        <div class="opt-cards" id="opt-mode">
+          <button class="opt-card active">
+            <span><span class="t">Buy</span><span class="d" style="display:block">Delivery and professional assembly are included</span></span>
+          </button>
+          <button class="opt-card">
+            <span><span class="t">Rent</span><span class="d" style="display:block">We prepare an offer based on the length of care</span></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Sticky price with button -->
+      <div class="buy-sticky">
+        <div class="total-row">
+          <span class="cap" id="total-cap">Total</span>
+          <span class="sum" id="pdp-total">39,900 CZK</span>
+        </div>
+        <button class="btn btn-dark btn-cta" id="add-to-cart">Buy evobeds</button>
+        <p class="alt-link">Rather with an advisor? <a href="contact.html">We will build it with you for free →</a></p>
+      </div>
+
+      <ul class="buy-usps">
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> Delivery and professional assembly included</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg> Certified under the MDR, quiet Linak drive</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6.5 7 .8-5.2 4.7 1.5 6.9L12 17.5 5.7 20.9l1.5-6.9L2 9.3l7-.8L12 2z"/></svg> Designed and made in the Czech Republic</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Fast delivery and service across CZ, SK and PL</li>
+      </ul>
+
+      <!-- Accordions -->
+      <div class="faq-wrap">
+        <div class="faq-item">
+          <button class="faq-q">Technical specification<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+          <div class="faq-a">
+            <table class="spec-table">
+              <tr><td>Overall width × length</td><td>106 × 224 cm</td></tr>
+              <tr><td>Minimum height</td><td>43 cm (31 cm without castors)</td></tr>
+              <tr><td>Max. height incl. lifting pole</td><td>209 cm</td></tr>
+              <tr><td>Lying surface</td><td>four sections, electrically adjustable</td></tr>
+              <tr><td>Backrest tilt</td><td>up to 68°</td></tr>
+              <tr><td>Leg section bend</td><td>up to 32°</td></tr>
+              <tr><td>Lying surface tilt</td><td>up to 10° (anti-Trendelenburg)</td></tr>
+              <tr><td>Maximum load</td><td>180 kg</td></tr>
+              <tr><td>Frame</td><td>steel, powder-coated; wooden panelling</td></tr>
+              <tr><td>Drive</td><td>Danish Linak motors and electronics</td></tr>
+              <tr><td>Controls</td><td>wired handset with button lock</td></tr>
+              <tr><td>Covers</td><td>padded fabric / eco-leather, replaceable and washable</td></tr>
+              <tr><td>Storage</td><td>120 × 40 × 110 cm, stackable</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Delivery and assembly<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+          <div class="faq-a"><p>We deliver the bed, assemble it right in the bedroom and set everything up to the user's needs. We show you the controls and take the packaging away. Thanks to the modular design, assembly and any later disassembly is quick and gentle.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Warranty and service<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+          <div class="faq-a"><p>We are the manufacturer, not a reseller. You are guaranteed service, spare parts and long-term support. A design with replaceable parts means simple servicing and a long life. We provide service across the Czech Republic, Slovakia and Poland.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Renting the bed<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+          <div class="faq-a"><p>You can also rent the bed. We adapt to your needs, whether you are arranging care for months or long term. We will prepare a tailored rental offer, get in touch.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Video section -->
+  <section class="section" style="margin-top:clamp(64px,9vw,128px)">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">See how it works</p>
+        <h2 class="h-xl">One button.<br>A position for every moment.</h2>
+      </div>
+      <div class="feature-media reveal" style="aspect-ratio:16/9">
+        <video autoplay muted loop playsinline poster="../assets/img/header-1.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+          <source src="../assets/video/hpvideo.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ecosystem -->
+  <section class="section" id="prislusenstvi">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">The bed's ecosystem</p>
+        <h2 class="h-xl">A bed that grows with you</h2>
+        <p class="lead">evobeds One is a modular kit: every corner has an attachment point for accessories. Anything can be added later. The bed adapts as your needs change.</p>
+      </div>
+      <div class="bento reveal">
+        <div class="bento-tile span2 rows2">
+          <img src="../assets/img/header-2.jpg" alt="evobeds One">
+          <div class="cap"><p class="t">evobeds One</p><p class="d">Smart electric positioning bed</p><p class="pr">from 39,900 CZK</p></div>
+        </div>
+        <div class="bento-tile">
+          <img src="../assets/img/slide-1.jpg" alt="Mattresses">
+          <div class="cap"><p class="t">Mattresses</p><p class="d">Clinic / Silver ProAir</p><p class="pr">from 5,500 CZK</p></div>
+        </div>
+        <div class="bento-tile">
+          <img src="../assets/img/header-4.jpg" alt="Lifting pole with handle">
+          <div class="cap"><p class="t">Lifting pole with handle</p><p class="d">Support for standing up</p><p class="pr">2,200 CZK</p></div>
+        </div>
+        <div class="bento-tile">
+          <img src="../assets/img/header-1.jpg" alt="Side rail set">
+          <div class="cap"><p class="t">Side rail set</p><p class="d">Padded, does not block the view</p><p class="pr">5,500 CZK</p></div>
+        </div>
+        <div class="bento-tile">
+          <img src="../assets/img/header-3.jpg" alt="Castors">
+          <div class="cap"><p class="t">Castors</p><p class="d">Double, with brakes (4 pcs)</p><p class="pr">3,300 CZK</p></div>
+        </div>
+        <div class="bento-tile span2">
+          <img src="../assets/img/slide-4.jpg" alt="Covers and bedding">
+          <div class="cap"><p class="t">Covers and bedding</p><p class="d">Replaceable covers in fabric and eco-leather, matching bedding</p><p class="pr">bedding 2,500 CZK</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dimensions -->
+  <section class="section bg-off">
+    <div class="container">
+      <div class="dims-grid reveal">
+        <div class="media"><img src="../assets/img/header-3.jpg" alt="evobeds One in profile"></div>
+        <div>
+          <p class="eyebrow" style="margin-bottom:14px">Dimensions</p>
+          <h2 class="h-lg" style="margin-bottom:18px">Fits where your bed stands today</h2>
+          <table class="spec-table">
+            <tr><td>Width</td><td>106 cm</td></tr>
+            <tr><td>Length</td><td>224 cm</td></tr>
+            <tr><td>Lying surface height</td><td>43 cm, lifts by position</td></tr>
+            <tr><td>Max. height incl. lifting pole</td><td>209 cm</td></tr>
+            <tr><td>Load capacity</td><td>180 kg</td></tr>
+            <tr><td>Storage (folded)</td><td>120 × 40 × 110 cm</td></tr>
+          </table>
+          <p style="margin-top:18px;font-size:var(--fs-sm);color:var(--gray-500)">Need a bed extension or a double variant? <a href="contact.html" style="font-weight:700;border-bottom:1.5px solid currentColor">Get in touch</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Installation -->
+  <section class="section">
+    <div class="container">
+      <div class="rail-head reveal">
+        <div class="section-head" style="margin-bottom:0">
+          <p class="eyebrow">How it works</p>
+          <h2 class="h-xl">From order<br>to the first night</h2>
+        </div>
+        <div class="rail-arrows">
+          <button class="rail-arrow rail-prev" aria-label="Previous"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <button class="rail-arrow rail-next" aria-label="Next"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+        </div>
+      </div>
+      <div class="cards-rail-wrap" data-rail>
+        <div class="cards-rail steps-rail reveal">
+          <article class="scenario-card">
+            <div class="body"><span class="num-chip">1</span><h3>Order and consultation</h3><p>You choose a set online, or an advisor gets in touch and goes through everything with you, from dimensions to cover colour.</p></div>
+          </article>
+          <article class="scenario-card">
+            <div class="body"><span class="num-chip">2</span><h3>Production and inspection</h3><p>Every bed is inspected and tested by hand before dispatch. We manufacture in the Czech Republic.</p></div>
+          </article>
+          <article class="scenario-card">
+            <div class="body"><span class="num-chip">3</span><h3>Delivery to your home</h3><p>We arrange the delivery date in advance. The modular design fits through narrow hallways and staircases too.</p></div>
+          </article>
+          <article class="scenario-card">
+            <div class="body"><span class="num-chip">4</span><h3>Assembly and demonstration</h3><p>We assemble the bed right in the bedroom, set up the positions and show you the controls. We take the packaging away.</p></div>
+          </article>
+          <article class="scenario-card">
+            <div class="body"><span class="num-chip">5</span><h3>Service and ongoing care</h3><p>We stay in touch, with service, spare parts, new covers and accessories across the Czech Republic, Slovakia and Poland.</p></div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reviews grid -->
+  <section class="section" id="reference">
+    <div class="container">
+      <div class="section-head center reveal">
+        <h2 class="h-xl">Trusted by families<br>and professionals</h2>
+      </div>
+      <div class="reviews-grid reveal">
+        <div class="review-card big">
+          <div class="head">
+            <div class="avatar">J</div>
+            <div><p class="name">Jana K.</p><p class="role">Cares for her mother</p></div>
+          </div>
+          <span class="stars">★★★★★</span>
+          <p class="text">"At first Mum didn't want the bed, she was afraid we were bringing a hospital home. When she saw it, she asked whether it was really adjustable. That's exactly it."</p>
+        </div>
+        <div class="review-card">
+          <div class="head">
+            <div class="avatar">P</div>
+            <div><p class="name">Petr M.</p><p class="role">Physiotherapist</p></div>
+          </div>
+          <p class="text">"Height adjustment is essential for caregivers' backs. What I value about evobeds is that the functions are invisible and clients see it as their bed, not as an aid."</p>
+        </div>
+        <div class="review-card">
+          <div class="head">
+            <div class="avatar">H</div>
+            <div><p class="name">Hana V.</p><p class="role">Care home director</p></div>
+          </div>
+          <p class="text">"Clients and families react completely differently than to classic medical beds. The room feels like home and you can tell in everyone's mood."</p>
+        </div>
+        <div class="review-card">
+          <div class="head">
+            <div class="avatar">M</div>
+            <div><p class="name">Martin D.</p><p class="role">After spinal surgery</p></div>
+          </div>
+          <span class="stars">★★★★★</span>
+          <p class="text">"Half a year of recovery at home. Positioning eased my pain every day and I can get up without help."</p>
+        </div>
+        <div class="review-card big">
+          <div class="head">
+            <div class="avatar">E</div>
+            <div><p class="name">Eva S.</p><p class="role">Caring daughter</p></div>
+          </div>
+          <span class="stars">★★★★★</span>
+          <p class="text">"You help a loved one and suddenly you find the bed is helping you too. After a year of caring, my back finally doesn't hurt."</p>
+        </div>
+        <div class="review-card">
+          <div class="head">
+            <div class="avatar">R</div>
+            <div><p class="name">Robert T.</p><p class="role">Home care nurse</p></div>
+          </div>
+          <p class="text">"A washable cover is something I've missed on beds for years. Here you take it off, wash it, done. Hygiene without compromise."</p>
+        </div>
+      </div>
+      <!-- Partner care homes -->
+      <div class="partners-strip reveal">
+        <p class="cap">Trusted by partner care homes and clinics</p>
+        <div class="partners-row">
+          <div class="partner-logo"><img src="../assets/img/ref-dobravoda.webp" alt="Dobrá Voda care home" loading="lazy"></div>
+          <div class="partner-logo"><img src="../assets/img/ref-teplice.webp" alt="Teplice nad Bečvou Spa" loading="lazy"></div>
+          <div class="partner-logo dark"><img src="../assets/img/ref-libella.webp" alt="Sanatorium Libella" loading="lazy"></div>
+          <div class="partner-logo"><img src="../assets/img/ref-senlife.svg" alt="Senlife care homes" loading="lazy"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section bg-off">
+    <div class="container">
+      <div class="section-head center reveal">
+        <h2 class="h-xl">Frequently asked questions</h2>
+      </div>
+      <div class="faq reveal">
+        <div class="faq-item">
+          <button class="faq-q">Can I rent the bed instead of buying it?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+          <div class="faq-a"><p>Yes, we offer both sale and rental. We adapt to your needs, whether you are arranging care for a few months after surgery or long term. We will prepare a tailored rental offer.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Is the bed a certified medical device?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+          <div class="faq-a"><p>Yes, evobeds One is a Class I medical device with full documentation under the European MDR regulation. It meets hospital safety standards but is designed for the home.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">How loud are the motors?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+          <div class="faq-a"><p>The bed is driven by Danish Linak motors and electronics with a smooth, quiet run, so positioning is comfortable even at night.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Can the cover be replaced or washed?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+          <div class="faq-a"><p>Yes. The padded covers are easy to replace without any specialist disassembly, allowing quick and hygienic changes, a refreshed look and a longer life for the bed.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">What if I need service?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+          <div class="faq-a"><p>We are the manufacturer. We provide service, spare parts and long-term support ourselves, quickly and across the Czech Republic, Slovakia and Poland. A design with replaceable parts makes servicing simple.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-sand">
+    <div class="final-cta">
+      <h2 class="reveal">Not sure which set?</h2>
+      <div class="btns reveal">
+        <a class="btn btn-light" href="contact.html">Free consultation</a>
+        <a class="btn btn-outline" href="#konfigurace">Build your bed</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-news">
+          <h3>Stay in the loop</h3>
+          <p>News, accessories and home care tips. No spam.</p>
+          <form class="news-form" data-demo>
+            <input type="email" placeholder="Your e-mail" required>
+            <button class="btn btn-light btn-sm" type="submit">Subscribe</button>
+          </form>
+        </div>
+        <div class="footer-cols">
+          <div class="footer-col">
+            <h4>Product</h4>
+            <a href="index.html#postel">Smart bed</a>
+            <a href="#konfigurace">Build your bed</a>
+            <a href="#konfigurace">Accessories</a>
+            <a href="eshop.html">E-shop</a>
+          </div>
+          <div class="footer-col">
+            <h4>Care</h4>
+            <a href="home-care.html">Home care</a>
+            <a href="professional-care.html">Professional care</a>
+            <a href="index.html">FAQ</a>
+          </div>
+          <div class="footer-col">
+            <h4>Company</h4>
+            <a href="about-us.html">About us</a>
+            <a href="contact.html">Contact</a>
+            <a href="contact.html">Showroom</a>
+            <a href="contact.html">For media</a>
+          </div>
+          <div class="footer-col">
+            <h4>Support</h4>
+            <a href="user-manual.html">User manual</a>
+            <a href="contact.html">Delivery and assembly</a>
+            <a href="contact.html">Service</a>
+            <a href="contact.html">Warranty</a>
+          </div>
+        </div>
+      </div>
+      <!-- Legally required company details -->
+      <div class="footer-company">
+        <div>
+          <h4>Evobeds s.r.o.</h4>
+          <p>Paličkova 75/2, Nová Ves<br>709 00 Ostrava, Czech Republic</p>
+          <p>Company ID: 07754523<br>VAT ID: CZ07754523</p>
+        </div>
+        <div>
+          <h4>Ostrava</h4>
+          <p>Headquarters, registered office and showroom<br>Paličkova 75/2, 709 00 Ostrava</p>
+          <p><a href="tel:+420773030533">+420 773 030 533</a><br><a href="mailto:info@evobeds.com">info@evobeds.com</a></p>
+          <a class="map-link" href="https://maps.google.com/?q=Pali%C4%8Dkova+75/2,+709+00+Ostrava" target="_blank" rel="noopener">Map <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+        <div>
+          <h4>Prague</h4>
+          <p>Branch and showroom<br>U Nikolajky 957/11, 150 00 Praha 5 Smíchov</p>
+          <p><a href="tel:+420731578376">+420 731 578 376</a><br><a href="mailto:praha@invira.cz">praha@invira.cz</a></p>
+          <a class="map-link" href="https://maps.google.com/?q=U+Nikolajky+957/11,+150+00+Praha+5" target="_blank" rel="noopener">Map <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <img src="../assets/img/logo.png" alt="evobeds">
+        <div class="legal">
+          <span>© 2026 evobeds s.r.o. All rights reserved.</span>
+          <a href="terms-and-conditions.html">Terms and Conditions</a>
+          <a href="privacy-policy.html">Privacy Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js?v=14"></script>
+  <script>
+  /* PDP: configurator + price calculation */
+  (function () {
+    'use strict';
+
+    /* ---------- Bed preview configurator ----------
+       The file name encodes the configuration:
+       cover 0 to 9 (cover colour), sidewalls, wheels, mattress 0 to 2, trapeze, bedding */
+    var konf = { cover: 0, sidewalls: 0, wheels: 0, mattress: 0, trapeze: 0, bedding: 0 };
+    var konfImg = document.getElementById('konf-img');
+    /* Mapping of accessory buttons to keys in the file name */
+    var addonKeys = { 0: 'trapeze', 1: 'sidewalls', 2: 'wheels', 3: 'bedding' };
+
+    function konfSrc() {
+      return '../assets/img/konfigurator/00cover' + konf.cover +
+             '-10sidewalls' + konf.sidewalls +
+             '-20wheels' + konf.wheels +
+             '-30mattress' + konf.mattress +
+             '-40trapeze' + konf.trapeze +
+             '-50bedding' + konf.bedding + '.jpg';
+    }
+    /* The counter prevents an older, later-arriving image from overwriting the preview during fast clicking */
+    var konfToken = 0;
+    function konfRender() {
+      var token = ++konfToken;
+      var next = new Image();
+      next.onload = function () {
+        if (token !== konfToken) return;
+        konfImg.src = next.src;
+        konfImg.style.opacity = '';
+      };
+      konfImg.style.opacity = '.55';
+      next.src = konfSrc();
+    }
+
+    /* Cover material: switches between eco-leather and fabric swatches */
+    var BASE_PRICE = 39900;
+    var materialCards = Array.prototype.slice.call(document.querySelectorAll('#opt-material .opt-card'));
+    var swatchRows = Array.prototype.slice.call(document.querySelectorAll('[data-material-group]'));
+    var colorName = document.getElementById('color-name');
+    var material = 'leather';
+
+    function activeSwatch() {
+      return document.querySelector('[data-material-group="' + material + '"] .swatch.active');
+    }
+    function applySwatch(s) {
+      konf.cover = +s.dataset.cover;
+      colorName.textContent = s.dataset.color;
+      konfRender();
+    }
+    materialCards.forEach(function (c) {
+      c.addEventListener('click', function () {
+        materialCards.forEach(function (x) { x.classList.remove('active'); });
+        c.classList.add('active');
+        var predchozi = activeSwatch();
+        material = c.dataset.material;
+        swatchRows.forEach(function (r) { r.hidden = r.dataset.materialGroup !== material; });
+        /* In the other material, select the same colour shade */
+        var stejnaBarva = document.querySelector('[data-material-group="' + material + '"] .swatch[data-color="' + predchozi.dataset.color + '"]');
+        var cil = stejnaBarva || document.querySelector('[data-material-group="' + material + '"] .swatch');
+        document.querySelectorAll('.swatch').forEach(function (x) { x.classList.remove('active'); });
+        cil.classList.add('active');
+        applySwatch(cil);
+      });
+    });
+
+    var swatches = Array.prototype.slice.call(document.querySelectorAll('.swatch'));
+    swatches.forEach(function (s) {
+      s.addEventListener('click', function () {
+        swatches.forEach(function (x) { x.classList.remove('active'); });
+        s.classList.add('active');
+        applySwatch(s);
+      });
+    });
+
+    /* Mattress: the choice updates the preview and the price */
+    var mattressCards = Array.prototype.slice.call(document.querySelectorAll('#konf-mattress .opt-card'));
+    mattressCards.forEach(function (c) {
+      c.addEventListener('click', function () {
+        mattressCards.forEach(function (x) { x.classList.remove('active'); });
+        c.classList.add('active');
+        konf.mattress = +c.dataset.mattress;
+        konfRender();
+        recalc();
+      });
+    });
+
+    /* Price and accessories */
+    var addonCards = Array.prototype.slice.call(document.querySelectorAll('#opt-addons .opt-card'));
+    var modeCards = Array.prototype.slice.call(document.querySelectorAll('#opt-mode .opt-card'));
+    var totalEl = document.getElementById('pdp-total');
+    var totalCap = document.getElementById('total-cap');
+    var cta = document.getElementById('add-to-cart');
+    var rentMode = false;
+
+    function fmt(n) { return n.toLocaleString('en-GB') + ' CZK'; }
+    function soucetCeny() {
+      var soucet = BASE_PRICE;
+      mattressCards.forEach(function (c) {
+        if (c.classList.contains('active') && c.dataset.price) soucet += +c.dataset.price;
+      });
+      addonCards.forEach(function (c) {
+        if (c.classList.contains('active')) soucet += +c.dataset.price;
+      });
+      return soucet;
+    }
+    function recalc() {
+      var soucet = soucetCeny();
+      if (rentMode) {
+        totalCap.textContent = 'Rental';
+        totalEl.textContent = 'Tailored offer';
+        cta.textContent = 'Enquire about rental';
+      } else {
+        totalCap.textContent = 'Total';
+        totalEl.textContent = fmt(soucet);
+        cta.textContent = 'Buy evobeds';
+      }
+      cta.disabled = false;
+    }
+
+    /* Accessories in the price list update the bed preview */
+    addonCards.forEach(function (c, i) {
+      c.addEventListener('click', function () {
+        var on = c.classList.toggle('active');
+        var klic = addonKeys[i];
+        if (klic) konf[klic] = on ? 1 : 0;
+        konfRender();
+        recalc();
+      });
+    });
+
+    modeCards.forEach(function (c, i) {
+      c.addEventListener('click', function () {
+        modeCards.forEach(function (x) { x.classList.remove('active'); });
+        c.classList.add('active');
+        rentMode = i === 1;
+        recalc();
+      });
+    });
+    /* Passing the configuration to the order form */
+    cta.addEventListener('click', function () {
+      if (rentMode) { window.location.href = 'contact.html'; return; }
+      var doplnky = addonCards
+        .filter(function (c) { return c.classList.contains('active'); })
+        .map(function (c) { return c.querySelector('.t').textContent + '|' + c.dataset.price; });
+      var matraceKarta = mattressCards.filter(function (c) { return c.classList.contains('active'); })[0];
+      var material = materialCards.filter(function (c) { return c.classList.contains('active'); })[0];
+      var p = new URLSearchParams({
+        material: material.querySelector('.t').textContent,
+        barva: colorName.textContent,
+        matrace: matraceKarta.querySelector('.t').textContent,
+        matracecena: matraceKarta.dataset.price || '0',
+        doplnky: doplnky.join(';'),
+        zaklad: String(BASE_PRICE),
+        celkem: String(soucetCeny()),
+        nahled: konfSrc()
+      });
+      window.location.href = 'order.html?' + p.toString();
+    });
+    recalc();
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete your order | evobeds</title>
+  <meta name="description" content="Complete your evobeds One bed order. Fill in your contact and billing details and we will send you an order summary and payment instructions.">
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="../css/style.css?v=51">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
+  <meta name="theme-color" content="#2f4156">
+</head>
+<body>
+
+
+  <header class="site-header">
+    <div class="header-bar">
+      <div class="header-inner">
+        <button class="mobile-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+        <a class="brand" href="index.html"><img src="../assets/img/logo.png" alt="evobeds"></a>
+        <nav class="main-nav">
+          <a class="nav-link" href="home-care.html">Home care</a>
+          <a class="nav-link" href="professional-care.html">Professional care</a>
+          <a class="nav-link" href="eshop.html#prislusenstvi">Accessories</a>
+          <a class="nav-link" href="references.html">References</a>
+          <a class="nav-link" href="about-us.html">About us</a>
+          <a class="nav-link" href="contact.html">Contact</a>
+        </nav>
+        <div class="nav-right">
+          <div class="lang">
+            <button class="lang-toggle" aria-label="Change language">
+              <span class="flag">🇬🇧</span> EN
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+            <div class="lang-menu">
+              <a href="order.html"><span>🇬🇧</span> English</a>
+              <a href="../objednavka.html"><span>🇨🇿</span> Čeština</a>
+            </div>
+          </div>
+          <a class="btn btn-dark btn-sm" href="eshop.html">e-shop</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-menu">
+    <a href="home-care.html">Home care</a>
+    <a href="professional-care.html">Professional care</a>
+    <a href="eshop.html#prislusenstvi">Accessories</a>
+    <a href="references.html">References</a>
+    <a href="about-us.html">About us</a>
+    <a href="contact.html">Contact</a>
+    <a class="btn btn-dark" href="eshop.html">e-shop</a>
+  </div>
+
+  <!-- Order -->
+  <section class="container order-wrap" id="objednavka">
+    <div class="order-head">
+      <p class="eyebrow">Step 2 of 2</p>
+      <h1 class="h-xl">Complete your order</h1>
+      <p class="lead">All that remains is to fill in where we should deliver the bed and who to invoice. The order is not binding until you pay the proforma invoice.</p>
+    </div>
+
+    <div class="order-grid">
+      <!-- Form -->
+      <form class="order-form" id="order-form" novalidate>
+        <div class="form-block">
+          <h2 class="opt-title">Contact details. <span>So we can arrange a date.</span></h2>
+          <div class="form-grid">
+            <div class="field">
+              <label for="o-jmeno">Full name of the person ordering <span class="req">*</span></label>
+              <input id="o-jmeno" name="jmeno" type="text" required autocomplete="name">
+            </div>
+            <div class="field">
+              <label for="o-telefon">Phone <span class="req">*</span></label>
+              <input id="o-telefon" name="telefon" type="tel" required autocomplete="tel" placeholder="+420">
+            </div>
+            <div class="field full">
+              <label for="o-email">E-mail <span class="req">*</span></label>
+              <input id="o-email" name="email" type="email" required autocomplete="email">
+              <p class="field-hint">We will send the order summary and payment details to this address.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-block">
+          <h2 class="opt-title">Delivery. <span>Where we bring and assemble the bed.</span></h2>
+          <div class="form-grid">
+            <div class="field full">
+              <label for="o-ulice">Street and house number <span class="req">*</span></label>
+              <input id="o-ulice" name="ulice" type="text" required autocomplete="street-address">
+            </div>
+            <div class="field">
+              <label for="o-mesto">City <span class="req">*</span></label>
+              <input id="o-mesto" name="mesto" type="text" required autocomplete="address-level2">
+            </div>
+            <div class="field">
+              <label for="o-psc">Postcode <span class="req">*</span></label>
+              <input id="o-psc" name="psc" type="text" required autocomplete="postal-code" inputmode="numeric">
+            </div>
+            <div class="field full">
+              <label for="o-patro">Floor and lift availability</label>
+              <input id="o-patro" name="patro" type="text" placeholder="For example 3rd floor, lift available">
+              <p class="field-hint">It helps us prepare the assembly. The bed fits through narrow hallways and staircases too.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-block">
+          <h2 class="opt-title">Billing details. <span>Who we invoice.</span></h2>
+          <label class="check-inline">
+            <input type="checkbox" id="o-firma-toggle" name="nafirmu">
+            <span>I am ordering for a company or a facility</span>
+          </label>
+          <div class="form-grid" id="firma-pole" hidden>
+            <div class="field full">
+              <label for="o-firma">Company or facility name</label>
+              <input id="o-firma" name="firma" type="text" autocomplete="organization">
+            </div>
+            <div class="field">
+              <label for="o-ic">Company ID</label>
+              <input id="o-ic" name="ic" type="text" inputmode="numeric">
+            </div>
+            <div class="field">
+              <label for="o-dic">VAT ID</label>
+              <input id="o-dic" name="dic" type="text">
+            </div>
+          </div>
+          <label class="check-inline" style="margin-top:16px">
+            <input type="checkbox" id="o-adresa-toggle" name="jinaadresa">
+            <span>The billing address differs from the delivery address</span>
+          </label>
+          <div class="form-grid" id="fakt-pole" hidden>
+            <div class="field full">
+              <label for="o-fakt">Billing address</label>
+              <input id="o-fakt" name="fakturacniadresa" type="text" placeholder="Street, city, postcode">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-block">
+          <h2 class="opt-title">Note. <span>Anything we should know.</span></h2>
+          <div class="field">
+            <label for="o-pozn">Order note</label>
+            <textarea id="o-pozn" name="poznamka" placeholder="For example a preferred delivery date, the user's health condition or a question about accessories."></textarea>
+          </div>
+        </div>
+
+        <!-- What happens next -->
+        <div class="form-block">
+          <h2 class="opt-title">What happens next. <span>Four steps to a bed at your home.</span></h2>
+          <ol class="process-steps">
+            <li>
+              <span class="step-num">1</span>
+              <div>
+                <h3>We confirm your order</h3>
+                <p>Right after submitting you will receive an order summary with your configuration by e-mail. Our sales team gets a copy too and will contact you within two working days to go through everything with you.</p>
+              </div>
+            </li>
+            <li>
+              <span class="step-num">2</span>
+              <div>
+                <h3>We send the payment details</h3>
+                <p>After confirming the order we will send you a proforma invoice with all payment details, meaning the account number, the reference number and the amount.</p>
+              </div>
+            </li>
+            <li>
+              <span class="step-num">3</span>
+              <div>
+                <h3>Your bed goes into production</h3>
+                <p>As soon as the payment is credited, we hand the order over to production in the Czech Republic. Every bed is inspected and tested by hand before dispatch.</p>
+              </div>
+            </li>
+            <li>
+              <span class="step-num">4</span>
+              <div>
+                <h3>We deliver and assemble</h3>
+                <p>We arrange the delivery date by phone. We assemble the bed right in the bedroom, set up the positions, demonstrate the controls and take the packaging away.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+
+        <div class="form-block">
+          <label class="check-inline">
+            <input type="checkbox" id="o-souhlas" name="souhlas" required>
+            <span>I agree with the <a href="terms-and-conditions.html" target="_blank">terms and conditions</a> and the <a href="privacy-policy.html" target="_blank">processing of personal data</a>. <span class="req">*</span></span>
+          </label>
+          <p class="form-error" id="form-error" hidden></p>
+        </div>
+      </form>
+
+      <!-- Order summary -->
+      <aside class="order-summary">
+        <div class="summary-card">
+          <div class="summary-img"><img id="sum-img" src="../assets/img/konfigurator/00cover0-10sidewalls0-20wheels0-30mattress0-40trapeze0-50bedding0.jpg" alt="Your evobeds One bed configuration"></div>
+          <h2 class="summary-title">evobeds One</h2>
+          <p class="summary-sub">Smart electric positioning bed</p>
+          <div class="summary-rows" id="sum-rows"></div>
+          <div class="summary-total">
+            <span>Total</span>
+            <strong id="sum-total">39,900 CZK</strong>
+          </div>
+          <p class="summary-note">Price includes VAT. Delivery and professional assembly are included.</p>
+          <button class="btn btn-dark btn-cta" type="submit" form="order-form" id="order-submit">Place binding order</button>
+          <a class="summary-back" href="eshop.html#konfigurace">← Edit configuration</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Thank you after submitting -->
+  <section class="container order-done" id="order-done" hidden>
+    <div class="done-card">
+      <span class="done-icon">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      </span>
+      <h1 class="h-xl">Thank you for your order</h1>
+      <p class="lead">We have sent the order summary to your e-mail and to our sales team. We will get back to you within two working days to arrange the details.</p>
+      <div class="done-next">
+        <p><strong>What happens next:</strong></p>
+        <ol>
+          <li>We will call you to confirm the configuration and the date.</li>
+          <li>We will send you a proforma invoice with payment details.</li>
+          <li>Once the payment is credited, the bed goes into production.</li>
+          <li>We deliver it to your home and assemble it.</li>
+        </ol>
+      </div>
+      <p class="done-contact">Need to clarify something sooner? Call us at <a href="tel:+420773030533">+420 773 030 533</a>, weekdays 8 am to 4 pm CET.</p>
+      <div class="btns">
+        <a class="btn btn-dark" href="index.html">Back to the home page</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Failed payment -->
+  <section class="container order-done" id="order-fail" hidden>
+    <div class="done-card">
+      <span class="done-icon fail">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </span>
+      <h1 class="h-xl">The payment failed</h1>
+      <p class="lead">Your order is saved with us, only the payment could not be completed. Nothing is lost, you can try the payment again.</p>
+      <div class="btns">
+        <a class="btn btn-dark" id="fail-retry" href="#">Retry payment</a>
+      </div>
+      <p class="done-contact">If the trouble persists, call us at <a href="tel:+420773030533">+420 773 030 533</a>, weekdays 8 am to 4 pm CET. We will complete the order together over the phone.</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-news">
+          <h3>Stay in the loop</h3>
+          <p>News, accessories and home care tips. No spam.</p>
+          <form class="news-form" data-demo>
+            <input type="email" placeholder="Your e-mail" required>
+            <button class="btn btn-light btn-sm" type="submit">Subscribe</button>
+          </form>
+        </div>
+        <div class="footer-cols">
+          <div class="footer-col">
+            <h4>Product</h4>
+            <a href="index.html#postel">Smart bed</a>
+            <a href="eshop.html#konfigurace">Build your bed</a>
+            <a href="eshop.html#prislusenstvi">Accessories</a>
+            <a href="eshop.html">E-shop</a>
+          </div>
+          <div class="footer-col">
+            <h4>Care</h4>
+            <a href="home-care.html">Home care</a>
+            <a href="professional-care.html">Professional care</a>
+            <a href="index.html">FAQ</a>
+          </div>
+          <div class="footer-col">
+            <h4>Company</h4>
+            <a href="about-us.html">About us</a>
+            <a href="contact.html">Contact</a>
+            <a href="contact.html">Showroom</a>
+          </div>
+          <div class="footer-col">
+            <h4>Support</h4>
+            <a href="user-manual.html">User manual</a>
+            <a href="contact.html">Delivery and assembly</a>
+            <a href="contact.html">Service</a>
+            <a href="contact.html">Warranty</a>
+          </div>
+        </div>
+      </div>
+      <!-- Legally required company details -->
+      <div class="footer-company">
+        <div>
+          <h4>Evobeds s.r.o.</h4>
+          <p>Paličkova 75/2, Nová Ves<br>709 00 Ostrava, Czech Republic</p>
+          <p>Company ID: 07754523<br>VAT ID: CZ07754523</p>
+        </div>
+        <div>
+          <h4>Ostrava</h4>
+          <p>Headquarters, registered office and showroom<br>Paličkova 75/2, 709 00 Ostrava</p>
+          <p><a href="tel:+420773030533">+420 773 030 533</a><br><a href="mailto:info@evobeds.com">info@evobeds.com</a></p>
+          <a class="map-link" href="https://maps.google.com/?q=Pali%C4%8Dkova+75/2,+709+00+Ostrava" target="_blank" rel="noopener">Map <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+        <div>
+          <h4>Prague</h4>
+          <p>Branch and showroom<br>U Nikolajky 957/11, 150 00 Praha 5 Smíchov</p>
+          <p><a href="tel:+420731578376">+420 731 578 376</a><br><a href="mailto:praha@invira.cz">praha@invira.cz</a></p>
+          <a class="map-link" href="https://maps.google.com/?q=U+Nikolajky+957/11,+150+00+Praha+5" target="_blank" rel="noopener">Map <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <img src="../assets/img/logo.png" alt="evobeds">
+        <div class="legal">
+          <span>© 2026 evobeds. All rights reserved.</span>
+          <a href="terms-and-conditions.html">Terms and Conditions</a>
+          <a href="privacy-policy.html">Privacy Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js?v=14"></script>
+  <script>
+  /* Order: configuration summary, validation and submission */
+  (function () {
+    'use strict';
+
+    /* ====== ORDER SUBMISSION SETTINGS ======
+       BACKEND_URL: address of the server part with GP webpay payments and the
+       Pohoda connection (see backend/README.md). Once filled in, the form
+       sends the order to the server and the customer goes straight to payment,
+       e.g. 'https://objednavky.evobeds.cz'.
+       While BACKEND_URL is empty, the fallback mode applies: Web3Forms
+       (ACCESS_KEY from web3forms.com), and without a key a pre-filled e-mail. */
+    var BACKEND_URL = '';
+    var ACCESS_KEY = '';
+    var OBCHOD_EMAIL = 'info@evobeds.com';
+
+    /* ---------- Order summary from the passed configuration ---------- */
+    var p = new URLSearchParams(location.search);
+    var zaklad = +(p.get('zaklad') || 39900);
+    var celkem = +(p.get('celkem') || zaklad);
+    var material = p.get('material') || 'Padded eco-leather';
+    var barva = p.get('barva') || 'light grey';
+    var matrace = p.get('matrace') || 'No mattress';
+    var matraceCena = +(p.get('matracecena') || 0);
+    var doplnky = (p.get('doplnky') || '').split(';').filter(Boolean).map(function (d) {
+      var c = d.split('|');
+      return { nazev: c[0], cena: +c[1] };
+    });
+    var nahled = p.get('nahled');
+
+    function fmt(n) { return n.toLocaleString('en-GB') + ' CZK'; }
+    function radek(popis, hodnota, cena) {
+      return '<div class="summary-row"><span class="sr-l"><span class="sr-t">' + popis +
+             '</span><span class="sr-d">' + hodnota + '</span></span>' +
+             '<span class="sr-p">' + cena + '</span></div>';
+    }
+
+    if (nahled) document.getElementById('sum-img').src = nahled;
+    var rows = radek('evobeds One bed', material + ', ' + barva, fmt(zaklad));
+    rows += radek('Mattress', matrace, matraceCena ? '+ ' + fmt(matraceCena) : 'included');
+    doplnky.forEach(function (d) {
+      rows += radek('Accessory', d.nazev, '+ ' + fmt(d.cena));
+    });
+    document.getElementById('sum-rows').innerHTML = rows;
+    document.getElementById('sum-total').textContent = fmt(celkem);
+
+    /* ---------- Optional billing fields ---------- */
+    function prepni(idPrepinace, idPole) {
+      var t = document.getElementById(idPrepinace);
+      var pole = document.getElementById(idPole);
+      t.addEventListener('change', function () { pole.hidden = !t.checked; });
+    }
+    prepni('o-firma-toggle', 'firma-pole');
+    prepni('o-adresa-toggle', 'fakt-pole');
+
+    /* ---------- Submitting the order ---------- */
+    var form = document.getElementById('order-form');
+    var chyba = document.getElementById('form-error');
+    var tlacitko = document.getElementById('order-submit');
+
+    function textSouhrnu(data) {
+      var r = ['NEW ORDER evobeds One', ''];
+      r.push('CONFIGURATION');
+      r.push('evobeds One bed, ' + material + ', ' + barva + ': ' + fmt(zaklad));
+      r.push('Mattress: ' + matrace + (matraceCena ? ' (+ ' + fmt(matraceCena) + ')' : ''));
+      doplnky.forEach(function (d) { r.push('Accessory: ' + d.nazev + ' (+ ' + fmt(d.cena) + ')'); });
+      r.push('TOTAL: ' + fmt(celkem) + ' including VAT, delivery and assembly included');
+      r.push('');
+      r.push('CUSTOMER');
+      r.push('Name: ' + data.jmeno);
+      r.push('Phone: ' + data.telefon);
+      r.push('E-mail: ' + data.email);
+      r.push('');
+      r.push('DELIVERY');
+      r.push(data.ulice + ', ' + data.mesto + ', ' + data.psc);
+      if (data.patro) r.push('Floor and lift: ' + data.patro);
+      if (data.firma) r.push('');
+      if (data.firma) r.push('BILLING: ' + data.firma + ', Company ID ' + (data.ic || 'not provided') + ', VAT ID ' + (data.dic || 'not provided'));
+      if (data.fakturacniadresa) r.push('Billing address: ' + data.fakturacniadresa);
+      if (data.poznamka) { r.push(''); r.push('NOTE: ' + data.poznamka); }
+      return r.join('\n');
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      chyba.hidden = true;
+
+      if (!form.checkValidity()) {
+        var prvni = form.querySelector(':invalid');
+        chyba.textContent = prvni && prvni.id === 'o-souhlas'
+          ? 'To submit the order you need to agree with the terms and conditions.'
+          : 'Please check the required fields marked with an asterisk.';
+        chyba.hidden = false;
+        if (prvni) { prvni.focus(); prvni.scrollIntoView({ block: 'center' }); }
+        return;
+      }
+
+      var data = {};
+      new FormData(form).forEach(function (v, k) { data[k] = v; });
+      var souhrn = textSouhrnu(data);
+      tlacitko.disabled = true;
+      tlacitko.textContent = 'Sending your order…';
+
+      function hotovo() {
+        document.getElementById('objednavka').hidden = true;
+        document.getElementById('order-done').hidden = false;
+        window.scrollTo(0, 0);
+      }
+
+      function selhani(zprava) {
+        chyba.textContent = zprava || 'The order could not be sent. Please call us at +420 773 030 533.';
+        chyba.hidden = false;
+        tlacitko.disabled = false;
+        tlacitko.textContent = BACKEND_URL ? 'Order and pay' : 'Place binding order';
+      }
+
+      if (BACKEND_URL) {
+        /* Send to the server and redirect to the GP webpay payment gateway */
+        tlacitko.textContent = 'Redirecting to payment…';
+        fetch(BACKEND_URL + '/api/objednavka', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            konfigurace: {
+              material: material, barva: barva,
+              matrace: matrace, matraceKc: matraceCena,
+              doplnky: doplnky.map(function (d) { return { nazev: d.nazev, cena: d.cena }; })
+            },
+            zakaznik: data
+          })
+        }).then(function (r) { return r.json().then(function (t) { return r.ok ? t : Promise.reject(t); }); })
+          .then(function (t) { window.location.href = t.platbaUrl; })
+          .catch(function (t) { selhani(t && t.chyba); });
+        return;
+      }
+
+      if (ACCESS_KEY) {
+        /* Send via Web3Forms: a copy to sales and to the customer */
+        fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            access_key: ACCESS_KEY,
+            subject: 'New evobeds One order, ' + data.jmeno,
+            from_name: 'evobeds orders',
+            email: OBCHOD_EMAIL,
+            replyto: data.email,
+            cc: data.email,
+            message: souhrn
+          })
+        }).then(hotovo).catch(function () { selhani(); });
+      } else {
+        /* Fallback without a service: opens a pre-filled e-mail to sales with a copy to the customer */
+        var mail = 'mailto:' + OBCHOD_EMAIL +
+                   '?cc=' + encodeURIComponent(data.email) +
+                   '&subject=' + encodeURIComponent('New evobeds One order, ' + data.jmeno) +
+                   '&body=' + encodeURIComponent(souhrn);
+        window.location.href = mail;
+        setTimeout(hotovo, 600);
+      }
+    });
+
+    /* ---------- Online payment mode: texts and return from the gateway ---------- */
+    if (BACKEND_URL) {
+      tlacitko.textContent = 'Order and pay';
+
+      /* The process description matches paying in advance via the gateway */
+      var kroky = document.querySelectorAll('.process-steps > li');
+      if (kroky.length === 4) {
+        kroky[0].querySelector('h3').textContent = 'You pay securely online';
+        kroky[0].querySelector('p').textContent = 'After submitting the order we redirect you to the secure GP webpay payment gateway, where you pay by card. You receive an immediate confirmation of the payment result.';
+        kroky[1].querySelector('h3').textContent = 'We confirm your order';
+        kroky[1].querySelector('p').textContent = 'Right after paying you receive the order summary and the payment receipt by e-mail. Our sales team will contact you within two working days and go through everything with you.';
+        kroky[2].querySelector('p').textContent = 'After confirming the configuration we hand the order over to production in the Czech Republic. Every bed is inspected and tested by hand before dispatch.';
+      }
+
+      var doneList = document.querySelector('#order-done .done-next ol');
+      if (doneList) {
+        doneList.innerHTML = '<li>We will call you to confirm the configuration and the date.</li>' +
+          '<li>The bed goes into production.</li>' +
+          '<li>We deliver it to your home and assemble it.</li>';
+      }
+
+      /* Return from the payment gateway: ?platba=ok|chyba&cislo=… */
+      var vysledek = p.get('platba');
+      if (vysledek === 'ok') {
+        document.querySelector('#order-done .lead').textContent =
+          'The payment was successful. We have sent the order summary to your e-mail and to our sales team. We will get back to you within two working days to arrange the details.';
+        document.getElementById('objednavka').hidden = true;
+        document.getElementById('order-done').hidden = false;
+        window.scrollTo(0, 0);
+      } else if (vysledek === 'chyba') {
+        var cislo = p.get('cislo');
+        var retry = document.getElementById('fail-retry');
+        if (cislo) {
+          retry.href = BACKEND_URL + '/api/platba/znovu/' + encodeURIComponent(cislo);
+        } else {
+          retry.textContent = 'Back to the order';
+          retry.href = 'order.html';
+        }
+        document.getElementById('objednavka').hidden = true;
+        document.getElementById('order-fail').hidden = false;
+        window.scrollTo(0, 0);
+      }
+    }
+  })();
+  </script>
+</body>
+</html>
