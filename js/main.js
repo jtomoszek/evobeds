@@ -245,8 +245,25 @@
     if (!sticky || !rail) return;
     const mq = window.matchMedia('(min-width: 900px)');
     let ticking = false;
+    const karty = [...rail.querySelectorAll('.scenario-card')];
 
     function maxPosun() { return Math.max(0, rail.scrollWidth - rail.clientWidth); }
+
+    /* Pozornost patří jedné kartě podle průběhu posunu: na začátku první,
+       na konci poslední, mezi tím se štafeta plynule předává. Ostatní se ztlumí. */
+    function zaostri() {
+      if (!karty.length) return;
+      const max = maxPosun();
+      if (max <= 0) { karty.forEach((k) => k.classList.remove('utlum')); return; }
+      const p = Math.min(1, Math.max(0, rail.scrollLeft / max));
+      const aktivni = Math.round(p * (karty.length - 1));
+      karty.forEach((k, i) => k.classList.toggle('utlum', i !== aktivni));
+    }
+    /* I při ručním posouvání lišty (mobil, šipky) se zaostření přepočítá */
+    let railTick = false;
+    rail.addEventListener('scroll', () => {
+      if (!railTick) { railTick = true; requestAnimationFrame(() => { railTick = false; zaostri(); }); }
+    }, { passive: true });
 
     function layout() {
       /* Výška sekce = obrazovka + dráha vodorovného posunu */
@@ -260,6 +277,7 @@
       if (draha <= 0) return;
       const p = Math.min(1, Math.max(0, -rect.top / draha));
       rail.scrollLeft = p * maxPosun();
+      zaostri();
     }
     function onScrollH() {
       if (!ticking) { ticking = true; requestAnimationFrame(update); }
@@ -267,8 +285,8 @@
     window.addEventListener('scroll', onScrollH, { passive: true });
     window.addEventListener('resize', () => { layout(); onScrollH(); });
     /* Rozměry se dopočítají až po načtení fotek karet */
-    window.addEventListener('load', () => { layout(); onScrollH(); });
-    layout(); update();
+    window.addEventListener('load', () => { layout(); onScrollH(); zaostri(); });
+    layout(); update(); zaostri();
   });
 
   /* ---------- Jemná paralaxa: prvek se posouvá proti směru rolování ---------- */
