@@ -2605,4 +2605,3 @@ a, button { -webkit-tap-highlight-color: transparent; }
 /* Komu postel pomáhá: pozornost na jednu kartu, ostatní lehce průsvitné */
 [data-hscroll] .scenario-card { transition: opacity .5s ease, transform .5s ease; }
 [data-hscroll] .scenario-card.utlum { opacity: .38; transform: scale(.97); }
-[data-hscroll] .scenario-card.utlum:hover { opacity: 1; transform: none; }
