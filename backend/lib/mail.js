@@ -1,4 +1,4 @@
-/* Potvrzovací e-maily po zaplacené objednávce: zákazníkovi i obchodu. */
+/* Potvrzovací e-maily k objednávce: zákazníkovi i obchodu. */
 
 'use strict';
 
@@ -15,7 +15,7 @@ function transport() {
 
 function fmt(n) { return n.toLocaleString('cs-CZ') + ' Kč'; }
 
-function textSouhrnu(o) {
+function textSouhrnu(o, platbaProbehla) {
   const k = o.konfigurace;
   const z = o.zakaznik;
   const r = [
@@ -27,7 +27,9 @@ function textSouhrnu(o) {
   ];
   for (const d of k.doplnky) r.push(`Příslušenství: ${d.nazev} (+ ${fmt(d.cena)})`);
   r.push(`CELKEM: ${fmt(o.celkemKc)} včetně DPH, doprava a montáž v ceně`);
-  r.push('', 'Platba: zaplaceno online přes GP webpay');
+  r.push('', platbaProbehla
+    ? 'Platba: zaplaceno online přes GP webpay'
+    : 'Platba a doprava: podrobnosti s Vámi domluví obchodní oddělení');
   r.push('', 'ZÁKAZNÍK');
   r.push(`Jméno: ${z.jmeno}`, `Telefon: ${z.telefon}`, `E-mail: ${z.email}`);
   r.push('', 'DORUČENÍ', `${z.ulice}, ${z.mesto}, ${z.psc}`);
@@ -38,10 +40,42 @@ function textSouhrnu(o) {
   return r.join('\n');
 }
 
+/* Po přijetí objednávky bez online platby: zákazníkovi potvrzení a obchodu
+   samostatný e-mail s objednávkou. Na dokončení obou odeslání se čeká. */
+async function posliPotvrzeniPrijeti(o) {
+  const t = transport();
+  const souhrn = textSouhrnu(o, false);
+  const odesilatel = `"evobeds" <${process.env.SMTP_ODESILATEL || process.env.SMTP_UZIVATEL}>`;
+
+  await t.sendMail({
+    from: odesilatel,
+    to: o.zakaznik.email,
+    subject: `Děkujeme za objednávku č. ${o.cislo}`,
+    text:
+`Dobrý den,
+
+děkujeme za Vaši objednávku a potvrzujeme její přijetí. Naše obchodní oddělení se Vám ozve do dvou pracovních dnů telefonicky nebo e-mailem, potvrdí konfiguraci a domluví s Vámi způsob platby a dopravy.
+
+${souhrn}
+
+V případě dotazů volejte +420 773 030 533 (pracovní dny 8 až 16 hod).
+
+evobeds s.r.o.`
+  });
+
+  await t.sendMail({
+    from: odesilatel,
+    to: process.env.EMAIL_OBCHOD || 'info@evobeds.com',
+    replyTo: o.zakaznik.email,
+    subject: `Nová objednávka č. ${o.cislo}, ${o.zakaznik.jmeno}`,
+    text: souhrn
+  });
+}
+
 /* Po úspěšné platbě: zákazníkovi poděkování, obchodu kopie objednávky. */
 async function posliPotvrzeni(o) {
   const t = transport();
-  const souhrn = textSouhrnu(o);
+  const souhrn = textSouhrnu(o, true);
   const odesilatel = `"evobeds" <${process.env.SMTP_ODESILATEL || process.env.SMTP_UZIVATEL}>`;
 
   await t.sendMail({
@@ -69,4 +103,4 @@ evobeds s.r.o.`
   });
 }
 
-module.exports = { posliPotvrzeni };
+module.exports = { posliPotvrzeni, posliPotvrzeniPrijeti };

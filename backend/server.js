@@ -71,7 +71,7 @@ async function poZaplaceni(o) {
 }
 
 /* ---------- Přijetí objednávky z webu ---------- */
-app.post('/api/objednavka', (req, res) => {
+app.post('/api/objednavka', async (req, res) => {
   const t = req.body || {};
   const z = t.zakaznik || {};
   const k = t.konfigurace || {};
@@ -95,7 +95,7 @@ app.post('/api/objednavka', (req, res) => {
   const objednavka = {
     cislo: Date.now(),
     vytvoreno: new Date().toISOString(),
-    stav: 'ceka-na-platbu',
+    stav: 'prijata',
     celkemKc,
     konfigurace: {
       material: String(k.material || '').slice(0, 80),
@@ -121,16 +121,32 @@ app.post('/api/objednavka', (req, res) => {
     }
   };
 
+  /* Objednávku nejprve uložíme. GP webpay se v tomto toku nevolá; jeho
+     knihovna a endpointy zůstávají zachované pro případné budoucí dokončení. */
   try {
-    const platbaUrl = gpwebpay.vytvorPlatbu(objednavka);
     sklad.uloz(objednavka);
     crm.zWebu(objednavka);
-    console.log(`Objednávka ${objednavka.cislo} přijata, ${celkemKc} Kč, přesměrování na bránu.`);
-    res.json({ cislo: objednavka.cislo, platbaUrl });
   } catch (e) {
-    console.error('Vytvoření platby selhalo:', e);
-    res.status(500).json({ chyba: 'Platbu se nepodařilo připravit. Zavolejte nám prosím na +420 773 030 533.' });
+    console.error('Uložení objednávky selhalo:', e);
+    return res.status(500).json({ chyba: 'Objednávku se nepodařilo uložit. Zavolejte nám prosím na +420 773 030 533.' });
   }
+
+  try {
+    await mail.posliPotvrzeniPrijeti(objednavka);
+    objednavka.emailOdeslan = true;
+    sklad.uloz(objednavka);
+  } catch (e) {
+    objednavka.emailOdeslan = false;
+    objednavka.emailChyba = String(e.message || e);
+    sklad.uloz(objednavka);
+    console.error(`Objednávka ${objednavka.cislo}: potvrzovací e-maily se nepodařilo odeslat:`, e.message);
+    return res.status(502).json({
+      chyba: 'Objednávku jsme přijali, ale potvrzovací e-maily se nepodařilo odeslat. Zavolejte nám prosím na +420 773 030 533.'
+    });
+  }
+
+  console.log(`Objednávka ${objednavka.cislo} přijata, ${celkemKc} Kč, oba e-maily odeslány.`);
+  return res.status(201).json({ ok: true, cislo: objednavka.cislo });
 });
 
 /* ---------- Návrat z platební brány ---------- */
