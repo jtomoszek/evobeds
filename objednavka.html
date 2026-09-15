@@ -327,16 +327,12 @@
   (function () {
     'use strict';
 
-    /* ====== NASTAVENÍ ODESLÁNÍ OBJEDNÁVKY ======
-       BACKEND_URL: adresa serverové části s platbami GP webpay a napojením
-       na Pohodu (viz backend/README.md). Jakmile ji vyplníte, formulář
-       posílá objednávku na server a zákazník jde rovnou platit,
-       např. 'https://objednavky.evobeds.cz'.
-       Dokud je BACKEND_URL prázdný, platí záložní režim: Web3Forms
-       (ACCESS_KEY z web3forms.com), a bez klíče předvyplněný e-mail. */
-    var BACKEND_URL = '';
-    var ACCESS_KEY = '';
-    var OBCHOD_EMAIL = 'info@evobeds.com';
+    /* Lokální web používá lokální backend, veřejný web produkční backend.
+       E-mail obchodu se nastavuje pouze v backend/.env jako EMAIL_OBCHOD. */
+    var JE_LOCALHOST = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+    var BACKEND_URL = JE_LOCALHOST
+      ? 'http://127.0.0.1:3400'
+      : 'https://objednavky.evobeds.cz';
 
     /* ---------- Souhrn objednávky z předané konfigurace ---------- */
     var p = new URLSearchParams(location.search);
@@ -382,29 +378,6 @@
     var chyba = document.getElementById('form-error');
     var tlacitko = document.getElementById('order-submit');
 
-    function textSouhrnu(data) {
-      var r = ['NOVÁ OBJEDNÁVKA evobeds One', ''];
-      r.push('KONFIGURACE');
-      r.push('Postel evobeds One, ' + material + ', ' + barva + ': ' + fmt(zaklad));
-      r.push('Matrace: ' + matrace + (matraceCena ? ' (+ ' + fmt(matraceCena) + ')' : ''));
-      doplnky.forEach(function (d) { r.push('Příslušenství: ' + d.nazev + ' (+ ' + fmt(d.cena) + ')'); });
-      r.push('CELKEM: ' + fmt(celkem) + ' včetně DPH, doprava a montáž v ceně');
-      r.push('');
-      r.push('ZÁKAZNÍK');
-      r.push('Jméno: ' + data.jmeno);
-      r.push('Telefon: ' + data.telefon);
-      r.push('E-mail: ' + data.email);
-      r.push('');
-      r.push('DORUČENÍ');
-      r.push(data.ulice + ', ' + data.mesto + ', ' + data.psc);
-      if (data.patro) r.push('Patro a výtah: ' + data.patro);
-      if (data.firma) r.push('');
-      if (data.firma) r.push('FAKTURACE: ' + data.firma + ', IČ ' + (data.ic || 'neuvedeno') + ', DIČ ' + (data.dic || 'neuvedeno'));
-      if (data.fakturacniadresa) r.push('Fakturační adresa: ' + data.fakturacniadresa);
-      if (data.poznamka) { r.push(''); r.push('POZNÁMKA: ' + data.poznamka); }
-      return r.join('\n');
-    }
-
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       chyba.hidden = true;
@@ -421,7 +394,6 @@
 
       var data = {};
       new FormData(form).forEach(function (v, k) { data[k] = v; });
-      var souhrn = textSouhrnu(data);
       tlacitko.disabled = true;
       tlacitko.textContent = 'Odesíláme objednávku…';
 
@@ -438,50 +410,22 @@
         tlacitko.textContent = BACKEND_URL ? 'Objednat a zaplatit' : 'Závazně objednat';
       }
 
-      if (BACKEND_URL) {
-        /* Odeslání na server a přesměrování na platební bránu GP webpay */
-        tlacitko.textContent = 'Přesměrováváme na platbu…';
-        fetch(BACKEND_URL + '/api/objednavka', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            konfigurace: {
-              material: material, barva: barva,
-              matrace: matrace, matraceKc: matraceCena,
-              doplnky: doplnky.map(function (d) { return { nazev: d.nazev, cena: d.cena }; })
-            },
-            zakaznik: data
-          })
-        }).then(function (r) { return r.json().then(function (t) { return r.ok ? t : Promise.reject(t); }); })
-          .then(function (t) { window.location.href = t.platbaUrl; })
-          .catch(function (t) { selhani(t && t.chyba); });
-        return;
-      }
-
-      if (ACCESS_KEY) {
-        /* Odeslání přes Web3Forms: kopie na obchod i zákazníkovi */
-        fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({
-            access_key: ACCESS_KEY,
-            subject: 'Nová objednávka evobeds One, ' + data.jmeno,
-            from_name: 'evobeds objednávky',
-            email: OBCHOD_EMAIL,
-            replyto: data.email,
-            cc: data.email,
-            message: souhrn
-          })
-        }).then(hotovo).catch(function () { selhani(); });
-      } else {
-        /* Záloha bez služby: otevře předvyplněný e-mail na obchod s kopií zákazníkovi */
-        var mail = 'mailto:' + OBCHOD_EMAIL +
-                   '?cc=' + encodeURIComponent(data.email) +
-                   '&subject=' + encodeURIComponent('Nová objednávka evobeds One, ' + data.jmeno) +
-                   '&body=' + encodeURIComponent(souhrn);
-        window.location.href = mail;
-        setTimeout(hotovo, 600);
-      }
+      /* Odeslání na server a přesměrování na platební bránu GP webpay */
+      tlacitko.textContent = 'Přesměrováváme na platbu…';
+      fetch(BACKEND_URL + '/api/objednavka', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          konfigurace: {
+            material: material, barva: barva,
+            matrace: matrace, matraceKc: matraceCena,
+            doplnky: doplnky.map(function (d) { return { nazev: d.nazev, cena: d.cena }; })
+          },
+          zakaznik: data
+        })
+      }).then(function (r) { return r.json().then(function (t) { return r.ok ? t : Promise.reject(t); }); })
+        .then(function (t) { window.location.href = t.platbaUrl; })
+        .catch(function (t) { selhani(t && t.chyba); });
     });
 
     /* ---------- Režim online platby: texty a návrat z brány ---------- */
