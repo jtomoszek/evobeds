@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dokončení objednávky | evobeds</title>
-  <meta name="description" content="Dokončete objednávku postele evobeds One. Vyplňte kontaktní a fakturační údaje, my vám obratem pošleme souhrn objednávky a podklady k platbě.">
+  <meta name="description" content="Dokončete objednávku postele evobeds One. Vyplňte kontaktní a fakturační údaje, my vám obratem pošleme souhrn objednávky a informace o dalším postupu.">
   <meta name="robots" content="noindex">
   <link rel="stylesheet" href="css/style.css?v=53">
   <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
@@ -60,7 +60,7 @@
     <div class="order-head">
       <p class="eyebrow">Krok 2 ze 2</p>
       <h1 class="h-xl">Dokončení objednávky</h1>
-      <p class="lead">Zbývá vyplnit údaje, na které postel doručíme a vystavíme fakturu. Objednávka je nezávazná do chvíle, než uhradíte zálohovou fakturu.</p>
+      <p class="lead">Zbývá vyplnit údaje, na které postel doručíme a vystavíme fakturu. Po odeslání vám objednávku potvrdíme e-mailem a ozveme se kvůli dalším podrobnostem.</p>
     </div>
 
     <div class="order-grid">
@@ -80,7 +80,7 @@
             <div class="field full">
               <label for="o-email">E-mail <span class="req">*</span></label>
               <input id="o-email" name="email" type="email" required autocomplete="email">
-              <p class="field-hint">Na tuto adresu vám pošleme souhrn objednávky a podklady k platbě.</p>
+              <p class="field-hint">Na tuto adresu vám pošleme souhrn a potvrzení přijetí objednávky.</p>
             </div>
           </div>
         </div>
@@ -162,15 +162,15 @@
             <li>
               <span class="step-num">2</span>
               <div>
-                <h3>Pošleme fakturační údaje</h3>
-                <p>Po potvrzení objednávky vám zašleme zálohovou fakturu se všemi platebními údaji, tedy číslem účtu, variabilním symbolem a částkou.</p>
+                <h3>Domluvíme podrobnosti</h3>
+                <p>Telefonicky nebo e-mailem s vámi potvrdíme konfiguraci a domluvíme způsob platby i dopravy.</p>
               </div>
             </li>
             <li>
               <span class="step-num">3</span>
               <div>
                 <h3>Postel jde do výroby</h3>
-                <p>Jakmile je platba připsaná, předáváme objednávku do výroby v České republice. Každou postel ručně kontrolujeme a testujeme před expedicí.</p>
+                <p>Po potvrzení konfigurace a domluvě podrobností předáváme objednávku do výroby v České republice. Každou postel ručně kontrolujeme a testujeme před expedicí.</p>
               </div>
             </li>
             <li>
@@ -222,9 +222,9 @@
       <div class="done-next">
         <p><strong>Co bude následovat:</strong></p>
         <ol>
-          <li>Zavoláme vám a potvrdíme konfiguraci i termín.</li>
-          <li>Pošleme vám zálohovou fakturu s platebními údaji.</li>
-          <li>Po připsání platby postel předáme do výroby.</li>
+          <li>Ozveme se vám telefonicky nebo e-mailem.</li>
+          <li>Potvrdíme konfiguraci a domluvíme způsob platby i dopravy.</li>
+          <li>Postel předáme do výroby.</li>
           <li>Přivezeme ji k vám domů a sestavíme.</li>
         </ol>
       </div>
@@ -235,7 +235,7 @@
     </div>
   </section>
 
-  <!-- Neúspěšná platba -->
+  <!-- Neúspěšná platba; zobrazí se pouze při zapnutém GP webpay. -->
   <section class="container order-done" id="order-fail" hidden>
     <div class="done-card">
       <span class="done-icon fail">
@@ -333,6 +333,7 @@
     var BACKEND_URL = JE_LOCALHOST
       ? 'http://127.0.0.1:3400'
       : 'https://objednavky.evobeds.cz';
+    var gpwebpayEnabled = false;
 
     /* ---------- Souhrn objednávky z předané konfigurace ---------- */
     var p = new URLSearchParams(location.search);
@@ -407,11 +408,10 @@
         chyba.textContent = zprava || 'Objednávku se nepodařilo odeslat. Zavolejte nám prosím na +420 773 030 533.';
         chyba.hidden = false;
         tlacitko.disabled = false;
-        tlacitko.textContent = BACKEND_URL ? 'Objednat a zaplatit' : 'Závazně objednat';
+        tlacitko.textContent = gpwebpayEnabled ? 'Objednat a zaplatit' : 'Závazně objednat';
       }
 
-      /* Odeslání na server a přesměrování na platební bránu GP webpay */
-      tlacitko.textContent = 'Přesměrováváme na platbu…';
+      tlacitko.textContent = gpwebpayEnabled ? 'Přesměrováváme na platbu…' : 'Odesíláme objednávku…';
       fetch(BACKEND_URL + '/api/objednavka', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -424,15 +424,20 @@
           zakaznik: data
         })
       }).then(function (r) { return r.json().then(function (t) { return r.ok ? t : Promise.reject(t); }); })
-        .then(function (t) { window.location.href = t.platbaUrl; })
+        .then(function (t) {
+          if (t.platbaUrl) {
+            window.location.href = t.platbaUrl;
+          } else {
+            hotovo();
+          }
+        })
         .catch(function (t) { selhani(t && t.chyba); });
     });
 
-    /* ---------- Režim online platby: texty a návrat z brány ---------- */
-    if (BACKEND_URL) {
+    function aktivujGpwebpay() {
+      gpwebpayEnabled = true;
       tlacitko.textContent = 'Objednat a zaplatit';
 
-      /* Popis procesu odpovídá platbě předem přes bránu */
       var kroky = document.querySelectorAll('.process-steps > li');
       if (kroky.length === 4) {
         kroky[0].querySelector('h3').textContent = 'Zaplatíte zabezpečeně online';
@@ -449,7 +454,6 @@
           '<li>Přivezeme ji k vám domů a sestavíme.</li>';
       }
 
-      /* Návrat z platební brány: ?platba=ok|chyba&cislo=… */
       var vysledek = p.get('platba');
       if (vysledek === 'ok') {
         document.querySelector('#order-done .lead').textContent =
@@ -471,6 +475,15 @@
         window.scrollTo(0, 0);
       }
     }
+
+    fetch(BACKEND_URL + '/api/nastaveni')
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+      .then(function (nastaveni) {
+        if (nastaveni.gpwebpayEnabled) aktivujGpwebpay();
+      })
+      .catch(function () {
+        /* Při nedostupné konfiguraci zůstane bezpečně aktivní neplatební UI. */
+      });
   })();
   </script>
 </body>

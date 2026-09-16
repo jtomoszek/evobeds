@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Complete your order | evobeds</title>
-  <meta name="description" content="Complete your evobeds One bed order. Fill in your contact and billing details and we will send you an order summary and payment instructions.">
+  <meta name="description" content="Complete your evobeds One bed order. Fill in your contact and billing details and we will send you an order summary and information about the next steps.">
   <meta name="robots" content="noindex">
   <link rel="stylesheet" href="../css/style.css?v=53">
   <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
@@ -60,7 +60,7 @@
     <div class="order-head">
       <p class="eyebrow">Step 2 of 2</p>
       <h1 class="h-xl">Complete your order</h1>
-      <p class="lead">All that remains is to fill in where we should deliver the bed and who to invoice. The order is not binding until you pay the proforma invoice.</p>
+      <p class="lead">All that remains is to fill in where we should deliver the bed and who to invoice. After submitting, we will confirm your order by e-mail and contact you to arrange the details.</p>
     </div>
 
     <div class="order-grid">
@@ -80,7 +80,7 @@
             <div class="field full">
               <label for="o-email">E-mail <span class="req">*</span></label>
               <input id="o-email" name="email" type="email" required autocomplete="email">
-              <p class="field-hint">We will send the order summary and payment details to this address.</p>
+              <p class="field-hint">We will send the order summary and confirmation of receipt to this address.</p>
             </div>
           </div>
         </div>
@@ -162,15 +162,15 @@
             <li>
               <span class="step-num">2</span>
               <div>
-                <h3>We send the payment details</h3>
-                <p>After confirming the order we will send you a proforma invoice with all payment details, meaning the account number, the reference number and the amount.</p>
+                <h3>We arrange the details</h3>
+                <p>We will confirm the configuration and arrange the method of payment and delivery with you by phone or e-mail.</p>
               </div>
             </li>
             <li>
               <span class="step-num">3</span>
               <div>
                 <h3>Your bed goes into production</h3>
-                <p>As soon as the payment is credited, we hand the order over to production in the Czech Republic. Every bed is inspected and tested by hand before dispatch.</p>
+                <p>After confirming the configuration and arranging the details, we hand the order over to production in the Czech Republic. Every bed is inspected and tested by hand before dispatch.</p>
               </div>
             </li>
             <li>
@@ -222,9 +222,9 @@
       <div class="done-next">
         <p><strong>What happens next:</strong></p>
         <ol>
-          <li>We will call you to confirm the configuration and the date.</li>
-          <li>We will send you a proforma invoice with payment details.</li>
-          <li>Once the payment is credited, the bed goes into production.</li>
+          <li>We will contact you by phone or e-mail.</li>
+          <li>We will confirm the configuration and arrange payment and delivery.</li>
+          <li>The bed goes into production.</li>
           <li>We deliver it to your home and assemble it.</li>
         </ol>
       </div>
@@ -235,7 +235,7 @@
     </div>
   </section>
 
-  <!-- Failed payment -->
+  <!-- Failed payment; shown only when GP webpay is enabled. -->
   <section class="container order-done" id="order-fail" hidden>
     <div class="done-card">
       <span class="done-icon fail">
@@ -333,6 +333,7 @@
     var BACKEND_URL = JE_LOCALHOST
       ? 'http://127.0.0.1:3400'
       : 'https://objednavky.evobeds.cz';
+    var gpwebpayEnabled = false;
 
     /* ---------- Order summary from the passed configuration ---------- */
     var p = new URLSearchParams(location.search);
@@ -407,11 +408,10 @@
         chyba.textContent = zprava || 'The order could not be sent. Please call us at +420 773 030 533.';
         chyba.hidden = false;
         tlacitko.disabled = false;
-        tlacitko.textContent = BACKEND_URL ? 'Order and pay' : 'Place binding order';
+        tlacitko.textContent = gpwebpayEnabled ? 'Order and pay' : 'Place binding order';
       }
 
-      /* Send to the server and redirect to the GP webpay payment gateway */
-      tlacitko.textContent = 'Redirecting to payment…';
+      tlacitko.textContent = gpwebpayEnabled ? 'Redirecting to payment…' : 'Sending your order…';
       fetch(BACKEND_URL + '/api/objednavka', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -424,15 +424,20 @@
           zakaznik: data
         })
       }).then(function (r) { return r.json().then(function (t) { return r.ok ? t : Promise.reject(t); }); })
-        .then(function (t) { window.location.href = t.platbaUrl; })
+        .then(function (t) {
+          if (t.platbaUrl) {
+            window.location.href = t.platbaUrl;
+          } else {
+            hotovo();
+          }
+        })
         .catch(function (t) { selhani(t && t.chyba); });
     });
 
-    /* ---------- Online payment mode: texts and return from the gateway ---------- */
-    if (BACKEND_URL) {
+    function aktivujGpwebpay() {
+      gpwebpayEnabled = true;
       tlacitko.textContent = 'Order and pay';
 
-      /* The process description matches paying in advance via the gateway */
       var kroky = document.querySelectorAll('.process-steps > li');
       if (kroky.length === 4) {
         kroky[0].querySelector('h3').textContent = 'You pay securely online';
@@ -449,7 +454,6 @@
           '<li>We deliver it to your home and assemble it.</li>';
       }
 
-      /* Return from the payment gateway: ?platba=ok|chyba&cislo=… */
       var vysledek = p.get('platba');
       if (vysledek === 'ok') {
         document.querySelector('#order-done .lead').textContent =
@@ -471,6 +475,15 @@
         window.scrollTo(0, 0);
       }
     }
+
+    fetch(BACKEND_URL + '/api/nastaveni')
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+      .then(function (nastaveni) {
+        if (nastaveni.gpwebpayEnabled) aktivujGpwebpay();
+      })
+      .catch(function () {
+        /* If configuration is unavailable, the non-payment UI stays active. */
+      });
   })();
   </script>
 </body>

@@ -46,6 +46,17 @@ formulář jede postaru (e-mailem) a nic se nerozbije.
 
 ## GP webpay: co zařídit
 
+Online platby řídí jediný přepínač v `.env`:
+
+```env
+GPWEBPAY_ENABLED=false
+```
+
+Při hodnotě `false` se objednávka uloží a backend počká na odeslání e-mailu
+zákazníkovi i obchodu. GP webpay ani jeho endpointy se nepoužijí. Hodnota
+`true` zapne vytvoření platby, přesměrování zákazníka a zpracování návratu
+z brány. Zapínejte ji až po doplnění a ověření všech ostatních `GPW_*` hodnot.
+
 1. V portálu GP webpay (https://portal.gpwebpay.com) vygenerujte privátní
    klíč obchodníka, nastavte mu heslo a nahrajte veřejnou část do portálu.
    Privátní klíč uložte na server do `backend/keys/gpwebpay-privatni.pem`.

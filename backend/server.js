@@ -21,6 +21,9 @@ const path = require('path');
 const app = express();
 app.use(express.json({ limit: '100kb' }));
 
+/* GP webpay se zapíná jedinou explicitní hodnotou v .env. */
+const GPWEBPAY_ENABLED = String(process.env.GPWEBPAY_ENABLED || '').toLowerCase() === 'true';
+
 /* ---------- CORS: web běží na jiné doméně než backend ---------- */
 const POVOLENE_PUVODY = (process.env.FRONTEND_PUVODY ||
   'https://jtomoszek.github.io,https://evobeds.cz,https://www.evobeds.cz')
@@ -42,11 +45,21 @@ function chybaKlienta(res, zprava) {
   return res.status(400).json({ chyba: zprava });
 }
 
+function vyzadujGpwebpay(req, res, next) {
+  if (!GPWEBPAY_ENABLED) return res.status(404).json({ chyba: 'Online platba není aktivní.' });
+  next();
+}
+
 function adresaNavratu(parametry) {
   const url = new URL((process.env.FRONTEND_URL || 'https://jtomoszek.github.io/evobeds') + '/objednavka.html');
   for (const [k, v] of Object.entries(parametry)) url.searchParams.set(k, v);
   return url.toString();
 }
+
+/* Veřejná konfigurace pro objednávkový formulář; neobsahuje tajné údaje. */
+app.get('/api/nastaveni', (req, res) => {
+  res.json({ gpwebpayEnabled: GPWEBPAY_ENABLED });
+});
 
 /* Po zaplacení: e-maily a založení do Pohody. Selhání jednoho kroku
    nesmí zastavit ostatní; všechno se poznamená do objednávky. */
@@ -95,7 +108,7 @@ app.post('/api/objednavka', async (req, res) => {
   const objednavka = {
     cislo: Date.now(),
     vytvoreno: new Date().toISOString(),
-    stav: 'prijata',
+    stav: GPWEBPAY_ENABLED ? 'ceka-na-platbu' : 'prijata',
     celkemKc,
     konfigurace: {
       material: String(k.material || '').slice(0, 80),
@@ -131,6 +144,17 @@ app.post('/api/objednavka', async (req, res) => {
     return res.status(500).json({ chyba: 'Objednávku se nepodařilo uložit. Zavolejte nám prosím na +420 773 030 533.' });
   }
 
+  if (GPWEBPAY_ENABLED) {
+    try {
+      const platbaUrl = gpwebpay.vytvorPlatbu(objednavka);
+      console.log(`Objednávka ${objednavka.cislo} přijata, ${celkemKc} Kč, přesměrování na bránu.`);
+      return res.json({ cislo: objednavka.cislo, platbaUrl });
+    } catch (e) {
+      console.error('Vytvoření platby selhalo:', e);
+      return res.status(500).json({ chyba: 'Platbu se nepodařilo připravit. Zavolejte nám prosím na +420 773 030 533.' });
+    }
+  }
+
   try {
     await mail.posliPotvrzeniPrijeti(objednavka);
     objednavka.emailOdeslan = true;
@@ -150,7 +174,7 @@ app.post('/api/objednavka', async (req, res) => {
 });
 
 /* ---------- Návrat z platební brány ---------- */
-app.get('/api/platba/navrat', async (req, res) => {
+app.get('/api/platba/navrat', vyzadujGpwebpay, async (req, res) => {
   const surovyDotaz = req.url.split('?')[1] || '';
   let vysledek;
   try {
@@ -192,7 +216,7 @@ app.get('/api/platba/navrat', async (req, res) => {
 });
 
 /* ---------- Opakování platby po neúspěchu ---------- */
-app.get('/api/platba/znovu/:cislo', (req, res) => {
+app.get('/api/platba/znovu/:cislo', vyzadujGpwebpay, (req, res) => {
   const o = sklad.nacti(req.params.cislo);
   if (!o) return res.status(404).send('Objednávka nenalezena.');
   if (o.stav === 'zaplacena') return res.redirect(adresaNavratu({ platba: 'ok', cislo: o.cislo }));
