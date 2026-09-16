@@ -13,6 +13,14 @@ function transport() {
   });
 }
 
+/* Bezplatný Mailtrap Sandbox přijme jen jeden e-mail za 10 sekund.
+   Prodleva se proto použije pouze při lokálním testování přes jeho SMTP host. */
+async function mailtrapProdleva() {
+  if (process.env.SMTP_HOST === 'sandbox.smtp.mailtrap.io') {
+    await new Promise(resolve => setTimeout(resolve, 11000));
+  }
+}
+
 function fmt(n) { return n.toLocaleString('cs-CZ') + ' Kč'; }
 
 function textSouhrnu(o, platbaProbehla) {
@@ -40,12 +48,22 @@ function textSouhrnu(o, platbaProbehla) {
   return r.join('\n');
 }
 
-/* Po přijetí objednávky bez online platby: zákazníkovi potvrzení a obchodu
-   samostatný e-mail s objednávkou. Na dokončení obou odeslání se čeká. */
+/* Po přijetí objednávky bez online platby: obchodu samostatný e-mail
+   s objednávkou a potom zákazníkovi potvrzení. Na dokončení obou se čeká. */
 async function posliPotvrzeniPrijeti(o) {
   const t = transport();
   const souhrn = textSouhrnu(o, false);
   const odesilatel = `"evobeds" <${process.env.SMTP_ODESILATEL || process.env.SMTP_UZIVATEL}>`;
+
+  await t.sendMail({
+    from: odesilatel,
+    to: process.env.EMAIL_OBCHOD || 'info@evobeds.com',
+    replyTo: o.zakaznik.email,
+    subject: `Nová objednávka č. ${o.cislo}, ${o.zakaznik.jmeno}`,
+    text: souhrn
+  });
+
+  await mailtrapProdleva();
 
   await t.sendMail({
     from: odesilatel,
@@ -62,21 +80,23 @@ V případě dotazů volejte +420 773 030 533 (pracovní dny 8 až 16 hod).
 
 evobeds s.r.o.`
   });
+}
+
+/* Po úspěšné platbě: obchodu kopie objednávky a zákazníkovi poděkování. */
+async function posliPotvrzeni(o) {
+  const t = transport();
+  const souhrn = textSouhrnu(o, true);
+  const odesilatel = `"evobeds" <${process.env.SMTP_ODESILATEL || process.env.SMTP_UZIVATEL}>`;
 
   await t.sendMail({
     from: odesilatel,
     to: process.env.EMAIL_OBCHOD || 'info@evobeds.com',
     replyTo: o.zakaznik.email,
-    subject: `Nová objednávka č. ${o.cislo}, ${o.zakaznik.jmeno}`,
+    subject: `Nová zaplacená objednávka č. ${o.cislo}, ${o.zakaznik.jmeno}`,
     text: souhrn
   });
-}
 
-/* Po úspěšné platbě: zákazníkovi poděkování, obchodu kopie objednávky. */
-async function posliPotvrzeni(o) {
-  const t = transport();
-  const souhrn = textSouhrnu(o, true);
-  const odesilatel = `"evobeds" <${process.env.SMTP_ODESILATEL || process.env.SMTP_UZIVATEL}>`;
+  await mailtrapProdleva();
 
   await t.sendMail({
     from: odesilatel,
@@ -92,14 +112,6 @@ ${souhrn}
 V případě dotazů volejte +420 773 030 533 (pracovní dny 8 až 16 hod).
 
 evobeds s.r.o.`
-  });
-
-  await t.sendMail({
-    from: odesilatel,
-    to: process.env.EMAIL_OBCHOD || 'info@evobeds.com',
-    replyTo: o.zakaznik.email,
-    subject: `Nová zaplacená objednávka č. ${o.cislo}, ${o.zakaznik.jmeno}`,
-    text: souhrn
   });
 }
 
