@@ -36,13 +36,24 @@ subdoménu, například `objednavky.evobeds.cz`:
 ```
 server {
     server_name objednavky.evobeds.cz;
-    location / { proxy_pass http://127.0.0.1:3400; proxy_set_header Host $host; }
+    location / {
+        proxy_pass http://127.0.0.1:3400;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
 }
 ```
 
-Nakonec na webu v `objednavka.html` vyplňte
-`var BACKEND_URL = 'https://objednavky.evobeds.cz';`. Dokud je prázdný,
-formulář jede postaru (e-mailem) a nic se nerozbije.
+Český i anglický objednávkový formulář používají na localhostu backend
+`http://127.0.0.1:3400` a v produkci `https://objednavky.evobeds.cz`.
+Povolené frontendové domény nastavte v `FRONTEND_PUVODY` podle `.env.example`.
+
+Veřejné kontaktní, B2B a newsletterové formuláře používají endpoint
+`POST /api/formular`. Každý úspěšně přijatý formulář odešle samostatný e-mail
+na `EMAIL_OBCHOD`; e-mail návštěvníka se použije jako `Reply-To`. Endpoint
+povolí z jedné IP nejvýše pět pokusů za deset minut.
 
 ## GP webpay: co zařídit
 

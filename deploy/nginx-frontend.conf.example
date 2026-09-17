@@ -1,0 +1,52 @@
+# Nahraďte /var/www/evobeds skutečnou cestou k repozitáři.
+# HTTPS certifikáty lze následně doplnit například pomocí Certbotu.
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name evobeds.cz www.evobeds.cz;
+
+    root /var/www/evobeds;
+    index index.html;
+
+    location ^~ /backend/ { return 404; }
+    location ^~ /deploy/  { return 404; }
+    location = /dev-server.js { return 404; }
+    location ~ /\. { deny all; }
+
+    location = /en { return 301 https://evobeds.com/; }
+    location ~ ^/en/(.*)$ { return 301 https://evobeds.com/$1; }
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name evobeds.com www.evobeds.com;
+
+    root /var/www/evobeds;
+    index index.html;
+
+    location ^~ /assets/ { try_files $uri =404; }
+    location ^~ /css/    { try_files $uri =404; }
+    location ^~ /js/     { try_files $uri =404; }
+
+    location ^~ /backend/ { return 404; }
+    location ^~ /deploy/  { return 404; }
+    location = /dev-server.js { return 404; }
+    location ~ /\. { deny all; }
+
+    location = /en { return 301 https://evobeds.com/; }
+    location ~ ^/en/(.*)$ { return 301 https://evobeds.com/$1; }
+
+    location = / {
+        try_files /en/index.html =404;
+    }
+
+    location / {
+        try_files /en$uri =404;
+    }
+}

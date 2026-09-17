@@ -19,6 +19,7 @@ const uzivatele = require('./lib/uzivatele');
 const path = require('path');
 
 const app = express();
+app.set('trust proxy', 'loopback');
 app.use(express.json({ limit: '100kb' }));
 
 /* GP webpay se zapíná jedinou explicitní hodnotou v .env. */
@@ -26,7 +27,7 @@ const GPWEBPAY_ENABLED = String(process.env.GPWEBPAY_ENABLED || '').toLowerCase(
 
 /* ---------- CORS: web běží na jiné doméně než backend ---------- */
 const POVOLENE_PUVODY = (process.env.FRONTEND_PUVODY ||
-  'https://jtomoszek.github.io,https://evobeds.cz,https://www.evobeds.cz')
+  'https://evobeds.cz,https://www.evobeds.cz,https://evobeds.com,https://www.evobeds.com')
   .split(',').map(s => s.trim());
 
 app.use((req, res, next) => {
@@ -51,7 +52,7 @@ function vyzadujGpwebpay(req, res, next) {
 }
 
 function adresaNavratu(parametry) {
-  const url = new URL((process.env.FRONTEND_URL || 'https://jtomoszek.github.io/evobeds') + '/objednavka.html');
+  const url = new URL((process.env.FRONTEND_URL || 'https://evobeds.cz') + '/objednavka.html');
   for (const [k, v] of Object.entries(parametry)) url.searchParams.set(k, v);
   return url.toString();
 }
@@ -59,6 +60,78 @@ function adresaNavratu(parametry) {
 /* Veřejná konfigurace pro objednávkový formulář; neobsahuje tajné údaje. */
 app.get('/api/nastaveni', (req, res) => {
   res.json({ gpwebpayEnabled: GPWEBPAY_ENABLED });
+});
+
+/* ---------- Kontaktní a newsletterové formuláře ---------- */
+const FORMULAR_LIMIT_OKNO_MS = 10 * 60 * 1000;
+const FORMULAR_LIMIT_POCET = 5;
+const formularPokusy = new Map();
+
+function omezFormulare(req, res, next) {
+  const ted = Date.now();
+  if (formularPokusy.size > 1000) {
+    for (const [ip, pokus] of formularPokusy) {
+      if (ted - pokus.od >= FORMULAR_LIMIT_OKNO_MS) formularPokusy.delete(ip);
+    }
+  }
+  const klic = req.ip || req.socket.remoteAddress || 'neznamy';
+  let zaznam = formularPokusy.get(klic);
+  if (!zaznam || ted - zaznam.od >= FORMULAR_LIMIT_OKNO_MS) {
+    zaznam = { od: ted, pocet: 0 };
+    formularPokusy.set(klic, zaznam);
+  }
+  if (zaznam.pocet >= FORMULAR_LIMIT_POCET) {
+    return res.status(429).json({ chyba: 'Bylo odesláno příliš mnoho formulářů. Zkuste to prosím později.' });
+  }
+  zaznam.pocet++;
+  next();
+}
+
+function ocistiFormularovouHodnotu(hodnota, maximum) {
+  return String(hodnota || '').trim().slice(0, maximum);
+}
+
+app.post('/api/formular', omezFormulare, async (req, res) => {
+  const vstup = req.body || {};
+  if (vstup.web) return res.status(204).end(); /* skryté pole pro roboty */
+
+  const typy = ['newsletter', 'kontakt', 'prezentace', 'cenik'];
+  const typ = ocistiFormularovouHodnotu(vstup.typ, 20);
+  if (!typy.includes(typ)) return chybaKlienta(res, 'Neplatný typ formuláře.');
+
+  const zdroj = vstup.udaje && typeof vstup.udaje === 'object' ? vstup.udaje : {};
+  const udaje = {
+    jmeno: ocistiFormularovouHodnotu(zdroj.jmeno, 120),
+    organizace: ocistiFormularovouHodnotu(zdroj.organizace, 160),
+    telefon: ocistiFormularovouHodnotu(zdroj.telefon, 50),
+    email: ocistiFormularovouHodnotu(zdroj.email, 200),
+    tema: ocistiFormularovouHodnotu(zdroj.tema, 200),
+    zprava: ocistiFormularovouHodnotu(zdroj.zprava, 3000)
+  };
+  const emailJePovinny = typ === 'newsletter' || typ === 'kontakt' || typ === 'cenik';
+  if ((emailJePovinny || udaje.email) && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(udaje.email)) {
+    return chybaKlienta(res, 'Zadejte platný e-mail.');
+  }
+  if (typ !== 'newsletter' && !udaje.jmeno) return chybaKlienta(res, 'Zadejte jméno.');
+  if ((typ === 'kontakt' || typ === 'prezentace' || typ === 'cenik') && !udaje.telefon) {
+    return chybaKlienta(res, 'Zadejte telefon.');
+  }
+  if ((typ === 'prezentace' || typ === 'cenik') && !udaje.organizace) {
+    return chybaKlienta(res, 'Zadejte název organizace.');
+  }
+
+  try {
+    await mail.posliFormular({
+      typ,
+      jazyk: vstup.jazyk === 'en' ? 'en' : 'cs',
+      stranka: ocistiFormularovouHodnotu(vstup.stranka, 500),
+      udaje
+    });
+    res.status(201).json({ ok: true });
+  } catch (e) {
+    console.error('Odeslání formuláře selhalo:', e.message);
+    res.status(502).json({ chyba: 'Formulář se nepodařilo odeslat. Zkuste to prosím později.' });
+  }
 });
 
 /* Po zaplacení: e-maily a založení do Pohody. Selhání jednoho kroku
