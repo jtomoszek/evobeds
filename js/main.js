@@ -511,12 +511,90 @@
     });
   });
 
-  /* ---------- Newsletter / formuláře (zatím bez backendu) ---------- */
-  document.querySelectorAll('form[data-demo]').forEach((f) => {
-    f.addEventListener('submit', (e) => {
+  /* ---------- Newsletter a kontaktní formuláře ---------- */
+  const FORM_BACKEND_URL = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+    ? 'http://127.0.0.1:3400'
+    : 'https://objednavky.evobeds.cz';
+  const JE_ANGLICKY = document.documentElement.lang.toLowerCase().startsWith('en');
+  const KLICE_POLI = {
+    name: 'jmeno',
+    org: 'organizace',
+    phone: 'telefon',
+    email: 'email',
+    type: 'tema',
+    msg: 'zprava'
+  };
+
+  function nactiFormular(f) {
+    const udaje = {};
+    f.querySelectorAll('input, select, textarea').forEach((pole) => {
+      if (pole.type === 'submit' || pole.type === 'button') return;
+      const castId = (pole.id || '').split('-').pop();
+      const klic = KLICE_POLI[castId] || (pole.type === 'email' ? 'email' : '');
+      if (klic) udaje[klic] = String(pole.value || '').trim();
+    });
+    return udaje;
+  }
+
+  document.querySelectorAll('form[data-formular]').forEach((f) => {
+    const past = document.createElement('input');
+    past.type = 'text';
+    past.name = 'web';
+    past.tabIndex = -1;
+    past.autocomplete = 'off';
+    past.setAttribute('aria-hidden', 'true');
+    past.style.position = 'absolute';
+    past.style.left = '-10000px';
+    f.appendChild(past);
+
+    const stav = document.createElement('p');
+    stav.className = 'form-status';
+    stav.setAttribute('role', 'status');
+    stav.hidden = true;
+    f.insertAdjacentElement('afterend', stav);
+
+    f.addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = f.querySelector('button');
-      if (btn) { btn.textContent = 'Děkujeme ✓'; btn.disabled = true; }
+      const puvodniText = btn ? btn.textContent : '';
+      stav.hidden = true;
+      stav.classList.remove('is-success', 'is-error');
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = JE_ANGLICKY ? 'Sending…' : 'Odesíláme…';
+      }
+
+      try {
+        const odpoved = await fetch(FORM_BACKEND_URL + '/api/formular', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            typ: f.dataset.formular,
+            jazyk: JE_ANGLICKY ? 'en' : 'cs',
+            stranka: location.href,
+            web: past.value,
+            udaje: nactiFormular(f)
+          })
+        });
+        const telo = await odpoved.json().catch(() => ({}));
+        if (!odpoved.ok) throw new Error(JE_ANGLICKY
+          ? 'The form could not be sent. Please try again later.'
+          : (telo.chyba || 'Odeslání selhalo.'));
+        f.reset();
+        stav.textContent = JE_ANGLICKY ? 'Thank you. The form has been sent.' : 'Děkujeme. Formulář byl odeslán.';
+        stav.classList.add('is-success');
+      } catch (chyba) {
+        stav.textContent = chyba.message || (JE_ANGLICKY
+          ? 'The form could not be sent. Please try again later.'
+          : 'Formulář se nepodařilo odeslat. Zkuste to prosím později.');
+        stav.classList.add('is-error');
+      } finally {
+        stav.hidden = false;
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = puvodniText;
+        }
+      }
     });
   });
 })();

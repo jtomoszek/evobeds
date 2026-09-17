@@ -115,4 +115,41 @@ evobeds s.r.o.`
   });
 }
 
-module.exports = { posliPotvrzeni, posliPotvrzeniPrijeti };
+/* Zpráva z veřejných kontaktních a newsletterových formulářů. */
+async function posliFormular(f) {
+  const predmety = {
+    newsletter: 'Nové přihlášení k newsletteru',
+    kontakt: 'Nová zpráva z kontaktního formuláře',
+    prezentace: 'Nová poptávka po prezentaci',
+    cenik: 'Nová žádost o B2B ceník'
+  };
+  const popisky = {
+    jmeno: 'Jméno',
+    organizace: 'Organizace',
+    telefon: 'Telefon',
+    email: 'E-mail',
+    tema: 'Téma',
+    zprava: 'Zpráva'
+  };
+  const text = [
+    predmety[f.typ],
+    '',
+    `Jazyk formuláře: ${f.jazyk === 'en' ? 'angličtina' : 'čeština'}`,
+    `Stránka: ${f.stranka}`,
+    ''
+  ];
+  for (const klic of Object.keys(popisky)) {
+    if (f.udaje[klic]) text.push(`${popisky[klic]}: ${f.udaje[klic]}`);
+  }
+
+  const zprava = {
+    from: `"evobeds web" <${process.env.SMTP_ODESILATEL || process.env.SMTP_UZIVATEL}>`,
+    to: process.env.EMAIL_OBCHOD || 'info@evobeds.com',
+    subject: predmety[f.typ],
+    text: text.join('\n')
+  };
+  if (f.udaje.email) zprava.replyTo = f.udaje.email;
+  await transport().sendMail(zprava);
+}
+
+module.exports = { posliPotvrzeni, posliPotvrzeniPrijeti, posliFormular };
