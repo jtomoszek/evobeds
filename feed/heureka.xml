@@ -34,6 +34,17 @@
     <DELIVERY_DATE>7</DELIVERY_DATE>
   </SHOPITEM>
   <SHOPITEM>
+    <ITEM_ID>matrace-sanna</ITEM_ID>
+    <PRODUCTNAME>Matrace Sanna pro postel evobeds One</PRODUCTNAME>
+    <DESCRIPTION>Prémiová matrace pro nejvyšší komfort spánku, vyvinutá pro postel evobeds One. Rozměr odpovídá ložné ploše postele, snímatelný a pratelný potah.</DESCRIPTION>
+    <URL>https://jtomoszek.github.io/evobeds/eshop.html#konfigurace</URL>
+    <IMGURL>https://jtomoszek.github.io/evobeds/assets/img/slide-1.jpg</IMGURL>
+    <PRICE_VAT>11990</PRICE_VAT>
+    <MANUFACTURER>evobeds</MANUFACTURER>
+    <CATEGORYTEXT>Heureka.cz | Dům a zahrada | Nábytek | Ložnice | Matrace</CATEGORYTEXT>
+    <DELIVERY_DATE>7</DELIVERY_DATE>
+  </SHOPITEM>
+  <SHOPITEM>
     <ITEM_ID>hrazda-s-madlem</ITEM_ID>
     <PRODUCTNAME>Hrazda s madlem pro postel evobeds One</PRODUCTNAME>
     <DESCRIPTION>Pevná opora pro posazení, změnu polohy i bezpečné vstávání. Výška 95 cm, umístění v čele postele evobeds One, lze kdykoli doplnit nebo odejmout.</DESCRIPTION>
