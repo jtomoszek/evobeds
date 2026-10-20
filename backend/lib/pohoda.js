@@ -39,15 +39,20 @@ function sestavXml(o) {
   if (Array.isArray(o.polozkyVlastni) && o.polozkyVlastni.length) {
     polozky = o.polozkyVlastni.map(p => polozkaXml(p.nazev, p.cenaKc, sazba));
   } else {
-    polozky = [polozkaXml(
-      `Postel evobeds One, ${o.konfigurace.material}, ${o.konfigurace.barva}`,
-      o.konfigurace.zakladKc, sazba
-    )];
+    const pocet = Math.max(1, Math.round(+o.konfigurace.pocet || 1));
+    const krat = pocet > 1 ? `${pocet}× ` : '';
+    polozky = [];
+    if (o.konfigurace.zakladKc > 0) {
+      polozky.push(polozkaXml(
+        `${krat}Postel evobeds One, ${o.konfigurace.material}, ${o.konfigurace.barva}`,
+        o.konfigurace.zakladKc * pocet, sazba
+      ));
+    }
     if (o.konfigurace.matraceKc > 0) {
-      polozky.push(polozkaXml(`Matrace ${o.konfigurace.matrace}`, o.konfigurace.matraceKc, sazba));
+      polozky.push(polozkaXml(`${krat}Matrace ${o.konfigurace.matrace}`, o.konfigurace.matraceKc * pocet, sazba));
     }
     for (const d of o.konfigurace.doplnky) {
-      polozky.push(polozkaXml(d.nazev, d.cena, sazba));
+      polozky.push(polozkaXml(`${krat}${d.nazev}`, d.cena * pocet, sazba));
     }
   }
 

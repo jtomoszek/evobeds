@@ -170,13 +170,18 @@ app.post('/api/objednavka', async (req, res) => {
   }
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(z.email)) return chybaKlienta(res, 'Neplatný e-mail');
 
-  /* Cena se počítá na serveru, ceně z prohlížeče se nevěří. */
-  const zakladKc = 39900;
+  /* Cena se počítá na serveru, ceně z prohlížeče se nevěří.
+     Objednat jde 1 až 10 kusů sestavy, případně jen příslušenství bez postele. */
+  const pocet = Math.max(1, Math.min(10, Math.round(+k.pocet || 1)));
+  const bezPostele = k.bezPostele === true || k.bezPostele === 1 || k.bezPostele === '1';
+  const zakladKc = bezPostele ? 0 : 39900;
   const matraceKc = Math.max(0, Math.min(20000, +k.matraceKc || 0));
   const doplnky = (Array.isArray(k.doplnky) ? k.doplnky : [])
     .slice(0, 10)
     .map(d => ({ nazev: String(d.nazev || '').slice(0, 120), cena: Math.max(0, Math.min(20000, +d.cena || 0)) }));
-  const celkemKc = zakladKc + matraceKc + doplnky.reduce((s, d) => s + d.cena, 0);
+  const sadaKc = zakladKc + matraceKc + doplnky.reduce((s, d) => s + d.cena, 0);
+  if (sadaKc <= 0) return chybaKlienta(res, 'Vyberte prosím alespoň jednu položku.');
+  const celkemKc = sadaKc * pocet;
 
   const objednavka = {
     cislo: Date.now(),
@@ -188,6 +193,8 @@ app.post('/api/objednavka', async (req, res) => {
       barva: String(k.barva || '').slice(0, 80),
       matrace: String(k.matrace || 'Bez matrace').slice(0, 120),
       matraceKc,
+      pocet,
+      bezPostele,
       doplnky,
       zakladKc
     },

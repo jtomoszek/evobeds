@@ -272,16 +272,21 @@ function uprav(id, zmeny, kdo) {
 /* Z webové objednávky (formát ulozeni.js) vytvoří zakázku se stejným číslem. */
 function zWebu(o) {
   if (nacti(o.cislo)) return nacti(o.cislo);
+  const pocet = Math.max(1, Math.round(+o.konfigurace.pocet || 1));
   const polozky = [
-    { nazev: `Postel evobeds One, ${o.konfigurace.material}, ${o.konfigurace.barva}`, pocet: 1, cenaKc: o.konfigurace.zakladKc },
-    ...(o.konfigurace.matraceKc > 0 ? [{ nazev: o.konfigurace.matrace, pocet: 1, cenaKc: o.konfigurace.matraceKc }] : []),
-    ...o.konfigurace.doplnky.map(d => ({ nazev: d.nazev, pocet: 1, cenaKc: d.cena }))
+    ...(o.konfigurace.zakladKc > 0
+      ? [{ nazev: `Postel evobeds One, ${o.konfigurace.material}, ${o.konfigurace.barva}`, pocet, cenaKc: o.konfigurace.zakladKc }]
+      : []),
+    ...(o.konfigurace.matraceKc > 0 ? [{ nazev: o.konfigurace.matrace, pocet, cenaKc: o.konfigurace.matraceKc }] : []),
+    ...o.konfigurace.doplnky.map(d => ({ nazev: d.nazev, pocet, cenaKc: d.cena }))
   ];
   return vytvor({
     id: o.cislo,
     typ: 'b2c',
     zdroj: 'web',
-    nazev: `Objednávka z webu, ${o.zakaznik.jmeno}`,
+    nazev: o.konfigurace.bezPostele
+      ? `Objednávka příslušenství, ${o.zakaznik.jmeno}`
+      : `Objednávka z webu, ${o.zakaznik.jmeno}` + (pocet > 1 ? `, ${pocet}× postel` : ''),
     zakaznik: {
       jmeno: o.zakaznik.jmeno,
       firma: o.zakaznik.firma,

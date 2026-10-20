@@ -26,15 +26,17 @@ function fmt(n) { return n.toLocaleString('cs-CZ') + ' Kč'; }
 function textSouhrnu(o, platbaProbehla) {
   const k = o.konfigurace;
   const z = o.zakaznik;
+  const pocet = Math.max(1, Math.round(+k.pocet || 1));
+  const krat = pocet > 1 ? `${pocet}× ` : '';
   const r = [
     `Objednávka č. ${o.cislo}`,
     '',
-    'KONFIGURACE',
-    `Postel evobeds One, ${k.material}, ${k.barva}: ${fmt(k.zakladKc)}`,
-    `Matrace: ${k.matrace}${k.matraceKc ? ' (+ ' + fmt(k.matraceKc) + ')' : ''}`
+    'KONFIGURACE'
   ];
-  for (const d of k.doplnky) r.push(`Příslušenství: ${d.nazev} (+ ${fmt(d.cena)})`);
-  r.push(`CELKEM: ${fmt(o.celkemKc)} včetně DPH, doprava a montáž v ceně`);
+  if (k.zakladKc > 0) r.push(`${krat}Postel evobeds One, ${k.material}, ${k.barva}: ${fmt(k.zakladKc * pocet)}`);
+  if (k.zakladKc > 0 || k.matraceKc) r.push(`${krat}Matrace: ${k.matrace}${k.matraceKc ? ' (+ ' + fmt(k.matraceKc * pocet) + ')' : ''}`);
+  for (const d of k.doplnky) r.push(`${krat}Příslušenství: ${d.nazev} (+ ${fmt(d.cena * pocet)})`);
+  r.push(`CELKEM: ${fmt(o.celkemKc)} včetně DPH${k.zakladKc > 0 ? ', doprava a montáž v ceně' : ''}`);
   r.push('', platbaProbehla
     ? 'Platba: zaplaceno online přes GP webpay'
     : 'Platba a doprava: podrobnosti s Vámi domluví obchodní oddělení');

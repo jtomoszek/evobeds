@@ -42,7 +42,7 @@
   --font-display: 'Helvetica Now Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   /* Skleněné tlačítko a navigace podle předlohy */
   --glass-shadow: 0 9px 7px -7px rgba(56,56,69,.08), 0 22px 21px -7px rgba(63,63,94,.12), inset 0 1px 0 0 #fff, inset 0 -9px 11px 1px #fff;
-  --nav-shadow: 0 9px 7px -7px rgba(56,56,69,.08), 0 22px 21px -7px rgba(63,63,94,.12), inset 0 1px 0 0 #fff;
+  --nav-shadow: 0 9px 7px -7px rgba(56,56,69,.08), 0 22px 21px -7px rgba(63,63,94,.12);
   --ease: cubic-bezier(.25, .1, .25, 1);
 
   /* Typografická škála: responzivní velikosti, na větších displejích větší písmo */
@@ -2644,3 +2644,21 @@ a, button { -webkit-tap-highlight-color: transparent; }
 a.ref-logo { cursor: pointer; transition: transform .25s; }
 a.ref-logo:hover { transform: translateY(-2px); }
 .case, #ref-teplice { scroll-margin-top: 110px; }
+
+/* ---------- Počet kusů v e-shopu ---------- */
+.pocet-ovladani { display: flex; align-items: center; gap: 14px; }
+.pocet-tlacitko {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--gray-100);
+  color: var(--black);
+  font-size: 19px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s, transform .2s;
+}
+.pocet-tlacitko:hover { background: var(--gray-200); transform: scale(1.06); }
+.pocet-hodnota { min-width: 26px; text-align: center; font-weight: 600; font-size: 17px; }

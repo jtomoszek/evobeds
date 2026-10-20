@@ -6,7 +6,7 @@
   <title>Dokončení objednávky | evobeds</title>
   <meta name="description" content="Dokončete objednávku postele evobeds One. Vyplňte kontaktní a fakturační údaje, my vám obratem pošleme souhrn objednávky a informace o dalším postupu.">
   <meta name="robots" content="noindex">
-  <link rel="stylesheet" href="css/style.css?v=55">
+  <link rel="stylesheet" href="css/style.css?v=56">
   <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
@@ -284,6 +284,7 @@
           <div class="footer-col">
             <h4>Podpora</h4>
             <a href="navod-k-obsluze.html">Návod k obsluze</a>
+            <a href="pro-architekty.html">Pro architekty (DXF)</a>
             <a href="kontakt.html">Doprava a montáž</a>
             <a href="kontakt.html">Servis</a>
             <a href="kontakt.html">Záruka</a>
@@ -338,9 +339,11 @@
     /* ---------- Souhrn objednávky z předané konfigurace ---------- */
     var p = new URLSearchParams(location.search);
     var zaklad = +(p.get('zaklad') || 39900);
+    var pocet = Math.max(1, Math.min(10, +(p.get('pocet') || 1)));
+    var bezPostele = p.get('bezpostele') === '1';
     var celkem = +(p.get('celkem') || zaklad);
     var material = p.get('material') || 'Polstrovaná ekokůže';
-    var barva = p.get('barva') || 'světle šedá';
+    var barva = p.get('barva') || 'Purity (bílá)';
     var matrace = p.get('matrace') || 'Bez matrace';
     var matraceCena = +(p.get('matracecena') || 0);
     var doplnky = (p.get('doplnky') || '').split(';').filter(Boolean).map(function (d) {
@@ -357,10 +360,21 @@
     }
 
     if (nahled) document.getElementById('sum-img').src = nahled;
-    var rows = radek('Postel evobeds One', material + ', ' + barva, fmt(zaklad));
-    rows += radek('Matrace', matrace, matraceCena ? '+ ' + fmt(matraceCena) : 'v ceně');
+    /* Násobek kusů se ukazuje u každé položky, u jednoho kusu se nic nepřidává */
+    var krat = pocet > 1 ? pocet + '× ' : '';
+    var rows = '';
+    if (!bezPostele) {
+      rows += radek(krat + 'Postel evobeds One', material + ', ' + barva, fmt(zaklad * pocet));
+    } else {
+      document.querySelector('.summary-title').textContent = 'Příslušenství evobeds One';
+      document.querySelector('.summary-sub').textContent = 'Ke stávající posteli evobeds One';
+      document.querySelector('.summary-note').textContent = 'Cena včetně DPH. Dopravu příslušenství účtujeme dle ceníku v obchodních podmínkách.';
+    }
+    if (!bezPostele || matraceCena) {
+      rows += radek(krat + 'Matrace', matrace, matraceCena ? '+ ' + fmt(matraceCena * pocet) : 'v ceně');
+    }
     doplnky.forEach(function (d) {
-      rows += radek('Příslušenství', d.nazev, '+ ' + fmt(d.cena));
+      rows += radek(krat + 'Příslušenství', d.nazev, '+ ' + fmt(d.cena * pocet));
     });
     document.getElementById('sum-rows').innerHTML = rows;
     document.getElementById('sum-total').textContent = fmt(celkem);
@@ -419,6 +433,7 @@
           konfigurace: {
             material: material, barva: barva,
             matrace: matrace, matraceKc: matraceCena,
+            pocet: pocet, bezPostele: bezPostele,
             doplnky: doplnky.map(function (d) { return { nazev: d.nazev, cena: d.cena }; })
           },
           zakaznik: data
