@@ -2686,3 +2686,12 @@ a.ref-logo:hover { transform: translateY(-2px); }
   align-items: center;
   gap: 10px;
 }
+
+/* iOS: tap na logo či odkaz nesmí nic „označit" (modrý rámeček výběru) */
+a, button { -webkit-tap-highlight-color: transparent; }
+.brand, .brand img, .mobile-toggle {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+.brand img { pointer-events: none; }
