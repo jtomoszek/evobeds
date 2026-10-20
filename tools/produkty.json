@@ -1,0 +1,85 @@
+{
+  "poznamka": "Zdrojová data produktového feedu. Po úpravě spusťte: node tools/generuj-feedy.mjs",
+  "produkty": [
+    {
+      "id": "evobeds-one",
+      "nazev": "Chytrá elektrická polohovací postel evobeds One",
+      "popis": "Chytrá elektrická polohovací postel s funkcemi zdravotnického lůžka a vzhledem moderní domácí postele. Čtyřdílná elektricky ovládaná ložná plocha, nastavení výšky, tiché motory Linak, vyměnitelné pratelné potahy v deseti barvách. Zdravotnický prostředek třídy I dle MDR, navrženo a vyrobeno v České republice. Doprava a odborná montáž v ceně.",
+      "cenaKc": 39900,
+      "url": "eshop.html#konfigurace",
+      "obrazek": "assets/img/konfigurator/00cover0-10sidewalls0-20wheels0-30mattress0-40trapeze0-50bedding0.jpg",
+      "kategorieGoogle": "505764",
+      "typProduktu": "Nábytek > Postele > Polohovací postele",
+      "kategorieHeureka": "Heureka.cz | Dům a zahrada | Nábytek | Ložnice | Postele",
+      "dodaniDni": 21
+    },
+    {
+      "id": "matrace-clinic",
+      "nazev": "Matrace Clinic pro postel evobeds One",
+      "popis": "Zdravotní matrace pro každodenní dlouhodobou péči, vyvinutá pro postel evobeds One. Rozměr odpovídá ložné ploše postele, snímatelný a pratelný potah.",
+      "cenaKc": 5500,
+      "url": "eshop.html#konfigurace",
+      "obrazek": "assets/img/slide-1.jpg",
+      "kategorieGoogle": "2696",
+      "typProduktu": "Nábytek > Postele > Matrace",
+      "kategorieHeureka": "Heureka.cz | Dům a zahrada | Nábytek | Ložnice | Matrace",
+      "dodaniDni": 7
+    },
+    {
+      "id": "matrace-silver-proair",
+      "nazev": "Matrace Silver ProAir pro postel evobeds One",
+      "popis": "Prodyšná matrace s antibakteriální úpravou pro postel evobeds One. Vhodná pro dlouhodobé ležení, snímatelný a pratelný potah.",
+      "cenaKc": 5900,
+      "url": "eshop.html#konfigurace",
+      "obrazek": "assets/img/slide-1.jpg",
+      "kategorieGoogle": "2696",
+      "typProduktu": "Nábytek > Postele > Matrace",
+      "kategorieHeureka": "Heureka.cz | Dům a zahrada | Nábytek | Ložnice | Matrace",
+      "dodaniDni": 7
+    },
+    {
+      "id": "hrazda-s-madlem",
+      "nazev": "Hrazda s madlem pro postel evobeds One",
+      "popis": "Pevná opora pro posazení, změnu polohy i bezpečné vstávání. Výška 95 cm, umístění v čele postele evobeds One, lze kdykoli doplnit nebo odejmout.",
+      "cenaKc": 2200,
+      "url": "eshop.html#prislusenstvi",
+      "obrazek": "assets/img/header-4.jpg",
+      "typProduktu": "Nábytek > Postele > Příslušenství k postelím",
+      "kategorieHeureka": "Heureka.cz | Dům a zahrada | Nábytek | Ložnice | Příslušenství k postelím",
+      "dodaniDni": 7
+    },
+    {
+      "id": "sada-zabran",
+      "nazev": "Sada zábran pro postel evobeds One (2 ks)",
+      "popis": "Polstrované sklopné a odnímatelné bočnice integrované do rámu postele evobeds One. Délka 120 cm, zajišťují bezpečí bez ústavního dojmu a neomezují výhled.",
+      "cenaKc": 5500,
+      "url": "eshop.html#prislusenstvi",
+      "obrazek": "assets/img/header-1.jpg",
+      "typProduktu": "Nábytek > Postele > Příslušenství k postelím",
+      "kategorieHeureka": "Heureka.cz | Dům a zahrada | Nábytek | Ložnice | Příslušenství k postelím",
+      "dodaniDni": 7
+    },
+    {
+      "id": "sada-kolecek",
+      "nazev": "Sada koleček pro postel evobeds One (4 ks)",
+      "popis": "Dvojitá kolečka s brzdou pro postel evobeds One. Snadný transport po bytě a jistá aretace na místě, design ladící s nábytkem.",
+      "cenaKc": 3300,
+      "url": "eshop.html#prislusenstvi",
+      "obrazek": "assets/img/header-3.jpg",
+      "typProduktu": "Nábytek > Postele > Příslušenství k postelím",
+      "kategorieHeureka": "Heureka.cz | Dům a zahrada | Nábytek | Ložnice | Příslušenství k postelím",
+      "dodaniDni": 7
+    },
+    {
+      "id": "sada-luzkovin",
+      "nazev": "Sada lůžkovin pro postel evobeds One",
+      "popis": "Sada lůžkovin barevně ladící s potahy postele evobeds One. Doplní postel do kompletního domácího vzhledu.",
+      "cenaKc": 2500,
+      "url": "eshop.html#prislusenstvi",
+      "obrazek": "assets/img/slide-4.jpg",
+      "typProduktu": "Nábytek > Postele > Příslušenství k postelím",
+      "kategorieHeureka": "Heureka.cz | Dům a zahrada | Nábytek | Ložnice | Lůžkoviny",
+      "dodaniDni": 7
+    }
+  ]
+}

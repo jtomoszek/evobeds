@@ -597,4 +597,90 @@
       }
     });
   });
+
+  /* ---------- Lightbox galerií (reference): klik zvětší fotku,
+     šipkami, klávesnicí nebo tahem prstu se listuje v rámci galerie ---------- */
+  (function () {
+    const skupiny = [...document.querySelectorAll('.case-media, .prez-grid')];
+    if (!skupiny.length) return;
+
+    const box = document.createElement('div');
+    box.className = 'lightbox';
+    box.setAttribute('role', 'dialog');
+    box.setAttribute('aria-modal', 'true');
+    box.innerHTML =
+      '<button class="lb-zavrit" aria-label="Zavřít">' +
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>' +
+      '</button>' +
+      '<button class="lb-sipka lb-zpet" aria-label="Předchozí fotka">' +
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>' +
+      '</button>' +
+      '<img alt="">' +
+      '<button class="lb-sipka lb-dal" aria-label="Další fotka">' +
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>' +
+      '</button>' +
+      '<p class="lb-pocitadlo"></p>';
+    document.body.appendChild(box);
+
+    const velka = box.querySelector('img');
+    const pocitadlo = box.querySelector('.lb-pocitadlo');
+    const zpet = box.querySelector('.lb-zpet');
+    const dal = box.querySelector('.lb-dal');
+    let fotky = [];
+    let index = 0;
+
+    function ukaz(i) {
+      index = (i + fotky.length) % fotky.length;
+      velka.src = fotky[index].src;
+      velka.alt = fotky[index].alt || '';
+      pocitadlo.textContent = (index + 1) + ' / ' + fotky.length;
+      const vice = fotky.length > 1;
+      zpet.hidden = !vice;
+      dal.hidden = !vice;
+      pocitadlo.hidden = !vice;
+      /* Sousední fotky se přednačtou, ať listování při prezentaci neškube */
+      [index + 1, index - 1].forEach((j) => {
+        const f = fotky[(j + fotky.length) % fotky.length];
+        if (f) { const p = new Image(); p.src = f.src; }
+      });
+    }
+
+    function otevri(seznam, i) {
+      fotky = seznam;
+      box.classList.add('otevreny');
+      document.documentElement.style.overflow = 'hidden';
+      ukaz(i);
+    }
+    function zavri() {
+      box.classList.remove('otevreny');
+      document.documentElement.style.overflow = '';
+    }
+
+    skupiny.forEach((skupina) => {
+      const obrazky = [...skupina.querySelectorAll('img')];
+      obrazky.forEach((img, i) => {
+        img.addEventListener('click', () => otevri(obrazky, i));
+      });
+    });
+
+    zpet.addEventListener('click', () => ukaz(index - 1));
+    dal.addEventListener('click', () => ukaz(index + 1));
+    box.querySelector('.lb-zavrit').addEventListener('click', zavri);
+    box.addEventListener('click', (e) => { if (e.target === box) zavri(); });
+    document.addEventListener('keydown', (e) => {
+      if (!box.classList.contains('otevreny')) return;
+      if (e.key === 'Escape') zavri();
+      else if (e.key === 'ArrowLeft') ukaz(index - 1);
+      else if (e.key === 'ArrowRight') ukaz(index + 1);
+    });
+    /* Listování tahem prstu na dotykových zařízeních */
+    let dotykX = null;
+    box.addEventListener('touchstart', (e) => { dotykX = e.touches[0].clientX; }, { passive: true });
+    box.addEventListener('touchend', (e) => {
+      if (dotykX == null) return;
+      const rozdil = e.changedTouches[0].clientX - dotykX;
+      dotykX = null;
+      if (Math.abs(rozdil) > 40) ukaz(index + (rozdil < 0 ? 1 : -1));
+    }, { passive: true });
+  })();
 })();
