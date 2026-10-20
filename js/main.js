@@ -239,54 +239,27 @@
   });
 
   /* ---------- Vodorovné projíždění karet: rolování stránky posouvá lištu ---------- */
-  document.querySelectorAll('section[data-hscroll]').forEach((root) => {
-    const sticky = root.querySelector('.hscroll-sticky');
+  /* ---------- Komu postel pomáhá: ruční posouvání, pozornost na jednu kartu.
+     Karty se listují šipkami nebo tahem, aktivní karta podle průběhu posunu. */
+  document.querySelectorAll('section[data-zaostrit]').forEach((root) => {
     const rail = root.querySelector('.cards-rail');
-    if (!sticky || !rail) return;
-    const mq = window.matchMedia('(min-width: 900px)');
-    let ticking = false;
+    if (!rail) return;
     const karty = [...rail.querySelectorAll('.scenario-card')];
-
-    function maxPosun() { return Math.max(0, rail.scrollWidth - rail.clientWidth); }
-
-    /* Pozornost patří jedné kartě podle průběhu posunu: na začátku první,
-       na konci poslední, mezi tím se štafeta plynule předává. Ostatní se ztlumí. */
+    if (!karty.length) return;
     function zaostri() {
-      if (!karty.length) return;
-      const max = maxPosun();
+      const max = Math.max(0, rail.scrollWidth - rail.clientWidth);
       if (max <= 0) { karty.forEach((k) => k.classList.remove('utlum')); return; }
       const p = Math.min(1, Math.max(0, rail.scrollLeft / max));
       const aktivni = Math.round(p * (karty.length - 1));
       karty.forEach((k, i) => k.classList.toggle('utlum', i !== aktivni));
     }
-    /* I při ručním posouvání lišty (mobil, šipky) se zaostření přepočítá */
-    let railTick = false;
+    let tick = false;
     rail.addEventListener('scroll', () => {
-      if (!railTick) { railTick = true; requestAnimationFrame(() => { railTick = false; zaostri(); }); }
+      if (!tick) { tick = true; requestAnimationFrame(() => { tick = false; zaostri(); }); }
     }, { passive: true });
-
-    function layout() {
-      /* Výška sekce = obrazovka + dráha vodorovného posunu */
-      root.style.height = mq.matches ? (sticky.offsetHeight + maxPosun()) + 'px' : '';
-    }
-    function update() {
-      ticking = false;
-      if (!mq.matches) return;
-      const rect = root.getBoundingClientRect();
-      const draha = rect.height - sticky.offsetHeight;
-      if (draha <= 0) return;
-      const p = Math.min(1, Math.max(0, -rect.top / draha));
-      rail.scrollLeft = p * maxPosun();
-      zaostri();
-    }
-    function onScrollH() {
-      if (!ticking) { ticking = true; requestAnimationFrame(update); }
-    }
-    window.addEventListener('scroll', onScrollH, { passive: true });
-    window.addEventListener('resize', () => { layout(); onScrollH(); });
-    /* Rozměry se dopočítají až po načtení fotek karet */
-    window.addEventListener('load', () => { layout(); onScrollH(); zaostri(); });
-    layout(); update(); zaostri();
+    window.addEventListener('resize', zaostri);
+    window.addEventListener('load', zaostri);
+    zaostri();
   });
 
   /* ---------- Jemná paralaxa: prvek se posouvá proti směru rolování ---------- */
@@ -656,11 +629,11 @@
       document.documentElement.style.overflow = '';
     }
 
-    skupiny.forEach((skupina) => {
-      const obrazky = [...skupina.querySelectorAll('img')];
-      obrazky.forEach((img, i) => {
-        img.addEventListener('click', () => otevri(obrazky, i));
-      });
+    /* Jedna galerie pro celou stránku: z libovolné fotky se dá
+       prolistovat všemi fotkami referencí v pořadí, v jakém jsou na stránce */
+    const vsechny = skupiny.flatMap((skupina) => [...skupina.querySelectorAll('img')]);
+    vsechny.forEach((img, i) => {
+      img.addEventListener('click', () => otevri(vsechny, i));
     });
 
     zpet.addEventListener('click', () => ukaz(index - 1));
