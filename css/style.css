@@ -2319,11 +2319,23 @@ body.detail-open .detail-drawer { transform: none; }
 }
 .craft-slide .cap p { font-size: var(--fs-sm); color: rgba(255, 255, 255, .85); max-width: 46ch; }
 @media (max-width: 900px) {
-  .craft-layout { grid-template-columns: 1fr; gap: 24px; align-content: center; }
+  /* Na mobilu žádný scrollytelling: videa s popisky jedou klasicky pod sebou */
+  .craft-scroll { height: auto; }
+  .craft-sticky { position: static; height: auto; overflow: visible; display: block; padding: clamp(40px, 10vw, 64px) 0; }
+  .craft-layout { grid-template-columns: 1fr; gap: 28px; align-content: start; }
   .craft-left { gap: 12px; }
-  .craft-steps-list { flex-direction: row; flex-wrap: wrap; margin-top: 8px; }
-  .craft-stage { height: min(52svh, 520px); }
-  .craft-slide { width: min(88%, 420px); border-radius: 24px; }
+  /* Názvy kroků jsou přímo na kartách, pilulky by byly dvakrát */
+  .craft-steps-list { display: none; }
+  .craft-stage { height: auto; display: flex; flex-direction: column; gap: 18px; }
+  .craft-slide {
+    position: static;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    max-height: 70svh;
+    border-radius: 24px;
+    transform: none !important;
+    opacity: 1 !important;
+  }
 }
 
 /* ---------- Reference: loga partnerů a seznam realizací ---------- */
@@ -2578,8 +2590,8 @@ a, button { -webkit-tap-highlight-color: transparent; }
 }
 
 /* Komu postel pomáhá: pozornost na jednu kartu, ostatní lehce průsvitné */
-[data-zaostrit] .scenario-card { transition: opacity .5s ease, transform .5s ease; }
-[data-zaostrit] .scenario-card.utlum { opacity: .38; transform: scale(.97); }
+[data-zaostrit] .scenario-card { transition: opacity .5s ease; }
+[data-zaostrit] .scenario-card.utlum { opacity: .38; }
 
 /* ---------- Lightbox galerií (reference) ---------- */
 .case-media img, .prez-grid img { cursor: zoom-in; }
@@ -2662,3 +2674,15 @@ a.ref-logo:hover { transform: translateY(-2px); }
 }
 .pocet-tlacitko:hover { background: var(--gray-200); transform: scale(1.06); }
 .pocet-hodnota { min-width: 26px; text-align: center; font-weight: 600; font-size: 17px; }
+
+/* Přepínač jazyka v mobilním menu */
+.mobile-menu .mobile-lang {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--gray-500);
+  border-bottom: 0;
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

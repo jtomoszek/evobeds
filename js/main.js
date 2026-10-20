@@ -184,13 +184,31 @@
     const slides = [...root.querySelectorAll('.craft-slide')];
     const kroky = [...root.querySelectorAll('.craft-steps-list li')];
     if (!slides.length) return;
+    const mq = window.matchMedia('(min-width: 900px)');
     let ticking = false;
+
+    /* Na mobilu jedou karty pod sebou: video hraje, když je na obrazovce */
+    const pozorovatel = new IntersectionObserver((zaznamy) => {
+      if (mq.matches) return;
+      zaznamy.forEach((zaznam) => {
+        const v = zaznam.target.querySelector('video');
+        if (!v) return;
+        if (zaznam.isIntersecting) { const p = v.play(); if (p) p.catch(() => {}); }
+        else if (!v.paused) v.pause();
+      });
+    }, { threshold: .35 });
+    slides.forEach((sl) => pozorovatel.observe(sl));
 
     const lerp = (a, b, t) => a + (b - a) * t;
     const ease = (t) => t * t * (3 - 2 * t); /* plynulý dojezd */
 
     function update() {
       ticking = false;
+      if (!mq.matches) {
+        /* Mobil: uklidit případné zbytky scrollytellingu po otočení displeje */
+        slides.forEach((sl) => { sl.style.transform = ''; sl.style.opacity = ''; sl.style.zIndex = ''; });
+        return;
+      }
       const rect = root.getBoundingClientRect();
       const draha = rect.height - sticky.offsetHeight;
       if (draha <= 0) return;
@@ -246,9 +264,12 @@
     if (!rail) return;
     const karty = [...rail.querySelectorAll('.scenario-card')];
     if (!karty.length) return;
+    /* Na mobilu je vidět jen jedna karta, ztlumení tam nedává smysl
+       a jeho proměny za jízdy blokují dotykové posouvání zpět */
+    const mq = window.matchMedia('(min-width: 900px)');
     function zaostri() {
       const max = Math.max(0, rail.scrollWidth - rail.clientWidth);
-      if (max <= 0) { karty.forEach((k) => k.classList.remove('utlum')); return; }
+      if (!mq.matches || max <= 0) { karty.forEach((k) => k.classList.remove('utlum')); return; }
       const p = Math.min(1, Math.max(0, rail.scrollLeft / max));
       const aktivni = Math.round(p * (karty.length - 1));
       karty.forEach((k, i) => k.classList.toggle('utlum', i !== aktivni));
@@ -296,6 +317,11 @@
 
     function update() {
       ticking = false;
+      if (!mq.matches) {
+        /* Mobil: uklidit případné zbytky scrollytellingu po otočení displeje */
+        slides.forEach((sl) => { sl.style.transform = ''; sl.style.opacity = ''; sl.style.zIndex = ''; });
+        return;
+      }
       const rect = root.getBoundingClientRect();
       const draha = rect.height - sticky.offsetHeight;
       if (draha <= 0) return;
