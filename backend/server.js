@@ -163,7 +163,7 @@ const CENIK = {
   'Bez matrace': 0, 'No mattress': 0,
   'Matrace Clinic': 5500, 'Clinic mattress': 5500,
   'Matrace Silver ProAir': 5900, 'Silver ProAir mattress': 5900,
-  'Matrace Sanna': 11990, 'Sanna mattress': 11990,
+  'Matrace Sana': 11990, 'Sana mattress': 11990,
   'Hrazda s madlem': 2200, 'Lifting pole with handle': 2200,
   'Sada zábran (2 ks)': 5500, 'Side rail set (2 pcs)': 5500,
   'Sada koleček (4 ks)': 3300, 'Castor set (4 pcs)': 3300,

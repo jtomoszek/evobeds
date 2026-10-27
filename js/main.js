@@ -600,7 +600,7 @@
   /* ---------- Lightbox galerií (reference): klik zvětší fotku,
      šipkami, klávesnicí nebo tahem prstu se listuje v rámci galerie ---------- */
   (function () {
-    const skupiny = [...document.querySelectorAll('.case-media, .prez-grid')];
+    const skupiny = [...document.querySelectorAll('.case-media, .prez-grid, .acc-galerie')];
     if (!skupiny.length) return;
 
     const box = document.createElement('div');

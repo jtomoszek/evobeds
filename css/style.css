@@ -2596,7 +2596,7 @@ a, button { -webkit-tap-highlight-color: transparent; }
 [data-zaostrit] .scenario-card.utlum { opacity: .38; }
 
 /* ---------- Lightbox galerií (reference) ---------- */
-.case-media img, .prez-grid img { cursor: zoom-in; }
+.case-media img, .prez-grid img, .acc-galerie img { cursor: zoom-in; }
 .lightbox {
   position: fixed;
   inset: 0;
@@ -2888,3 +2888,17 @@ body.acc-lista-on .footer { padding-bottom: 110px; }
   .acc-obsah > .acc-skupina:first-child { margin-top: 24px; }
   .acc-skupina, .acc-card { scroll-margin-top: 150px; }
 }
+
+/* Galerie u karty příslušenství (náhledy pod hlavní fotkou, otevírají lightbox) */
+.acc-nahledy { display: flex; gap: 8px; padding: 0 24px 4px; background: #fff; }
+.acc-nahledy img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--gray-100);
+  background: #fff;
+  transition: transform .2s, border-color .2s;
+}
+.acc-nahledy img:hover { transform: translateY(-2px); border-color: var(--gray-400); }
+.acc-galerie .acc-img img { transform: none; padding: 20px 22px 8px; }
