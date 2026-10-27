@@ -49,9 +49,9 @@
     <item>
       <g:id>matrace-clinic</g:id>
       <g:title>Matrace Clinic pro postel evobeds One</g:title>
-      <g:description>Zdravotní matrace pro každodenní dlouhodobou péči, vyvinutá pro postel evobeds One. Rozměr odpovídá ložné ploše postele, snímatelný a pratelný potah.</g:description>
-      <g:link>https://jtomoszek.github.io/evobeds/eshop.html#konfigurace</g:link>
-      <g:image_link>https://jtomoszek.github.io/evobeds/assets/img/slide-1.jpg</g:image_link>
+      <g:description>Zdravotní matrace pro každodenní dlouhodobou péči, navržená pro ložnou plochu polohovací postele evobeds One.</g:description>
+      <g:link>https://jtomoszek.github.io/evobeds/prislusenstvi.html#matrace-clinic</g:link>
+      <g:image_link>https://jtomoszek.github.io/evobeds/assets/img/konfigurator/00cover1-10sidewalls0-20wheels0-30mattress1-40trapeze0-50bedding0.jpg</g:image_link>
       <g:availability>in_stock</g:availability>
       <g:price>5500.00 CZK</g:price>
       <g:condition>new</g:condition>
@@ -63,9 +63,9 @@
     <item>
       <g:id>matrace-silver-proair</g:id>
       <g:title>Matrace Silver ProAir pro postel evobeds One</g:title>
-      <g:description>Prodyšná matrace s antibakteriální úpravou pro postel evobeds One. Vhodná pro dlouhodobé ležení, snímatelný a pratelný potah.</g:description>
-      <g:link>https://jtomoszek.github.io/evobeds/eshop.html#konfigurace</g:link>
-      <g:image_link>https://jtomoszek.github.io/evobeds/assets/img/slide-1.jpg</g:image_link>
+      <g:description>Prodyšná matrace s antibakteriální úpravou pro svěží a hygienické ležení, navržená pro ložnou plochu postele evobeds One.</g:description>
+      <g:link>https://jtomoszek.github.io/evobeds/prislusenstvi.html#matrace-silver-proair</g:link>
+      <g:image_link>https://jtomoszek.github.io/evobeds/assets/img/konfigurator/00cover1-10sidewalls0-20wheels0-30mattress2-40trapeze0-50bedding0.jpg</g:image_link>
       <g:availability>in_stock</g:availability>
       <g:price>5900.00 CZK</g:price>
       <g:condition>new</g:condition>
@@ -77,9 +77,9 @@
     <item>
       <g:id>matrace-sanna</g:id>
       <g:title>Matrace Sanna pro postel evobeds One</g:title>
-      <g:description>Prémiová matrace pro nejvyšší komfort spánku, vyvinutá pro postel evobeds One. Rozměr odpovídá ložné ploše postele, snímatelný a pratelný potah.</g:description>
-      <g:link>https://jtomoszek.github.io/evobeds/eshop.html#konfigurace</g:link>
-      <g:image_link>https://jtomoszek.github.io/evobeds/assets/img/slide-1.jpg</g:image_link>
+      <g:description>Prémiová matrace pro nejvyšší komfort spánku, s prémiovým jádrem. Navržená pro ložnou plochu postele evobeds One.</g:description>
+      <g:link>https://jtomoszek.github.io/evobeds/prislusenstvi.html#matrace-sanna</g:link>
+      <g:image_link>https://jtomoszek.github.io/evobeds/assets/img/konfigurator/00cover1-10sidewalls0-20wheels0-30mattress2-40trapeze0-50bedding0.jpg</g:image_link>
       <g:availability>in_stock</g:availability>
       <g:price>11990.00 CZK</g:price>
       <g:condition>new</g:condition>
@@ -92,8 +92,8 @@
       <g:id>hrazda-s-madlem</g:id>
       <g:title>Hrazda s madlem pro postel evobeds One</g:title>
       <g:description>Pevná opora pro posazení, změnu polohy i bezpečné vstávání. Výška 95 cm, umístění v čele postele evobeds One, lze kdykoli doplnit nebo odejmout.</g:description>
-      <g:link>https://jtomoszek.github.io/evobeds/eshop.html#prislusenstvi</g:link>
-      <g:image_link>https://jtomoszek.github.io/evobeds/assets/img/header-4.jpg</g:image_link>
+      <g:link>https://jtomoszek.github.io/evobeds/prislusenstvi.html#hrazda-s-madlem</g:link>
+      <g:image_link>https://jtomoszek.github.io/evobeds/assets/img/konfigurator/00cover1-10sidewalls0-20wheels0-30mattress0-40trapeze1-50bedding0.jpg</g:image_link>
       <g:availability>in_stock</g:availability>
       <g:price>2200.00 CZK</g:price>
       <g:condition>new</g:condition>
@@ -105,8 +105,8 @@
       <g:id>sada-zabran</g:id>
       <g:title>Sada zábran pro postel evobeds One (2 ks)</g:title>
       <g:description>Polstrované sklopné a odnímatelné bočnice integrované do rámu postele evobeds One. Délka 120 cm, zajišťují bezpečí bez ústavního dojmu a neomezují výhled.</g:description>
-      <g:link>https://jtomoszek.github.io/evobeds/eshop.html#prislusenstvi</g:link>
-      <g:image_link>https://jtomoszek.github.io/evobeds/assets/img/header-1.jpg</g:image_link>
+      <g:link>https://jtomoszek.github.io/evobeds/prislusenstvi.html#sada-zabran</g:link>
+      <g:image_link>https://jtomoszek.github.io/evobeds/assets/img/konfigurator/00cover1-10sidewalls1-20wheels0-30mattress0-40trapeze0-50bedding0.jpg</g:image_link>
       <g:availability>in_stock</g:availability>
       <g:price>5500.00 CZK</g:price>
       <g:condition>new</g:condition>
@@ -118,8 +118,8 @@
       <g:id>sada-kolecek</g:id>
       <g:title>Sada koleček pro postel evobeds One (4 ks)</g:title>
       <g:description>Dvojitá kolečka s brzdou pro postel evobeds One. Snadný transport po bytě a jistá aretace na místě, design ladící s nábytkem.</g:description>
-      <g:link>https://jtomoszek.github.io/evobeds/eshop.html#prislusenstvi</g:link>
-      <g:image_link>https://jtomoszek.github.io/evobeds/assets/img/header-3.jpg</g:image_link>
+      <g:link>https://jtomoszek.github.io/evobeds/prislusenstvi.html#sada-kolecek</g:link>
+      <g:image_link>https://jtomoszek.github.io/evobeds/assets/img/konfigurator/00cover1-10sidewalls0-20wheels1-30mattress0-40trapeze0-50bedding0.jpg</g:image_link>
       <g:availability>in_stock</g:availability>
       <g:price>3300.00 CZK</g:price>
       <g:condition>new</g:condition>
@@ -131,8 +131,8 @@
       <g:id>sada-luzkovin</g:id>
       <g:title>Sada lůžkovin pro postel evobeds One</g:title>
       <g:description>Sada lůžkovin barevně ladící s potahy postele evobeds One. Doplní postel do kompletního domácího vzhledu.</g:description>
-      <g:link>https://jtomoszek.github.io/evobeds/eshop.html#prislusenstvi</g:link>
-      <g:image_link>https://jtomoszek.github.io/evobeds/assets/img/slide-4.jpg</g:image_link>
+      <g:link>https://jtomoszek.github.io/evobeds/prislusenstvi.html#sada-luzkovin</g:link>
+      <g:image_link>https://jtomoszek.github.io/evobeds/assets/img/konfigurator/00cover1-10sidewalls0-20wheels0-30mattress0-40trapeze0-50bedding1.jpg</g:image_link>
       <g:availability>in_stock</g:availability>
       <g:price>2500.00 CZK</g:price>
       <g:condition>new</g:condition>

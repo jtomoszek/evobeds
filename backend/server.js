@@ -156,6 +156,25 @@ async function poZaplaceni(o) {
   sklad.uloz(o);
 }
 
+/* ---------- Ceník příslušenství a matrací (Kč s DPH) ----------
+   Ceny známých položek bere server odsud, ne z prohlížeče, aby nešly
+   podvrhnout úpravou adresy objednávky. Názvy v obou jazykových verzích. */
+const CENIK = {
+  'Bez matrace': 0, 'No mattress': 0,
+  'Matrace Clinic': 5500, 'Clinic mattress': 5500,
+  'Matrace Silver ProAir': 5900, 'Silver ProAir mattress': 5900,
+  'Matrace Sanna': 11990, 'Sanna mattress': 11990,
+  'Hrazda s madlem': 2200, 'Lifting pole with handle': 2200,
+  'Sada zábran (2 ks)': 5500, 'Side rail set (2 pcs)': 5500,
+  'Sada koleček (4 ks)': 3300, 'Castor set (4 pcs)': 3300,
+  'Lůžkoviny': 2500, 'Bedding': 2500
+};
+function cenaZCeniku(nazev, cenaZProhlizece) {
+  if (Object.prototype.hasOwnProperty.call(CENIK, nazev)) return CENIK[nazev];
+  console.warn('Položka mimo ceník, použita cena z prohlížeče:', nazev);
+  return Math.max(0, Math.min(20000, +cenaZProhlizece || 0));
+}
+
 /* ---------- Přijetí objednávky z webu ---------- */
 app.post('/api/objednavka', async (req, res) => {
   const t = req.body || {};
@@ -175,11 +194,16 @@ app.post('/api/objednavka', async (req, res) => {
   const pocet = Math.max(1, Math.min(10, Math.round(+k.pocet || 1)));
   const bezPostele = k.bezPostele === true || k.bezPostele === 1 || k.bezPostele === '1';
   const zakladKc = bezPostele ? 0 : 39900;
-  const matraceKc = Math.max(0, Math.min(20000, +k.matraceKc || 0));
+  const matrace = String(k.matrace || 'Bez matrace').slice(0, 120);
+  const matraceKc = cenaZCeniku(matrace, k.matraceKc);
+  /* Každá položka příslušenství může mít vlastní počet kusů (1 až 20) */
   const doplnky = (Array.isArray(k.doplnky) ? k.doplnky : [])
-    .slice(0, 10)
-    .map(d => ({ nazev: String(d.nazev || '').slice(0, 120), cena: Math.max(0, Math.min(20000, +d.cena || 0)) }));
-  const sadaKc = zakladKc + matraceKc + doplnky.reduce((s, d) => s + d.cena, 0);
+    .slice(0, 20)
+    .map(d => {
+      const nazev = String(d.nazev || '').slice(0, 120);
+      return { nazev, cena: cenaZCeniku(nazev, d.cena), pocet: Math.max(1, Math.min(20, Math.round(+d.pocet || 1))) };
+    });
+  const sadaKc = zakladKc + matraceKc + doplnky.reduce((s, d) => s + d.cena * d.pocet, 0);
   if (sadaKc <= 0) return chybaKlienta(res, 'Vyberte prosím alespoň jednu položku.');
   const celkemKc = sadaKc * pocet;
 
@@ -191,7 +215,7 @@ app.post('/api/objednavka', async (req, res) => {
     konfigurace: {
       material: String(k.material || '').slice(0, 80),
       barva: String(k.barva || '').slice(0, 80),
-      matrace: String(k.matrace || 'Bez matrace').slice(0, 120),
+      matrace,
       matraceKc,
       pocet,
       bezPostele,

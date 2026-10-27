@@ -6,7 +6,7 @@
   <title>Dokončení objednávky | evobeds</title>
   <meta name="description" content="Dokončete objednávku postele evobeds One. Vyplňte kontaktní a fakturační údaje, my vám obratem pošleme souhrn objednávky a informace o dalším postupu.">
   <meta name="robots" content="noindex">
-  <link rel="stylesheet" href="css/style.css?v=59">
+  <link rel="stylesheet" href="css/style.css?v=61">
   <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
@@ -23,7 +23,7 @@
         <nav class="main-nav">
           <a class="nav-link" href="domaci-pece.html">Domácí péče</a>
           <a class="nav-link" href="profesionalni-pece.html">Domovy a lázně</a>
-          <a class="nav-link" href="eshop.html#prislusenstvi">Příslušenství</a>
+          <a class="nav-link" href="prislusenstvi.html">Příslušenství</a>
           <a class="nav-link" href="reference.html">Reference</a>
           <a class="nav-link" href="o-nas.html">O nás</a>
           <a class="nav-link" href="kontakt.html">Kontakt</a>
@@ -48,7 +48,7 @@
   <div class="mobile-menu">
     <a href="domaci-pece.html">Domácí péče</a>
     <a href="profesionalni-pece.html">Domovy a lázně</a>
-    <a href="eshop.html#prislusenstvi">Příslušenství</a>
+    <a href="prislusenstvi.html">Příslušenství</a>
     <a href="reference.html">Reference</a>
     <a href="o-nas.html">O nás</a>
     <a href="kontakt.html">Kontakt</a>
@@ -267,7 +267,7 @@
             <h4>Produkt</h4>
             <a href="index.html#postel">Chytrá postel</a>
             <a href="eshop.html#konfigurace">Sestavit postel</a>
-            <a href="eshop.html#prislusenstvi">Příslušenství</a>
+            <a href="prislusenstvi.html">Příslušenství</a>
             <a href="eshop.html">E-shop</a>
           </div>
           <div class="footer-col">
@@ -349,7 +349,7 @@
     var matraceCena = +(p.get('matracecena') || 0);
     var doplnky = (p.get('doplnky') || '').split(';').filter(Boolean).map(function (d) {
       var c = d.split('|');
-      return { nazev: c[0], cena: +c[1] };
+      return { nazev: c[0], cena: +c[1], pocet: Math.max(1, Math.min(20, +(c[2] || 1))) };
     });
     var nahled = p.get('nahled');
 
@@ -375,7 +375,8 @@
       rows += radek(krat + 'Matrace', matrace, matraceCena ? '+ ' + fmt(matraceCena * pocet) : 'v ceně');
     }
     doplnky.forEach(function (d) {
-      rows += radek(krat + 'Příslušenství', d.nazev, '+ ' + fmt(d.cena * pocet));
+      var kusu = pocet * d.pocet;
+      rows += radek((kusu > 1 ? kusu + '× ' : '') + 'Příslušenství', d.nazev, '+ ' + fmt(d.cena * kusu));
     });
     document.getElementById('sum-rows').innerHTML = rows;
     document.getElementById('sum-total').textContent = fmt(celkem);
@@ -435,7 +436,7 @@
             material: material, barva: barva,
             matrace: matrace, matraceKc: matraceCena,
             pocet: pocet, bezPostele: bezPostele,
-            doplnky: doplnky.map(function (d) { return { nazev: d.nazev, cena: d.cena }; })
+            doplnky: doplnky.map(function (d) { return { nazev: d.nazev, cena: d.cena, pocet: d.pocet }; })
           },
           zakaznik: data
         })

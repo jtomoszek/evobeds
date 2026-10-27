@@ -35,7 +35,10 @@ function textSouhrnu(o, platbaProbehla) {
   ];
   if (k.zakladKc > 0) r.push(`${krat}Postel evobeds One, ${k.material}, ${k.barva}: ${fmt(k.zakladKc * pocet)}`);
   if (k.zakladKc > 0 || k.matraceKc) r.push(`${krat}Matrace: ${k.matrace}${k.matraceKc ? ' (+ ' + fmt(k.matraceKc * pocet) + ')' : ''}`);
-  for (const d of k.doplnky) r.push(`${krat}Příslušenství: ${d.nazev} (+ ${fmt(d.cena * pocet)})`);
+  for (const d of k.doplnky) {
+    const kusu = pocet * (d.pocet || 1);
+    r.push(`${kusu > 1 ? kusu + '× ' : ''}Příslušenství: ${d.nazev} (+ ${fmt(d.cena * kusu)})`);
+  }
   r.push(`CELKEM: ${fmt(o.celkemKc)} včetně DPH${k.zakladKc > 0 ? ', doprava a montáž v ceně' : ''}`);
   r.push('', platbaProbehla
     ? 'Platba: zaplaceno online přes GP webpay'

@@ -278,7 +278,7 @@ function zWebu(o) {
       ? [{ nazev: `Postel evobeds One, ${o.konfigurace.material}, ${o.konfigurace.barva}`, pocet, cenaKc: o.konfigurace.zakladKc }]
       : []),
     ...(o.konfigurace.matraceKc > 0 ? [{ nazev: o.konfigurace.matrace, pocet, cenaKc: o.konfigurace.matraceKc }] : []),
-    ...o.konfigurace.doplnky.map(d => ({ nazev: d.nazev, pocet, cenaKc: d.cena }))
+    ...o.konfigurace.doplnky.map(d => ({ nazev: d.nazev, pocet: pocet * (d.pocet || 1), cenaKc: d.cena }))
   ];
   return vytvor({
     id: o.cislo,

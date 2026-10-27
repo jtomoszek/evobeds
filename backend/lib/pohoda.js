@@ -52,7 +52,8 @@ function sestavXml(o) {
       polozky.push(polozkaXml(`${krat}Matrace ${o.konfigurace.matrace}`, o.konfigurace.matraceKc * pocet, sazba));
     }
     for (const d of o.konfigurace.doplnky) {
-      polozky.push(polozkaXml(`${krat}${d.nazev}`, d.cena * pocet, sazba));
+      const kusu = pocet * (d.pocet || 1);
+      polozky.push(polozkaXml(`${kusu > 1 ? kusu + '× ' : ''}${d.nazev}`, d.cena * kusu, sazba));
     }
   }
 

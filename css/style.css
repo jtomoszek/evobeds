@@ -2708,3 +2708,86 @@ a, button { -webkit-tap-highlight-color: transparent; }
 }
 .flag { display: inline-flex; align-items: center; }
 .lang-menu a span, .mobile-lang span { display: inline-flex; align-items: center; }
+
+/* ---------- Stránka Příslušenství (samostatný nákup) ---------- */
+.acc-skupina {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 2.4vw, 32px);
+  font-weight: 400;
+  letter-spacing: -.03em;
+  margin: clamp(40px, 5vw, 64px) 0 20px;
+}
+.acc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+@media (max-width: 1023px) { .acc-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .acc-grid { grid-template-columns: 1fr; } }
+.acc-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-card-lg);
+  overflow: hidden;
+  background: var(--white);
+  box-shadow: 0 24px 48px -32px rgba(56, 56, 68, .25);
+  transition: box-shadow .3s, transform .3s;
+  scroll-margin-top: 110px;
+}
+.acc-card.vybrano { box-shadow: 0 0 0 2px var(--dark), 0 24px 48px -32px rgba(56, 56, 68, .25); }
+.acc-img { aspect-ratio: 4 / 3; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.acc-img img { width: 100%; height: 100%; object-fit: contain; transform: scale(1.08); }
+.acc-body { padding: 22px 24px 24px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.acc-pro { font-size: 12px; letter-spacing: .07em; text-transform: uppercase; color: var(--gray-400); font-weight: 500; }
+.acc-body h3 { font-family: var(--font); font-size: var(--fs-lg); font-weight: 500; letter-spacing: -.02em; }
+.acc-popis { font-size: var(--fs-sm); color: var(--gray-500); }
+.acc-body-list { list-style: none; display: flex; flex-direction: column; gap: 5px; font-size: 13px; color: var(--gray-700); }
+.acc-body-list li { padding-left: 18px; position: relative; }
+.acc-body-list li::before { content: ''; position: absolute; left: 2px; top: .55em; width: 6px; height: 6px; border-radius: 50%; background: var(--gray-400); }
+.acc-koupit {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 56px;
+}
+.acc-cena { font-size: 19px; font-weight: 600; letter-spacing: -.01em; }
+.acc-info { margin-top: clamp(40px, 5vw, 64px); }
+
+/* Ukotvená lišta s výběrem dole */
+.acc-lista {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  z-index: 80;
+  width: min(100% - 32px, 640px);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .72);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  backdrop-filter: blur(22px) saturate(170%);
+  box-shadow: var(--nav-shadow);
+  border: 1px solid rgba(255, 255, 255, .75);
+}
+.acc-lista-in { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 10px 10px 26px; }
+.acc-lista-text { font-size: var(--fs-sm); }
+body.acc-lista-on .footer { padding-bottom: 110px; }
+@media (max-width: 640px) {
+  .acc-lista { border-radius: 24px; }
+  .acc-lista-in { flex-direction: column; align-items: stretch; text-align: center; padding: 14px; gap: 10px; }
+}
+.acc-eshop-cta {
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  flex-wrap: wrap;
+  padding: 22px 26px;
+  border-radius: var(--radius-card-lg);
+  background: var(--white);
+}
+.acc-eshop-cta p { font-size: var(--fs-md); color: var(--gray-700); }
