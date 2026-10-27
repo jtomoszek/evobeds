@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Příslušenství k posteli evobeds One | evobeds</title>
   <meta name="description" content="Příslušenství k polohovací posteli evobeds One samostatně: hrazda s madlem, sada zábran, kolečka, lůžkoviny a matrace Clinic, Silver ProAir a Sanna. Dokoupíte kdykoli.">
-  <link rel="stylesheet" href="css/style.css?v=64">
+  <link rel="stylesheet" href="css/style.css?v=65">
   <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
@@ -359,6 +359,7 @@
     var odkazyNav = Array.prototype.slice.call(document.querySelectorAll('.acc-nav [data-cil]'));
     var cile = odkazyNav.map(function (a) { return document.getElementById(a.dataset.cil); });
     var nav = document.querySelector('.acc-nav');
+    var skupinyNav = Array.prototype.slice.call(document.querySelectorAll('.acc-nav-skupina'));
     var spyTick = false;
     function zvyrazni() {
       spyTick = false;
@@ -369,13 +370,26 @@
         var r = el.getBoundingClientRect();
         if (odkazyNav[i].classList.contains('acc-nav-skupina')) {
           if (r.top <= hranice) aktivniSkupina = odkazyNav[i];
-        } else {
-          /* Položky: tučně všechny, které jsou právě na obrazovce */
-          odkazyNav[i].classList.toggle('aktivni', r.top < window.innerHeight * 0.85 && r.bottom > 140);
         }
       });
       odkazyNav.forEach(function (a) {
         if (a.classList.contains('acc-nav-skupina')) a.classList.toggle('aktivni', a === aktivniSkupina);
+      });
+      /* Linka u položek roste plynule dolů podle toho, jak daleko jste ve skupině:
+         skupiny za vámi jsou vyplněné, skupiny před vámi prázdné */
+      skupinyNav.forEach(function (a, i) {
+        var nadpis = document.getElementById(a.dataset.cil);
+        var seznam = a.nextElementSibling;
+        if (!nadpis || !seznam) return;
+        var zacatek = nadpis.getBoundingClientRect().top;
+        var dalsi = skupinyNav[i + 1] && document.getElementById(skupinyNav[i + 1].dataset.cil);
+        var konec = dalsi ? dalsi.getBoundingClientRect().top : nadpis.nextElementSibling.getBoundingClientRect().bottom;
+        var postup = Math.min(1, Math.max(0, (hranice - zacatek) / Math.max(1, konec - zacatek)));
+        seznam.style.setProperty('--postup', postup.toFixed(4));
+        var polozky = seznam.querySelectorAll('[data-cil]');
+        polozky.forEach(function (p, j) {
+          p.classList.toggle('aktivni', postup * polozky.length > j + 0.15);
+        });
       });
       /* Na mobilu lišta dojede na aktivní pilulku */
       if (aktivniSkupina && getComputedStyle(nav).overflowX === 'auto') {
@@ -386,6 +400,7 @@
     window.addEventListener('scroll', function () {
       if (!spyTick) { spyTick = true; requestAnimationFrame(zvyrazni); }
     }, { passive: true });
+    window.addEventListener('resize', zvyrazni);
     zvyrazni();
   })();
   </script>

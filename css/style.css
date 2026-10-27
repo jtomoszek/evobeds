@@ -2832,23 +2832,36 @@ body.acc-lista-on .footer { padding-bottom: 110px; }
 .acc-nav-skupina.aktivni span { color: rgba(255, 255, 255, .65); }
 /* Položky skupiny: neklikací odsazený přehled obsahu, svislá linka jako odskok */
 .acc-nav-polozky {
+  --postup: 0;
+  position: relative;
   list-style: none;
   display: flex;
   flex-direction: column;
   margin: 2px 0 10px 18px;
   border-left: 1px solid var(--gray-200);
 }
+/* Tmavá linka průběhu, roste dolů podle posunu skupinou */
+.acc-nav-polozky::before {
+  content: '';
+  position: absolute;
+  left: -1.5px;
+  top: 0;
+  width: 2px;
+  height: calc(var(--postup) * 100%);
+  border-radius: 2px;
+  background: var(--dark);
+  transition: height .25s cubic-bezier(.22, .61, .36, 1);
+}
 .acc-nav-polozky span {
   display: block;
   padding: 5px 10px 5px 14px;
-  margin-left: -1px;
-  border-left: 2px solid transparent;
   font-size: 13px;
   color: var(--gray-500);
   cursor: default;
-  transition: color .2s, border-color .2s;
+  transition: color .35s;
 }
-.acc-nav-polozky span.aktivni { color: var(--black); border-left-color: var(--dark); }
+.acc-nav-polozky span.aktivni { color: var(--black); }
+@media (prefers-reduced-motion: reduce) { .acc-nav-polozky::before { transition: none; } }
 .acc-obsah > .acc-skupina:first-child { margin-top: 0; }
 .acc-skupina { scroll-margin-top: 110px; }
 @media (max-width: 1199px) and (min-width: 1024px) { .acc-obsah .acc-grid { grid-template-columns: repeat(2, 1fr); } }
