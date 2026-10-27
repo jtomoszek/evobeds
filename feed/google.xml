@@ -5,13 +5,41 @@
     <link>https://jtomoszek.github.io/evobeds/</link>
     <description>Chytré elektrické polohovací postele evobeds a příslušenství. Česká výroba.</description>
     <item>
-      <g:id>evobeds-one</g:id>
-      <g:title>Chytrá elektrická polohovací postel evobeds One</g:title>
-      <g:description>Chytrá elektrická polohovací postel s funkcemi zdravotnického lůžka a vzhledem moderní domácí postele. Čtyřdílná elektricky ovládaná ložná plocha, nastavení výšky, tiché motory Linak, vyměnitelné pratelné potahy v deseti barvách. Zdravotnický prostředek třídy I dle MDR, navrženo a vyrobeno v České republice. Doprava a odborná montáž v ceně.</g:description>
-      <g:link>https://jtomoszek.github.io/evobeds/eshop.html#konfigurace</g:link>
-      <g:image_link>https://jtomoszek.github.io/evobeds/assets/img/konfigurator/00cover0-10sidewalls0-20wheels0-30mattress0-40trapeze0-50bedding0.jpg</g:image_link>
+      <g:id>evo-home</g:id>
+      <g:title>Polohovací postel evobeds One Evo Home, Anthracite</g:title>
+      <g:description>Sestava Evo Home: postel evobeds One v ekokůži Anthracite, bez příslušenství. Chytrá elektrická polohovací postel s funkcemi zdravotnického lůžka a vzhledem moderní domácí postele. Čtyřdílná elektricky ovládaná ložná plocha, nastavení výšky, tiché motory Linak, vyměnitelné pratelné potahy. Zdravotnický prostředek třídy I dle MDR, navrženo a vyrobeno v České republice. Doprava a odborná montáž v ceně.</g:description>
+      <g:link>https://jtomoszek.github.io/evobeds/eshop.html?sestava=evo-home</g:link>
+      <g:image_link>https://jtomoszek.github.io/evobeds/assets/img/konfigurator/00cover1-10sidewalls0-20wheels0-30mattress0-40trapeze0-50bedding0.jpg</g:image_link>
       <g:availability>in_stock</g:availability>
       <g:price>39900.00 CZK</g:price>
+      <g:condition>new</g:condition>
+      <g:brand>evobeds</g:brand>
+      <g:identifier_exists>no</g:identifier_exists>
+      <g:google_product_category>505764</g:google_product_category>
+      <g:product_type>Nábytek &gt; Postele &gt; Polohovací postele</g:product_type>
+    </item>
+    <item>
+      <g:id>evo-care</g:id>
+      <g:title>Polohovací postel evobeds One Evo Care s hrazdou a zábranami</g:title>
+      <g:description>Sestava Evo Care: postel evobeds One v ekokůži Anthracite, hrazda s madlem a sada polstrovaných zábran. Chytrá elektrická polohovací postel s funkcemi zdravotnického lůžka a vzhledem moderní domácí postele. Čtyřdílná elektricky ovládaná ložná plocha, nastavení výšky, tiché motory Linak, vyměnitelné pratelné potahy. Zdravotnický prostředek třídy I dle MDR, navrženo a vyrobeno v České republice. Doprava a odborná montáž v ceně.</g:description>
+      <g:link>https://jtomoszek.github.io/evobeds/eshop.html?sestava=evo-care</g:link>
+      <g:image_link>https://jtomoszek.github.io/evobeds/assets/img/konfigurator/00cover1-10sidewalls1-20wheels0-30mattress0-40trapeze1-50bedding0.jpg</g:image_link>
+      <g:availability>in_stock</g:availability>
+      <g:price>47600.00 CZK</g:price>
+      <g:condition>new</g:condition>
+      <g:brand>evobeds</g:brand>
+      <g:identifier_exists>no</g:identifier_exists>
+      <g:google_product_category>505764</g:google_product_category>
+      <g:product_type>Nábytek &gt; Postele &gt; Polohovací postele</g:product_type>
+    </item>
+    <item>
+      <g:id>evo-clinic</g:id>
+      <g:title>Polohovací postel evobeds One Evo Clinic, plná výbava</g:title>
+      <g:description>Sestava Evo Clinic: postel evobeds One v ekokůži Anthracite, hrazda s madlem, sada zábran, dvojitá kolečka s brzdou a matrace Silver ProAir. Chytrá elektrická polohovací postel s funkcemi zdravotnického lůžka a vzhledem moderní domácí postele. Čtyřdílná elektricky ovládaná ložná plocha, nastavení výšky, tiché motory Linak, vyměnitelné pratelné potahy. Zdravotnický prostředek třídy I dle MDR, navrženo a vyrobeno v České republice. Doprava a odborná montáž v ceně.</g:description>
+      <g:link>https://jtomoszek.github.io/evobeds/eshop.html?sestava=evo-clinic</g:link>
+      <g:image_link>https://jtomoszek.github.io/evobeds/assets/img/konfigurator/00cover1-10sidewalls1-20wheels1-30mattress2-40trapeze1-50bedding0.jpg</g:image_link>
+      <g:availability>in_stock</g:availability>
+      <g:price>56800.00 CZK</g:price>
       <g:condition>new</g:condition>
       <g:brand>evobeds</g:brand>
       <g:identifier_exists>no</g:identifier_exists>

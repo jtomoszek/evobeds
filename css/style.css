@@ -2695,3 +2695,16 @@ a, button { -webkit-tap-highlight-color: transparent; }
   -webkit-touch-callout: none;
 }
 .brand img { pointer-events: none; }
+
+/* Vlajky v přepínači jazyka (SVG místo emoji, Windows emoji vlajek neumí) */
+.vlajka {
+  display: inline-block;
+  width: 18px;
+  height: 12px;
+  border-radius: 2px;
+  vertical-align: -1px;
+  box-shadow: 0 0 0 .5px rgba(0, 0, 0, .18);
+  flex-shrink: 0;
+}
+.flag { display: inline-flex; align-items: center; }
+.lang-menu a span, .mobile-lang span { display: inline-flex; align-items: center; }

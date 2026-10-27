@@ -1,12 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SHOP>
   <SHOPITEM>
-    <ITEM_ID>evobeds-one</ITEM_ID>
-    <PRODUCTNAME>Chytrá elektrická polohovací postel evobeds One</PRODUCTNAME>
-    <DESCRIPTION>Chytrá elektrická polohovací postel s funkcemi zdravotnického lůžka a vzhledem moderní domácí postele. Čtyřdílná elektricky ovládaná ložná plocha, nastavení výšky, tiché motory Linak, vyměnitelné pratelné potahy v deseti barvách. Zdravotnický prostředek třídy I dle MDR, navrženo a vyrobeno v České republice. Doprava a odborná montáž v ceně.</DESCRIPTION>
-    <URL>https://jtomoszek.github.io/evobeds/eshop.html#konfigurace</URL>
-    <IMGURL>https://jtomoszek.github.io/evobeds/assets/img/konfigurator/00cover0-10sidewalls0-20wheels0-30mattress0-40trapeze0-50bedding0.jpg</IMGURL>
+    <ITEM_ID>evo-home</ITEM_ID>
+    <PRODUCTNAME>Polohovací postel evobeds One Evo Home, Anthracite</PRODUCTNAME>
+    <DESCRIPTION>Sestava Evo Home: postel evobeds One v ekokůži Anthracite, bez příslušenství. Chytrá elektrická polohovací postel s funkcemi zdravotnického lůžka a vzhledem moderní domácí postele. Čtyřdílná elektricky ovládaná ložná plocha, nastavení výšky, tiché motory Linak, vyměnitelné pratelné potahy. Zdravotnický prostředek třídy I dle MDR, navrženo a vyrobeno v České republice. Doprava a odborná montáž v ceně.</DESCRIPTION>
+    <URL>https://jtomoszek.github.io/evobeds/eshop.html?sestava=evo-home</URL>
+    <IMGURL>https://jtomoszek.github.io/evobeds/assets/img/konfigurator/00cover1-10sidewalls0-20wheels0-30mattress0-40trapeze0-50bedding0.jpg</IMGURL>
     <PRICE_VAT>39900</PRICE_VAT>
+    <MANUFACTURER>evobeds</MANUFACTURER>
+    <CATEGORYTEXT>Heureka.cz | Dům a zahrada | Nábytek | Ložnice | Postele</CATEGORYTEXT>
+    <DELIVERY_DATE>21</DELIVERY_DATE>
+  </SHOPITEM>
+  <SHOPITEM>
+    <ITEM_ID>evo-care</ITEM_ID>
+    <PRODUCTNAME>Polohovací postel evobeds One Evo Care s hrazdou a zábranami</PRODUCTNAME>
+    <DESCRIPTION>Sestava Evo Care: postel evobeds One v ekokůži Anthracite, hrazda s madlem a sada polstrovaných zábran. Chytrá elektrická polohovací postel s funkcemi zdravotnického lůžka a vzhledem moderní domácí postele. Čtyřdílná elektricky ovládaná ložná plocha, nastavení výšky, tiché motory Linak, vyměnitelné pratelné potahy. Zdravotnický prostředek třídy I dle MDR, navrženo a vyrobeno v České republice. Doprava a odborná montáž v ceně.</DESCRIPTION>
+    <URL>https://jtomoszek.github.io/evobeds/eshop.html?sestava=evo-care</URL>
+    <IMGURL>https://jtomoszek.github.io/evobeds/assets/img/konfigurator/00cover1-10sidewalls1-20wheels0-30mattress0-40trapeze1-50bedding0.jpg</IMGURL>
+    <PRICE_VAT>47600</PRICE_VAT>
+    <MANUFACTURER>evobeds</MANUFACTURER>
+    <CATEGORYTEXT>Heureka.cz | Dům a zahrada | Nábytek | Ložnice | Postele</CATEGORYTEXT>
+    <DELIVERY_DATE>21</DELIVERY_DATE>
+  </SHOPITEM>
+  <SHOPITEM>
+    <ITEM_ID>evo-clinic</ITEM_ID>
+    <PRODUCTNAME>Polohovací postel evobeds One Evo Clinic, plná výbava</PRODUCTNAME>
+    <DESCRIPTION>Sestava Evo Clinic: postel evobeds One v ekokůži Anthracite, hrazda s madlem, sada zábran, dvojitá kolečka s brzdou a matrace Silver ProAir. Chytrá elektrická polohovací postel s funkcemi zdravotnického lůžka a vzhledem moderní domácí postele. Čtyřdílná elektricky ovládaná ložná plocha, nastavení výšky, tiché motory Linak, vyměnitelné pratelné potahy. Zdravotnický prostředek třídy I dle MDR, navrženo a vyrobeno v České republice. Doprava a odborná montáž v ceně.</DESCRIPTION>
+    <URL>https://jtomoszek.github.io/evobeds/eshop.html?sestava=evo-clinic</URL>
+    <IMGURL>https://jtomoszek.github.io/evobeds/assets/img/konfigurator/00cover1-10sidewalls1-20wheels1-30mattress2-40trapeze1-50bedding0.jpg</IMGURL>
+    <PRICE_VAT>56800</PRICE_VAT>
     <MANUFACTURER>evobeds</MANUFACTURER>
     <CATEGORYTEXT>Heureka.cz | Dům a zahrada | Nábytek | Ložnice | Postele</CATEGORYTEXT>
     <DELIVERY_DATE>21</DELIVERY_DATE>

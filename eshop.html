@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>E-shop | evobeds One | Chytrá elektrická polohovací postel</title>
   <meta name="description" content="Sestavte si chytrou elektrickou polohovací postel evobeds One. Sestavy Evo Home, Evo Care a Evo Clinic, vyměnitelné potahy a příslušenství. Česká výroba, zdravotnický prostředek dle MDR.">
-  <link rel="stylesheet" href="css/style.css?v=58">
+  <link rel="stylesheet" href="css/style.css?v=59">
   <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
@@ -30,12 +30,12 @@
         <div class="nav-right">
           <div class="lang">
             <button class="lang-toggle" aria-label="Změnit jazyk">
-              <span class="flag">🇨🇿</span> CZ
+              <span class="flag"><svg class="vlajka" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#d7141a"/><rect width="30" height="10" fill="#fff"/><path d="M0 0 15 10 0 20z" fill="#11457e"/></svg></span> CZ
               <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
             </button>
             <div class="lang-menu">
-              <a href="eshop.html"><span>🇨🇿</span> Čeština</a>
-              <a href="https://evobeds.com/eshop.html"><span>🇬🇧</span> English</a>
+              <a href="eshop.html"><span><svg class="vlajka" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#d7141a"/><rect width="30" height="10" fill="#fff"/><path d="M0 0 15 10 0 20z" fill="#11457e"/></svg></span> Čeština</a>
+              <a href="https://evobeds.com/eshop.html"><span><svg class="vlajka" viewBox="0 0 60 30" aria-hidden="true"><rect width="60" height="30" fill="#012169"/><path d="M0 0l60 30M60 0 0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30M60 0 0 30" stroke="#c8102e" stroke-width="2"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#c8102e" stroke-width="6"/></svg></span> English</a>
             </div>
           </div>
           <a class="btn btn-dark btn-sm" href="eshop.html">e-shop</a>
@@ -51,7 +51,7 @@
     <a href="reference.html">Reference</a>
     <a href="o-nas.html">O nás</a>
     <a href="kontakt.html">Kontakt</a>
-    <a class="mobile-lang" href="https://evobeds.com/eshop.html"><span>🇬🇧</span> English</a>
+    <a class="mobile-lang" href="https://evobeds.com/eshop.html"><span><svg class="vlajka" viewBox="0 0 60 30" aria-hidden="true"><rect width="60" height="30" fill="#012169"/><path d="M0 0l60 30M60 0 0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30M60 0 0 30" stroke="#c8102e" stroke-width="2"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#c8102e" stroke-width="6"/></svg></span> English</a>
     <a class="btn btn-dark" href="eshop.html">e-shop</a>
   </div>
 
@@ -71,6 +71,25 @@
       </div>
       <h1>evobeds One</h1>
       <p class="sub">Chytrá elektrická polohovací postel. Funkce zdravotnického lůžka, vzhled moderní domácí postele.</p>
+
+      <!-- Hotové sestavy -->
+      <div class="opt-group apple-group">
+        <h2 class="opt-title">Hotové sestavy. <span>Vyberte, nebo si postel sestavte sami.</span></h2>
+        <div class="opt-cards" id="opt-sestavy">
+          <button class="opt-card" data-sestava="evo-home">
+            <span><span class="t">Evo Home</span><span class="d" style="display:block">Postel v barvě Anthracite, bez příslušenství</span></span>
+            <span class="p">39 900 Kč</span>
+          </button>
+          <button class="opt-card" data-sestava="evo-care">
+            <span><span class="t">Evo Care</span><span class="d" style="display:block">S hrazdou a sadou zábran</span></span>
+            <span class="p">47 600 Kč</span>
+          </button>
+          <button class="opt-card" data-sestava="evo-clinic">
+            <span><span class="t">Evo Clinic</span><span class="d" style="display:block">Hrazda, zábrany, kolečka a matrace Silver ProAir</span></span>
+            <span class="p">56 800 Kč</span>
+          </button>
+        </div>
+      </div>
 
       <!-- Materiál potahu -->
       <div class="opt-group apple-group">
@@ -711,6 +730,52 @@
       window.location.href = 'objednavka.html?' + p.toString();
     });
     recalc();
+    /* ---------- Hotové sestavy: rychlá volba a vlastní adresa pro reklamy ----------
+       eshop.html?sestava=evo-home|evo-care|evo-clinic nastaví konfigurátor
+       přesně na cenu sestavy, na kterou míří produktový feed. */
+    var SESTAVY = {
+      'evo-home':   { swatch: 1, matrace: 0, doplnky: [] },
+      'evo-care':   { swatch: 1, matrace: 0, doplnky: [0, 1] },
+      'evo-clinic': { swatch: 1, matrace: 2, doplnky: [0, 1, 2] }
+    };
+    var sestavaKarty = Array.prototype.slice.call(document.querySelectorAll('#opt-sestavy .opt-card'));
+    var nastavuji = false;
+    function oznacSestavu(id) {
+      sestavaKarty.forEach(function (k) { k.classList.toggle('active', k.dataset.sestava === id); });
+    }
+    function nastavSestavu(id) {
+      var s = SESTAVY[id];
+      if (!s) return;
+      nastavuji = true;
+      modeCards[0].click();
+      materialCards[0].click();
+      document.querySelectorAll('[data-material-group="leather"] .swatch')[s.swatch].click();
+      mattressCards[s.matrace].click();
+      addonCards.forEach(function (c, i) {
+        var chci = s.doplnky.indexOf(i) !== -1;
+        if (c.classList.contains('active') !== chci) c.click();
+      });
+      recalc();
+      nastavuji = false;
+      oznacSestavu(id);
+      try { history.replaceState(null, '', '?sestava=' + id + location.hash); } catch (e) {}
+    }
+    sestavaKarty.forEach(function (k) {
+      k.addEventListener('click', function () { nastavSestavu(k.dataset.sestava); });
+    });
+    /* Jakákoli ruční změna konfigurace z rychlé volby udělá vlastní sestavu */
+    document.querySelector('.buybox').addEventListener('click', function (e) {
+      if (nastavuji) return;
+      var karta = e.target.closest('.opt-card, .swatch');
+      if (!karta || karta.closest('#opt-sestavy')) return;
+      if (sestavaKarty.some(function (k) { return k.classList.contains('active'); })) {
+        oznacSestavu(null);
+        try { history.replaceState(null, '', location.pathname + location.hash); } catch (e2) {}
+      }
+    });
+    var zUrl = new URLSearchParams(location.search).get('sestava');
+    if (zUrl && SESTAVY[zUrl]) nastavSestavu(zUrl);
+
   })();
   </script>
 </body>
