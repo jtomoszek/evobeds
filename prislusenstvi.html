@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Příslušenství k posteli evobeds One | evobeds</title>
   <meta name="description" content="Příslušenství k polohovací posteli evobeds One samostatně: hrazda s madlem, sada zábran, kolečka, lůžkoviny a matrace Clinic, Silver ProAir a Sanna. Dokoupíte kdykoli.">
-  <link rel="stylesheet" href="css/style.css?v=63">
+  <link rel="stylesheet" href="css/style.css?v=64">
   <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
@@ -68,19 +68,19 @@
         <p class="acc-nav-titulek">Kategorie</p>
         <a class="acc-nav-skupina" href="#bezpeci" data-cil="bezpeci">Pro bezpečí a pohyb <span>3</span></a>
         <ul class="acc-nav-polozky">
-          <li><a href="#hrazda-s-madlem" data-cil="hrazda-s-madlem">Hrazda s madlem</a></li>
-          <li><a href="#sada-zabran" data-cil="sada-zabran">Sada zábran (2 ks)</a></li>
-          <li><a href="#sada-kolecek" data-cil="sada-kolecek">Sada koleček (4 ks)</a></li>
+          <li><span data-cil="hrazda-s-madlem">Hrazda s madlem</span></li>
+          <li><span data-cil="sada-zabran">Sada zábran (2 ks)</span></li>
+          <li><span data-cil="sada-kolecek">Sada koleček (4 ks)</span></li>
         </ul>
         <a class="acc-nav-skupina" href="#matrace" data-cil="matrace">Matrace <span>3</span></a>
         <ul class="acc-nav-polozky">
-          <li><a href="#matrace-clinic" data-cil="matrace-clinic">Matrace Clinic</a></li>
-          <li><a href="#matrace-silver-proair" data-cil="matrace-silver-proair">Matrace Silver ProAir</a></li>
-          <li><a href="#matrace-sanna" data-cil="matrace-sanna">Matrace Sanna</a></li>
+          <li><span data-cil="matrace-clinic">Matrace Clinic</span></li>
+          <li><span data-cil="matrace-silver-proair">Matrace Silver ProAir</span></li>
+          <li><span data-cil="matrace-sanna">Matrace Sanna</span></li>
         </ul>
         <a class="acc-nav-skupina" href="#luzkoviny" data-cil="luzkoviny">Lůžkoviny <span>1</span></a>
         <ul class="acc-nav-polozky">
-          <li><a href="#sada-luzkovin" data-cil="sada-luzkovin">Lůžkoviny</a></li>
+          <li><span data-cil="sada-luzkovin">Lůžkoviny</span></li>
         </ul>
       </nav>
       <div class="acc-obsah">
@@ -356,7 +356,7 @@
     vykresli();
 
     /* Rozcestník: zvýraznění právě viditelné skupiny a položky */
-    var odkazyNav = Array.prototype.slice.call(document.querySelectorAll('.acc-nav a[data-cil]'));
+    var odkazyNav = Array.prototype.slice.call(document.querySelectorAll('.acc-nav [data-cil]'));
     var cile = odkazyNav.map(function (a) { return document.getElementById(a.dataset.cil); });
     var nav = document.querySelector('.acc-nav');
     var spyTick = false;

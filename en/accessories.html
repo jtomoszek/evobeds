@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Accessories for the evobeds One bed | evobeds</title>
   <meta name="description" content="Accessories for the evobeds One positioning bed, sold separately: lifting pole, side rails, castors, bedding and Clinic, Silver ProAir and Sanna mattresses. Add them any time.">
-  <link rel="stylesheet" href="../css/style.css?v=63">
+  <link rel="stylesheet" href="../css/style.css?v=64">
   <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon-32.png">
   <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
@@ -68,19 +68,19 @@
         <p class="acc-nav-titulek">Categories</p>
         <a class="acc-nav-skupina" href="#bezpeci" data-cil="bezpeci">Safety and mobility <span>3</span></a>
         <ul class="acc-nav-polozky">
-          <li><a href="#hrazda-s-madlem" data-cil="hrazda-s-madlem">Lifting pole with handle</a></li>
-          <li><a href="#sada-zabran" data-cil="sada-zabran">Side rail set (2 pcs)</a></li>
-          <li><a href="#sada-kolecek" data-cil="sada-kolecek">Castor set (4 pcs)</a></li>
+          <li><span data-cil="hrazda-s-madlem">Lifting pole with handle</span></li>
+          <li><span data-cil="sada-zabran">Side rail set (2 pcs)</span></li>
+          <li><span data-cil="sada-kolecek">Castor set (4 pcs)</span></li>
         </ul>
         <a class="acc-nav-skupina" href="#matrace" data-cil="matrace">Mattresses <span>3</span></a>
         <ul class="acc-nav-polozky">
-          <li><a href="#matrace-clinic" data-cil="matrace-clinic">Clinic mattress</a></li>
-          <li><a href="#matrace-silver-proair" data-cil="matrace-silver-proair">Silver ProAir mattress</a></li>
-          <li><a href="#matrace-sanna" data-cil="matrace-sanna">Sanna mattress</a></li>
+          <li><span data-cil="matrace-clinic">Clinic mattress</span></li>
+          <li><span data-cil="matrace-silver-proair">Silver ProAir mattress</span></li>
+          <li><span data-cil="matrace-sanna">Sanna mattress</span></li>
         </ul>
         <a class="acc-nav-skupina" href="#luzkoviny" data-cil="luzkoviny">Bedding <span>1</span></a>
         <ul class="acc-nav-polozky">
-          <li><a href="#sada-luzkovin" data-cil="sada-luzkovin">Bedding</a></li>
+          <li><span data-cil="sada-luzkovin">Bedding</span></li>
         </ul>
       </nav>
       <div class="acc-obsah">
@@ -356,7 +356,7 @@
     vykresli();
 
     /* Rozcestník: zvýraznění právě viditelné skupiny a položky */
-    var odkazyNav = Array.prototype.slice.call(document.querySelectorAll('.acc-nav a[data-cil]'));
+    var odkazyNav = Array.prototype.slice.call(document.querySelectorAll('.acc-nav [data-cil]'));
     var cile = odkazyNav.map(function (a) { return document.getElementById(a.dataset.cil); });
     var nav = document.querySelector('.acc-nav');
     var spyTick = false;

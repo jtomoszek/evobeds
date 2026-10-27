@@ -2830,12 +2830,25 @@ body.acc-lista-on .footer { padding-bottom: 110px; }
 .acc-nav-skupina:hover { background: var(--gray-100); }
 .acc-nav-skupina.aktivni { background: var(--dark); color: var(--white); }
 .acc-nav-skupina.aktivni span { color: rgba(255, 255, 255, .65); }
-.acc-nav-polozky { list-style: none; display: flex; flex-direction: column; margin: 2px 0 8px; }
-.acc-nav-polozky a { display: block; padding: 6px 12px 6px 22px; font-size: 13px; color: var(--gray-500); position: relative; }
-.acc-nav-polozky a::before { content: ''; position: absolute; left: 12px; top: 50%; width: 4px; height: 4px; margin-top: -2px; border-radius: 50%; background: var(--gray-200); }
-.acc-nav-polozky a:hover { color: var(--black); }
-.acc-nav-polozky a.aktivni { color: var(--black); font-weight: 600; }
-.acc-nav-polozky a.aktivni::before { background: var(--dark); }
+/* Položky skupiny: neklikací odsazený přehled obsahu, svislá linka jako odskok */
+.acc-nav-polozky {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  margin: 2px 0 10px 18px;
+  border-left: 1px solid var(--gray-200);
+}
+.acc-nav-polozky span {
+  display: block;
+  padding: 5px 10px 5px 14px;
+  margin-left: -1px;
+  border-left: 2px solid transparent;
+  font-size: 13px;
+  color: var(--gray-500);
+  cursor: default;
+  transition: color .2s, border-color .2s;
+}
+.acc-nav-polozky span.aktivni { color: var(--black); border-left-color: var(--dark); }
 .acc-obsah > .acc-skupina:first-child { margin-top: 0; }
 .acc-skupina { scroll-margin-top: 110px; }
 @media (max-width: 1199px) and (min-width: 1024px) { .acc-obsah .acc-grid { grid-template-columns: repeat(2, 1fr); } }
