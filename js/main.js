@@ -317,11 +317,6 @@
 
     function update() {
       ticking = false;
-      if (!mq.matches) {
-        /* Mobil: uklidit případné zbytky scrollytellingu po otočení displeje */
-        slides.forEach((sl) => { sl.style.transform = ''; sl.style.opacity = ''; sl.style.zIndex = ''; });
-        return;
-      }
       const rect = root.getBoundingClientRect();
       const draha = rect.height - sticky.offsetHeight;
       if (draha <= 0) return;
