@@ -97,7 +97,9 @@
       '<div class="detail-body">' +
         '<div class="detail-content"><h2></h2><p class="p1"></p><p class="p2"></p></div>' +
         '<div class="detail-foot">' +
-          '<a class="btn btn-dark" href="eshop.html#konfigurace">Prohlédnout v e-shopu</a>' +
+          (document.documentElement.lang.toLowerCase().startsWith('en')
+            ? '<a class="btn btn-dark" href="eshop.html#configurator">View in the shop</a>'
+            : '<a class="btn btn-dark" href="eshop.html#konfigurace">Prohlédnout v e-shopu</a>') +
           '<div class="detail-nav">' +
             '<button class="d-prev" aria-label="Předchozí"><svg width="30" height="18" viewBox="0 0 32 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 1 1 9l8 8M1 9h30"/></svg></button>' +
             '<button class="d-next" aria-label="Další"><svg width="30" height="18" viewBox="0 0 32 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 1l8 8-8 8M31 9H1"/></svg></button>' +

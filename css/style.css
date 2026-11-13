@@ -2902,3 +2902,9 @@ body.acc-lista-on .footer { padding-bottom: 110px; }
 }
 .acc-nahledy img:hover { transform: translateY(-2px); border-color: var(--gray-400); }
 .acc-galerie .acc-img img { transform: none; padding: 20px 22px 8px; }
+
+/* Drobné právní poznámky: DPH u ceny, souhlas se zpracováním údajů u formulářů */
+.vat-note { margin: 8px 0 0; font-size: var(--fs-xs); color: var(--gray-500); text-align: right; }
+.form-note { margin: 12px 0 0; font-size: var(--fs-xs); color: var(--gray-500); line-height: 1.5; }
+.form-note a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.acc-lista-dph { color: var(--gray-500); font-size: var(--fs-xs); }
