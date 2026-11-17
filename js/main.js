@@ -680,3 +680,146 @@
     }, { passive: true });
   })();
 })();
+
+/* ---------- Souhlas s cookies + Smartlook (nahrávání návštěv) ----------
+   Smartlook se načte až po kliknutí na „Přijmout“. Formulářová pole, e-maily
+   a čísla se v nahrávkách maskují. Rozhodnutí se pamatuje v localStorage. */
+(function () {
+  var SMARTLOOK_KLIC = 'eec16d9c6368a090601415e6ed1c50f56d145595';
+  var KLIC_SOUHLASU = 'evobeds-cookies';
+  var EN = document.documentElement.lang.toLowerCase().startsWith('en');
+  var nacteno = false;
+
+  function precti() { try { return localStorage.getItem(KLIC_SOUHLASU); } catch (e) { return null; } }
+  function uloz(v) { try { localStorage.setItem(KLIC_SOUHLASU, v); } catch (e) {} }
+
+  function spustSmartlook() {
+    if (nacteno || !SMARTLOOK_KLIC) return;
+    nacteno = true;
+    window.smartlook || (function (d) {
+      var o = window.smartlook = function () { o.api.push(arguments); };
+      var h = d.getElementsByTagName('head')[0];
+      var c = d.createElement('script');
+      o.api = [];
+      c.async = true; c.type = 'text/javascript'; c.charset = 'utf-8';
+      c.src = 'https://web-sdk.smartlook.com/recorder.js';
+      h.appendChild(c);
+    })(document);
+    window.smartlook('init', SMARTLOOK_KLIC, { region: 'eu' });
+    window.smartlook('record', { forms: false, emails: false, numbers: false, ips: false });
+  }
+
+  /* Událost do Smartlooku, jen když je souhlas a nástroj běží */
+  function sleduj(nazev, vlastnosti) {
+    if (!nacteno || typeof window.smartlook !== 'function') return;
+    var p = vlastnosti || {};
+    p.jazyk = EN ? 'en' : 'cs';
+    window.smartlook('track', nazev, p);
+  }
+  window.evoSleduj = sleduj;
+
+  /* Lišta se souhlasem */
+  var lista = null;
+  function ukazListu() {
+    if (lista) { lista.hidden = false; return; }
+    lista = document.createElement('div');
+    lista.className = 'cookie-lista';
+    lista.setAttribute('role', 'dialog');
+    lista.setAttribute('aria-label', EN ? 'Cookie consent' : 'Souhlas s cookies');
+    lista.innerHTML = EN
+      ? '<p>We use analytics cookies and anonymised session recording (Smartlook) to improve this website. Nothing you type into forms is recorded. <a href="privacy-policy.html#cookies">More information</a></p>' +
+        '<div class="cookie-tlacitka"><button type="button" class="btn btn-light btn-sm" data-cookies="ne">Decline</button><button type="button" class="btn btn-dark btn-sm" data-cookies="ano">Accept</button></div>'
+      : '<p>Používáme analytické cookies a anonymní nahrávání návštěv (Smartlook), abychom web zlepšovali. Nic, co napíšete do formulářů, se nenahrává. <a href="zpracovani-osobnich-udaju.html#cookies">Více informací</a></p>' +
+        '<div class="cookie-tlacitka"><button type="button" class="btn btn-light btn-sm" data-cookies="ne">Odmítnout</button><button type="button" class="btn btn-dark btn-sm" data-cookies="ano">Přijmout</button></div>';
+    lista.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-cookies]');
+      if (!b) return;
+      var predtim = precti();
+      uloz(b.dataset.cookies);
+      lista.hidden = true;
+      if (b.dataset.cookies === 'ano') spustSmartlook();
+      else if (predtim === 'ano' && nacteno) location.reload(); /* odvolání souhlasu: zastavit nahrávání */
+    });
+    document.body.appendChild(lista);
+  }
+
+  /* Odkaz „Nastavení cookies“ v patičce každé stránky */
+  document.querySelectorAll('.footer .legal').forEach(function (l) {
+    var a = document.createElement('a');
+    a.href = '#';
+    a.textContent = EN ? 'Cookie settings' : 'Nastavení cookies';
+    a.addEventListener('click', function (e) { e.preventDefault(); ukazListu(); });
+    l.appendChild(a);
+  });
+
+  var souhlas = precti();
+  if (souhlas === 'ano') spustSmartlook();
+  else if (souhlas !== 'ne') ukazListu();
+
+  /* ---- Měření konfigurátoru: rozhodování o matraci ---- */
+  var matrace = Array.prototype.slice.call(document.querySelectorAll('#konf-mattress .opt-card'));
+  if (matrace.length) {
+    var NAZVY = ['bez matrace', 'Clinic', 'Silver ProAir', 'Sana'];
+    var nazevMatrace = function (c) { return NAZVY[matrace.indexOf(c)] || ('matrace ' + matrace.indexOf(c)); };
+    var aktivni = function (sel) { return document.querySelector(sel + ' .opt-card.active'); };
+    var pocetZmen = 0;
+    var posledni = nazevMatrace(aktivni('#konf-mattress') || matrace[0]);
+
+    /* Zákazník došel ke kroku s matracemi */
+    var krok = document.getElementById('konf-mattress');
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (zaznamy) {
+        if (!zaznamy[0].isIntersecting) return;
+        io.disconnect();
+        sleduj('konfigurator_matrace_zobrazeno', { vybrana: posledni });
+      }, { threshold: 0.5 });
+      io.observe(krok);
+    }
+
+    /* Ruční výběr matrace (ne změna vyvolaná hotovou sestavou) */
+    matrace.forEach(function (c) {
+      c.addEventListener('click', function (e) {
+        if (!e.isTrusted) return;
+        var nova = nazevMatrace(c);
+        if (nova === posledni) return;
+        pocetZmen++;
+        sleduj('konfigurator_matrace_vyber', { matrace: nova, predchozi: posledni, cena: +(c.dataset.price || 0), poradi_zmeny: pocetZmen });
+        posledni = nova;
+      });
+    });
+
+    /* Výběr hotové sestavy */
+    document.querySelectorAll('#opt-sestavy .opt-card').forEach(function (c) {
+      c.addEventListener('click', function (e) {
+        if (!e.isTrusted) return;
+        var t = c.querySelector('.t');
+        sleduj('konfigurator_sestava', { sestava: t ? t.textContent.trim() : '' });
+        setTimeout(function () { posledni = nazevMatrace(aktivni('#konf-mattress') || matrace[0]); }, 0);
+      });
+    });
+
+    /* Klik na Koupit: s jakou matrací zákazník odchází do objednávky */
+    var koupit = document.getElementById('add-to-cart');
+    if (koupit) koupit.addEventListener('click', function () {
+      var rezimy = ['koupe', 'jen prislusenstvi', 'pronajem'];
+      var m = Array.prototype.slice.call(document.querySelectorAll('#opt-mode .opt-card'));
+      var celkem = document.getElementById('pdp-total');
+      sleduj('konfigurator_koupit', {
+        matrace: posledni,
+        zmen_matrace: pocetZmen,
+        rezim: rezimy[m.indexOf(aktivni('#opt-mode'))] || 'koupe',
+        celkem: celkem ? celkem.textContent.trim() : ''
+      });
+    }, true);
+  }
+
+  /* Objednávka: zobrazení a odeslání (spolehlivější než klik, který hned přesměruje) */
+  var objednavka = document.getElementById('order-form');
+  if (objednavka) {
+    var q = new URLSearchParams(location.search);
+    var mq = q.get('matrace') || '';
+    var m2 = /sana/i.test(mq) ? 'Sana' : /proair/i.test(mq) ? 'Silver ProAir' : /clinic/i.test(mq) ? 'Clinic' : (mq ? 'bez matrace' : '');
+    sleduj('objednavka_zobrazena', { matrace: m2, jen_prislusenstvi: q.get('bezpostele') === '1' });
+    objednavka.addEventListener('submit', function () { sleduj('objednavka_odeslani', { matrace: m2 }); }, true);
+  }
+})();

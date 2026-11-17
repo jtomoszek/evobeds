@@ -2908,3 +2908,20 @@ body.acc-lista-on .footer { padding-bottom: 110px; }
 .form-note { margin: 12px 0 0; font-size: var(--fs-xs); color: var(--gray-500); line-height: 1.5; }
 .form-note a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 .acc-lista-dph { color: var(--gray-500); font-size: var(--fs-xs); }
+
+/* Lišta se souhlasem s cookies (Smartlook) */
+.cookie-lista {
+  position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 1200;
+  max-width: 760px; margin: 0 auto; padding: 18px 20px;
+  display: flex; align-items: center; gap: 18px;
+  background: #fff; color: var(--gray-700); border-radius: var(--radius-card);
+  box-shadow: 0 12px 40px rgba(20, 24, 40, .18);
+  font-size: var(--fs-sm); line-height: 1.5;
+}
+.cookie-lista p { margin: 0; flex: 1; }
+.cookie-lista a { font-weight: 700; border-bottom: 1.5px solid currentColor; }
+.cookie-tlacitka { display: flex; gap: 10px; flex-shrink: 0; }
+@media (max-width: 640px) {
+  .cookie-lista { flex-direction: column; align-items: stretch; }
+  .cookie-tlacitka .btn { flex: 1; }
+}
